@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.launcher3.view.CustomContentPage xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/default_sapce_10"
+    android:paddingRight="@dimen/default_sapce_10" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/default_sapce_5"
+        android:paddingRight="@dimen/default_sapce_5"
+        android:paddingTop="@dimen/default_sapce_5" >
+
+        <TextView
+            android:id="@+id/recent_use"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_sapce_10"
+            android:textColor="@color/workspace_all_apps_and_delete_zone_text_color"
+            android:textSize="@dimen/text_size_16sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/expand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_sapce_10"
+            android:text="@string/folded"
+            android:textColor="@color/workspace_all_apps_and_delete_zone_text_color"
+            android:textSize="@dimen/text_size_16sp" />
+    </LinearLayout>
+
+    <com.android.launcher3.view.RecentUseView
+        android:id="@+id/recentview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_sapce_5"
+        android:layout_marginRight="@dimen/default_sapce_5"
+        android:background="@drawable/bg_recent" />
+
+</com.android.launcher3.view.CustomContentPage>

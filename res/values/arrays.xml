@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="signature_compony">
+        <item>lenovo</item>
+    </string-array>
+    
+    <string-array name="transition_list">
+        <item>无</item>
+        <item>放大</item>
+        <item>缩小</item>
+        <item>向上旋转</item>
+        <item>向下旋转</item>
+        <item>立方体内部</item>
+        <item>立方体外部</item>
+        <item>堆叠</item>
+        <item>手风琴</item>
+        <item>翻转</item>
+        <item>圆柱体内部</item>
+        <item>圆柱体外部</item>
+        <item>旋转木马</item>
+        <item>概览</item>
+    </string-array>
+    
+    <!-- 需要隐藏的系统应用包名,多个时写多个item即可，带*的表示以xxx开头的 -->
+    <string-array name="hidden_pkg">
+        <item></item>
+    </string-array>
+</resources>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2013 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<favorites xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3" >
+
+    <!-- Dialer Hangouts Maps Chrome Camera -->
+    <!-- <favorite
+        launcher:className="com.android.settings.Settings"
+        launcher:packageName="com.android.settings"
+        launcher:screen="0"
+        launcher:x="2"
+        launcher:y="2" /> -->
+
+    <!--
+    Hotseat (We use the screen as the position of the item in the hotseat) 
+    screen表示这个图标在Hotseat中的位置从左到右依次为0 1 2 3    -->
+    <!-- Dialer, Contacts, [All Apps], Messaging, Browser -->
+    <favorite
+        launcher:container="-101"
+        launcher:packageName="com.android.phone"
+        launcher:screen="0" />
+    
+    <favorite
+        launcher:container="-101"
+        launcher:packageName="com.android.contacts"
+        launcher:screen="1" />
+    
+    <favorite
+        launcher:container="-101"
+        launcher:packageName="com.android.mms"
+        launcher:screen="2" />
+    
+    <favorite
+        launcher:container="-101"
+        launcher:packageName="com.android.browser"
+        launcher:screen="3" />
+
+    <folder
+        launcher:folderid="-10"
+        launcher:screen="1"
+        launcher:title="系统工具"
+        launcher:x="0"
+        launcher:y="0" >
+        <!-- <favorite
+            launcher:className="com.android.settings.Settings"
+            launcher:packageName="com.android.settings" />
+        <favorite
+            launcher:className="com.android.settings.Settings"
+            launcher:packageName="com.android.settings" /> -->
+    </folder>
+    
+    <!-- 时钟 -->
+    <systemapp
+        launcher:container="-100"
+        launcher:packageName="com.android.deskclock"
+        launcher:screen="0"
+        launcher:x="0"
+        launcher:y="3" />
+    
+    <!-- 日历 -->
+    <systemapp
+        launcher:container="-100"
+        launcher:packageName="com.android.calendar"
+        launcher:screen="0"
+        launcher:x="1"
+        launcher:y="3" />
+    
+    <!--  所有应用 @package:type/resource-->
+    <shortcut
+        launcher:container="-100"
+        launcher:screen="0"
+        launcher:x="2"
+        launcher:y="3" 
+        launcher:uri="#Intent;component=com.cuan.launcher/com.android.launcher3.JumpActivity;i.type=1;end"
+        launcher:icon="@com.cuan.launcher:drawable/all_apps"
+        launcher:title="@com.cuan.launcher:string/all_apps_name" />
+    
+    <!-- 图库 -->
+   <systemapp
+        launcher:container="-100"
+        launcher:packageName="com.cooliris.media"
+        launcher:screen="0"
+        launcher:x="3"
+        launcher:y="3" />
+    
+    <!-- 应用市场 -->
+    <systemapp
+        launcher:container="-100"
+        launcher:packageName="com.android.appstore"
+        launcher:screen="0"
+        launcher:x="0"
+        launcher:y="4" />
+
+    <!-- 音乐 -->
+    <systemapp
+        launcher:container="-100"
+        launcher:packageName="com.android.music"
+        launcher:screen="0"
+        launcher:x="1"
+        launcher:y="4" />
+     <!-- 相机 -->
+    <systemapp
+        launcher:container="-100"
+        launcher:packageName="com.android.camera"
+        launcher:screen="0"
+        launcher:x="2"
+        launcher:y="4" />
+    <!-- 设置 -->
+    <systemapp
+        launcher:container="-100"
+        launcher:packageName="com.android.settings"
+        launcher:screen="0"
+        launcher:x="3"
+        launcher:y="4" />
+    
+    <customwidget
+        launcher:container="-100"
+        launcher:screen="0"
+        launcher:x="0"
+        launcher:y="0" 
+        launcher:title="时钟天气"
+        launcher:spanX="4"
+        launcher:spanY="2"
+        launcher:itemType="1001"/>
+    
+</favorites>
