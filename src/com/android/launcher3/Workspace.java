@@ -479,6 +479,7 @@ public class Workspace extends SmoothPagedView
         setWallpaperDimension();
     }
 
+    //设置容器布局动画，容器布局动画就是当一个布局容器中的view方式改变时所产生的动画
     private void setupLayoutTransition() {
         // We want to show layout transitions when pages are deleted, to close the gap.
         mLayoutTransition = new LayoutTransition();
@@ -488,10 +489,11 @@ public class Workspace extends SmoothPagedView
         mLayoutTransition.disableTransitionType(LayoutTransition.CHANGE_APPEARING);
         setLayoutTransition(mLayoutTransition);
     }
-
+    //设置容器布局动画可用
     void enableLayoutTransitions() {
         setLayoutTransition(mLayoutTransition);
     }
+    //禁用容器布局动画
     void disableLayoutTransitions() {
         setLayoutTransition(null);
     }
@@ -2076,6 +2078,7 @@ public class Workspace extends SmoothPagedView
         mDragOutline = createDragOutline(b, DRAG_BITMAP_PADDING, size[0], size[1], clipAlpha);
     }
 
+    //退出桌面小部件的调整模式
     public void exitWidgetResizeMode() {
         DragLayer dragLayer = mLauncher.getDragLayer();
         dragLayer.clearAllResizeFrames();
@@ -3203,6 +3206,7 @@ public class Workspace extends SmoothPagedView
                         AppWidgetProviderInfo pinfo = hostView.getAppWidgetInfo();
                         if (pinfo != null &&
                                 pinfo.resizeMode != AppWidgetProviderInfo.RESIZE_NONE) {
+                            //显示调整widget大小的矩形框
                             final Runnable addResizeFrame = new Runnable() {
                                 public void run() {
                                     DragLayer dragLayer = mLauncher.getDragLayer();

@@ -254,7 +254,9 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
     }
 
     /**
-     * 启用快捷方式的安装队列。当Launcher处理停止状态的时候
+     * 启用快捷方式的安装队列。当Launcher处于推拽状态或者停止状态的时候(背其他的程序所覆盖),其他应用程序可能会调用Launcher对外
+     * 提供的安装应用程序接口，往桌面添加自己的快捷方式。因此，这里需要启用一个队列，以便保存安装的信息。
+     * 等到推拽结束或者onResume时在执行安装任务。
      */
     static void enableInstallQueue() {
         mUseInstallQueue = true;

@@ -126,10 +126,8 @@ public class CellLayout extends ViewGroup {
 
     private final FastBitmapView mTouchFeedbackView;
 
-    private HashMap<LayoutParams, Animator> mReorderAnimators = new
-            HashMap<LayoutParams, Animator>();
-    private HashMap<View, ReorderPreviewAnimation>
-            mShakeAnimators = new HashMap<View, ReorderPreviewAnimation>();
+    private HashMap<LayoutParams, Animator> mReorderAnimators = new HashMap<>();
+    private HashMap<View, ReorderPreviewAnimation> mShakeAnimators = new HashMap<>();
 
     private boolean mItemPlacementDirty = false;
 
@@ -438,6 +436,7 @@ public class CellLayout extends ViewGroup {
             }
         }
 
+        //调试的时候显示每个图标的显示区域
         if (DEBUG_VISUALIZE_OCCUPIED) {
             int[] pt = new int[2];
             ColorDrawable cd = new ColorDrawable(Color.RED);
@@ -2615,9 +2614,9 @@ public class CellLayout extends ViewGroup {
     }
 
     private class ItemConfiguration {
-        HashMap<View, CellAndSpan> map = new HashMap<View, CellAndSpan>();
-        private HashMap<View, CellAndSpan> savedMap = new HashMap<View, CellAndSpan>();
-        ArrayList<View> sortedViews = new ArrayList<View>();
+        HashMap<View, CellAndSpan> map = new HashMap<>();
+        private HashMap<View, CellAndSpan> savedMap = new HashMap<>();
+        ArrayList<View> sortedViews = new ArrayList<>();
         ArrayList<View> intersectingViews;
         boolean isSolution = false;
         int dragViewX, dragViewY, dragViewSpanX, dragViewSpanY;

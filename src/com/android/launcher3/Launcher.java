@@ -2245,6 +2245,7 @@ public class Launcher extends BaseActivity
 
     protected void onWorkspaceLockedChanged() {}
 
+    //重置桌面小部件缓存
     private void resetAddInfo() {
         mPendingAddInfo.container = ItemInfo.NO_ID;
         mPendingAddInfo.screenId = -1;
@@ -2315,7 +2316,7 @@ public class Launcher extends BaseActivity
 
     /**
      * Process a widget drop.
-     *
+     * 添加系统小部件
      * @param info The PendingAppWidgetInfo of the widget being added.
      * @param screenId The ID of the screen where it should be added
      * @param cell The cell it should be added to, optional
