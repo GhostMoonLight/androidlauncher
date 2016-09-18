@@ -533,7 +533,7 @@ public class Launcher extends BaseActivity
             showFirstRunActivity();
             showFirstRunClings();
         }
-        
+
         PushAgent mPushAgent = PushAgent.getInstance(this);
 //        mPushAgent.enable();
       //开启推送并设置注册的回调处理

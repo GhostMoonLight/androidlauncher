@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="@dimen/default_sapce_10"
-    android:paddingRight="@dimen/default_sapce_10" >
+    android:paddingRight="@dimen/default_sapce_10"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,5 +45,9 @@
         android:layout_marginLeft="@dimen/default_sapce_5"
         android:layout_marginRight="@dimen/default_sapce_5"
         android:background="@drawable/bg_recent" />
+
+    <com.android.launcher3.view.SecondOrderBezier
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </com.android.launcher3.view.CustomContentPage>
