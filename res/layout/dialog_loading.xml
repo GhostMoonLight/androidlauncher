@@ -14,7 +14,7 @@
         <!--android:layout_gravity="center">-->
     <!--</ProgressBar>-->
 
-    <com.android.launcher3.view.LoadingView
+    <com.android.launcher3.view.LoadCircleView
         android:layout_width="52dp"
         android:layout_height="52dp"/>
     

@@ -1,5 +1,7 @@
 package com.android.launcher3.view;
 
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,6 +11,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.OvershootInterpolator;
 
 import com.android.launcher3.utils.Util;
 
@@ -24,6 +28,9 @@ public class BezierMetaBall extends View {
     private int mTouchSlop;
     private Paint mPaint;
     private Path mPath;
+    AnimatorSet mAnimXY;
+    private ValueAnimator valueX;
+    private ValueAnimator valueY;
 
     public BezierMetaBall(Context context) {
         super(context);
@@ -55,15 +62,41 @@ public class BezierMetaBall extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setColor(Color.RED);
-
         mPath = new Path();
 
         mTouchSlop = ViewConfiguration.getTouchSlop();
+
+        mAnimXY = new AnimatorSet();
+        valueX = ValueAnimator.ofFloat(mSecondCircleX, mFirstCircleX);
+        valueY = ValueAnimator.ofFloat(mSecondCircleY, mFirstCircleY);
+        mAnimXY.playTogether(valueX, valueY);
+        valueX.setDuration(500);
+        valueY.setDuration(500);
+        valueX.setInterpolator(new OvershootInterpolator());
+        valueY.setInterpolator(new OvershootInterpolator());
+        valueX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mSecondCircleX = (Float) animation.getAnimatedValue();
+                caculate();
+                invalidate();
+            }
+        });
+
+        valueY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mSecondCircleY = (Float) animation.getAnimatedValue();
+                caculate();
+                invalidate();
+            }
+        });
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
         int w,h;
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -116,6 +149,7 @@ public class BezierMetaBall extends View {
         boolean result = false;
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
+                mAnimXY.cancel();
                 mLastDownX = mStartDownX = event.getX();
                 mLastDwonY = mStartDwonY = event.getY();
                 break;
@@ -145,6 +179,9 @@ public class BezierMetaBall extends View {
 //                mSecondCircleX = mFirstCircleX;
 //                mSecondCircleY = mFirstCircleY;
 //                invalidate();
+                valueX.setFloatValues(mSecondCircleX, mFirstCircleX);
+                valueY.setFloatValues(mSecondCircleY, mFirstCircleY);
+                mAnimXY.start();
                 break;
         }
 
