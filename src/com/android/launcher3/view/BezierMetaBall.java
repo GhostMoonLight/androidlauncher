@@ -11,9 +11,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.OvershootInterpolator;
 
+import com.android.launcher3.Interpolator.SpringInterpolator;
 import com.android.launcher3.utils.Util;
 
 /**
@@ -72,8 +71,8 @@ public class BezierMetaBall extends View {
         mAnimXY.playTogether(valueX, valueY);
         valueX.setDuration(500);
         valueY.setDuration(500);
-        valueX.setInterpolator(new OvershootInterpolator());
-        valueY.setInterpolator(new OvershootInterpolator());
+        valueX.setInterpolator(new SpringInterpolator(0.5f));
+        valueY.setInterpolator(new SpringInterpolator(0.5f));
         valueX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
