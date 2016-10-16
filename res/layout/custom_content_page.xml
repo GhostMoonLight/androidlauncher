@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:paddingLeft="@dimen/default_sapce_10"
     android:paddingRight="@dimen/default_sapce_10"
-    android:clipChildren="false"
+    android:clipChildren="true"
     android:clipToPadding="false">
 
     <LinearLayout
@@ -46,13 +46,13 @@
         android:layout_marginRight="@dimen/default_sapce_5"
         android:background="@drawable/bg_recent" />
 
-    <com.android.launcher3.view.BezierMetaBall
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+    <!--<com.android.launcher3.view.BezierMetaBall-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"/>-->
 
-    <com.android.launcher3.view.SecondOrderBezier
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <!--<com.android.launcher3.view.SecondOrderBezier-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
 
 </com.android.launcher3.view.CustomContentPage>

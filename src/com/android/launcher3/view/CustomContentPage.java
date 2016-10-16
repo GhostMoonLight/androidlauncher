@@ -160,7 +160,12 @@ public class CustomContentPage extends LinearLayout implements Insettable{
 	   					if (item.itemType != LauncherSettings.BaseLauncherColumns.ITEM_TYPE_SHORTCUT){
 	   						for (RecentUserAppInfo info: infos){
 	   							if (info.title.equals(sInfo.title) && info.pck.equals(sInfo.packName)){
-	   								info.icon = sInfo.themeDrawable;
+	   								if (sInfo.iconBg != null){
+                                        //只有时钟和日历的ShortcutInfo对象该字段有值
+                                        info.icon = sInfo.iconBg;
+                                    }else{
+                                        info.icon = sInfo.themeDrawable;
+                                    }
 	   							}
 	   			   			}
 	   					} 
@@ -169,7 +174,12 @@ public class CustomContentPage extends LinearLayout implements Insettable{
 	   					for (ShortcutInfo sInfo: fi.contents){
 	   						for (RecentUserAppInfo info: infos){
 	   							if (info.title.equals(sInfo.title) && info.pck.equals(sInfo.packName)){
-	   								info.icon = sInfo.themeDrawable;
+                                    if (sInfo.iconBg != null){
+                                        //只有时钟和日历的ShortcutInfo对象该字段有值
+                                        info.icon = sInfo.iconBg;
+                                    }else{
+                                        info.icon = sInfo.themeDrawable;
+                                    }
 	   							}
 	   			   			}
 	   					}

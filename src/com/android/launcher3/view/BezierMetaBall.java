@@ -17,6 +17,7 @@ import com.android.launcher3.utils.Util;
 
 /**
  * Created by wen on 2016/9/18.
+ * 杯赛尔曲线拟合，模仿QQ消息的拖拽
  */
 public class BezierMetaBall extends View {
 

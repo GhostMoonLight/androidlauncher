@@ -319,6 +319,7 @@ public class FolderSingleHanded extends FolderBase {
         } else {
             mFolderName.setText("");
         }
+        mFolderName.setText(mInfo.title);
         updateItemLocationsInDatabase();
 
         // In case any children didn't come across during loading, clean up the folder accordingly
@@ -929,6 +930,7 @@ public class FolderSingleHanded extends FolderBase {
     }
 
     public void onTitleChanged(CharSequence title) {
+        mFolderName.setText(title);
     }
 
     public void getLocationInDragLayer(int[] loc) {

@@ -409,9 +409,15 @@ public class AllAppListView extends LinearLayout implements OnScrollListener, On
 			if (subjectInfo.isFirst){
 				subjectView.name.setVisibility(View.VISIBLE);
 				convertView.setTag(R.id.tag_is_first, true);
+                subjectView.name.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
 			}else{
 				subjectView.name.setVisibility(View.INVISIBLE);
 				convertView.setTag(R.id.tag_is_first, false);
+                subjectView.name.setOnClickListener(null);
 			}
 			
 			int size = subjectInfo.mDatas.size();
@@ -437,6 +443,17 @@ public class AllAppListView extends LinearLayout implements OnScrollListener, On
 				view.setTag(null);
 				view.setVisibility(View.GONE);
 			}
+
+            if (subjectView.mLayout.getChildCount() < 3) {
+                ((ViewGroup)subjectView.mLayout.getParent()).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        animateClose();
+                    }
+                });
+            } else {
+                ((ViewGroup)subjectView.mLayout.getParent()).setOnClickListener(null);
+            }
 			
 			subjectView.name.setText(subjectInfo.name);
 			return convertView;

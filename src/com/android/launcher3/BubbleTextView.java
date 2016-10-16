@@ -329,6 +329,7 @@ public class BubbleTextView extends RelativeLayout implements OnClickListener {
         return result;
     }
 
+    //按压效果
     void setStayPressed(boolean stayPressed) {
         mStayPressed = stayPressed;
         if (!stayPressed) {

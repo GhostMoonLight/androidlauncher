@@ -4608,6 +4608,7 @@ public class Launcher extends BaseActivity
             return;
         }
         dismisProgressDialog();
+        mWorkspace.refreshCustomContentPageRecentUseApp();
         if (mSavedState != null) {
             if (!mWorkspace.hasFocus()) {
                 mWorkspace.getChildAt(mWorkspace.getCurrentPage()).requestFocus();
@@ -5360,7 +5361,6 @@ public class Launcher extends BaseActivity
 	@Override
 	public void dismisLoadingDialog() {
 		dismisProgressDialog();
-		mWorkspace.refreshCustomContentPageRecentUseApp();
 	}
 	
 	public void addCustomWidget(CustomWidgetInfo widgetInfo){
