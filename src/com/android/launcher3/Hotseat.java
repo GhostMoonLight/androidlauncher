@@ -28,8 +28,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TextView;
+
 import com.cuan.launcher.R;
+
 import java.util.ArrayList;
 
 public class Hotseat extends FrameLayout {
@@ -84,7 +85,8 @@ public class Hotseat extends FrameLayout {
 
     /* Get the orientation invariant order of the item in the hotseat for persistence. */
     int getOrderInHotseat(int x, int y) {
-        return hasVerticalHotseat() ? (mContent.getCountY() - y - 1) : x;
+        return hasVerticalHotseat() ? (mContent.getCountY() - y - 1) :
+                (!LauncherAppState.isDisableAllApps()&&(x>mAllAppsButtonRank)? (x-1):x);
     }
     /* Get the orientation specific coordinates given an invariant order in the hotseat. */
     int getCellXFromOrder(int rank) {
@@ -154,12 +156,12 @@ public class Hotseat extends FrameLayout {
             Context context = getContext();
 
             LayoutInflater inflater = LayoutInflater.from(context);
-            TextView allAppsButton = (TextView)
-                    inflater.inflate(R.layout.all_apps_button, mContent, false);
+            BubbleTextView allAppsButton = (BubbleTextView)
+                    inflater.inflate(R.layout.application, mContent, false); //R.layout.all_apps_button
             Drawable d = context.getResources().getDrawable(R.drawable.all_apps_button_icon);
 
             Utilities.resizeIconDrawable(d);
-            allAppsButton.setCompoundDrawables(null, d, null, null);
+            allAppsButton.setCompoundDrawablesWithIntrinsicBounds(d);
 
             allAppsButton.setContentDescription(context.getString(R.string.all_apps_button_label));
             allAppsButton.setOnKeyListener(new HotseatIconKeyEventListener());

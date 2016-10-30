@@ -162,7 +162,7 @@ public class Launcher extends BaseActivity
     private static final int REQUEST_CREATE_SHORTCUT = 1;
     private static final int REQUEST_CREATE_APPWIDGET = 5;
     private static final int REQUEST_PICK_SHORTCUT = 7;
-    private static final int REQUEST_PICK_APPWIDGET = 9;
+    private static final int REQUEST_PICK_APPWIDGET =9;
     private static final int REQUEST_PICK_WALLPAPER = 10;
 
     private static final int REQUEST_BIND_APPWIDGET = 11;
@@ -378,7 +378,7 @@ public class Launcher extends BaseActivity
         public void run() {
             if (mWorkspace != null) {
                 mWorkspace.buildPageHardwareLayers();
-            }
+ }
         }
     };
 
@@ -394,7 +394,7 @@ public class Launcher extends BaseActivity
         int cellX;
         int cellY;
         int appWidgetId;
-    }
+ }
 
     private Stats mStats;
 
@@ -422,7 +422,7 @@ public class Launcher extends BaseActivity
                     .penaltyLog().build());
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
                     .detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
-        }
+ }
         if (LOGD) {
             Log.w(TAG, "Launcher#onCreate");
         }
@@ -494,7 +494,7 @@ public class Launcher extends BaseActivity
         registerContentObservers();
 
         lockAllApps();
-        
+  
         mSavedState = savedInstanceState;
         restoreState(mSavedState);
 
@@ -546,11 +546,11 @@ public class Launcher extends BaseActivity
                           public void run() {
                     	       //onRegistered方法的参数registrationId即是device_token
                         	 System.out.println("AAAAAA registrationId:"+registrationId);
-                          }
+ }
                  });
              }
         });
-        
+  
 //        if (!mSharedPrefs.getBoolean(FIRST_LOAD_COMPLETE, false)){
 //        	new Thread(){
 //            	@Override
@@ -558,7 +558,7 @@ public class Launcher extends BaseActivity
 //            		BitmapUtils.setThemeWallpaper(Launcher.this);
 //            	}
 //            }.start();
-//        }
+// }
     }
     
     public TimeChangeReceiver getTimeChangeReceiver(){
@@ -566,11 +566,11 @@ public class Launcher extends BaseActivity
     }
 
     @Override
-    public void onLauncherProviderChange() {}
+    public void onLauncherProviderChange(){}
 
     /** To be overriden by subclasses to hint to Launcher that we have custom content 
      *  是否含有左屏
-     */
+*/
     protected boolean hasCustomContentToLeft() {
         return true;
     }
@@ -586,7 +586,7 @@ public class Launcher extends BaseActivity
         CustomContentPage view = (CustomContentPage) mInflater.inflate(R.layout.custom_content_page, null, false);
         view.setIconCache(mIconCache);
         mWorkspace.addToCustomContentPage(view, null, "");
-    }
+ }
 
     /**
      * Invoked by subclasses to signal a change to the ddCustomContentToLeft}= value to
@@ -678,7 +678,7 @@ public class Launcher extends BaseActivity
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void) null);
         }
-    }
+ }
 
     private static class LocaleConfiguration {
         public String locale;
@@ -702,7 +702,7 @@ public class Launcher extends BaseActivity
                 } catch (IOException e) {
                     // Ignore
                 }
-            }
+ }
         }
     }
 
@@ -726,7 +726,7 @@ public class Launcher extends BaseActivity
                 } catch (IOException e) {
                     // Ignore
                 }
-            }
+ }
         }
     }
     
@@ -742,11 +742,11 @@ public class Launcher extends BaseActivity
 	
 	/**
 	 * 获取状态栏高度
-	 */
+*/
 	public int getBottomNavBarHeight() {
 		if (mBottomNavBarHeight <= 0) {
 			mBottomNavBarHeight = Util.getBottomNavBarHeight(this);
-		}
+	}
 		return mBottomNavBarHeight;
 	}
 
@@ -762,7 +762,7 @@ public class Launcher extends BaseActivity
         // We prevent dragging when we are loading the workspace as it is possible to pick up a view
         // that is subsequently removed from the workspace in startBinding().
         return !mModel.isLoadingWorkspace();
-    }
+ }
 
     static int getScreen() {
         synchronized (sLock) {
@@ -774,7 +774,7 @@ public class Launcher extends BaseActivity
         synchronized (sLock) {
             sScreen = screen;
         }
-    }
+ }
 
     public static int generateViewId() {
         if (Build.VERSION.SDK_INT >= 17) {
@@ -786,11 +786,11 @@ public class Launcher extends BaseActivity
                 final int result = sNextGeneratedId.get();
                 // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
                 int newValue = result + 1;
-                if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
+                if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not0.
                 if (sNextGeneratedId.compareAndSet(result, newValue)) {
                     return result;
                 }
-            }
+ }
         }
     }
 
@@ -866,7 +866,7 @@ public class Launcher extends BaseActivity
                 mWorkspace.exitOverviewMode(false);
             }
             return;
-        }
+ }
 
         boolean isWidgetDrop = (requestCode == REQUEST_PICK_APPWIDGET || requestCode == REQUEST_CREATE_APPWIDGET);
 
@@ -922,7 +922,7 @@ public class Launcher extends BaseActivity
                             false);
                 } else {
                     sPendingAddItem = preparePendingAddArgs(requestCode, data, appWidgetId, mPendingAddInfo);
-                }
+ }
             }
             return;
         }
@@ -958,7 +958,7 @@ public class Launcher extends BaseActivity
             }
         } else if (resultCode == RESULT_CANCELED) {
             mWorkspace.removeExtraEmptyScreenDelayed(true, exitSpringLoaded, ON_ACTIVITY_RESULT_ANIMATION_DELAY, false);
-        }
+ }
         mDragLayer.clearAnimatedView();
     }
 
@@ -990,7 +990,7 @@ public class Launcher extends BaseActivity
         } else {
             return screenId;
         }
-    }
+ }
 
     private void completeTwoStageWidgetDrop(final int resultCode, final int appWidgetId) {
         CellLayout cellLayout = mWorkspace.getScreenWithId(mPendingAddInfo.screenId);
@@ -1026,7 +1026,7 @@ public class Launcher extends BaseActivity
     protected void onStop() {
         super.onStop();
         FirstFrameAnimatorHelper.setIsVisible(false);
-    }
+ }
 
     @Override
     protected void onStart() {
@@ -1050,7 +1050,7 @@ public class Launcher extends BaseActivity
         } else if (mOnResumeState == State.APPS_CUSTOMIZE) {
             //无动画立即显示应用程序菜单，并设置正确的标签页
             showAllApps(false, mAppsCustomizeContent.getContentType(), false);
-        }
+ }
         mOnResumeState = State.NONE;
 
         // Background was set to gradient in onPause(), restore to black if in all apps.
@@ -1062,7 +1062,7 @@ public class Launcher extends BaseActivity
             mModel.startLoader(true, PagedView.INVALID_RESTORE_PAGE);
             mRestoring = false;
             mOnResumeNeedsLoad = false;
-        }
+ }
         //判断是否有缓存的任务，需要在onResume时执行
         //当有应用程序图标、快捷方式需要被加载到桌面上的时候，由于Launcher的加载过程是异步的，那么这里可能无法马上执行，
         //所以他以绑定任务的方式把任务保存起来，等到Launcher被Resume的时候在调度加载
@@ -1082,7 +1082,7 @@ public class Launcher extends BaseActivity
             }
             if (mAppsCustomizeContent != null) {
                 mAppsCustomizeContent.setBulkBind(false);
-            }
+ }
             mBindOnResumeCallbacks.clear();
             if (DEBUG_RESUME_TIME) {
                 Log.d(TAG, "Time spent processing callbacks in onResume: "
@@ -1094,7 +1094,7 @@ public class Launcher extends BaseActivity
             //逐个执行任务
             for (int i = 0; i < mOnResumeCallbacks.size(); i++) {
                 mOnResumeCallbacks.get(i).run();
-            }
+ }
             //清理任务列表
             mOnResumeCallbacks.clear();
         }
@@ -1106,7 +1106,7 @@ public class Launcher extends BaseActivity
         if (mWaitingForResume != null) {
             // Resets the previous workspace icon press state
             mWaitingForResume.setStayPressed(false);
-        }
+ }
 
         // It is possible that widgets can receive updates while launcher is not in the foreground.
         // Consequently, the widgets will be inflated in the orientation of the foreground activity
@@ -1154,15 +1154,15 @@ public class Launcher extends BaseActivity
         mDragController.cancelDrag();
         mDragController.resetLastGestureUpTime();
 
-        // We call onHide() aggressively. The custom content callbacks should be able to
+        // We call onHide() aggressively. The custom content callbacks should be ableto
         // debounce excess onHide calls.
         if (mWorkspace.getCustomContentCallbacks() != null) {
             mWorkspace.getCustomContentCallbacks().onHide();
-        }
+ }
     }
 
     QSBScroller mQsbScroller = new QSBScroller() {
-        int scrollY = 0;
+        int scrollY =0;
 
         @Override
         public void setScrollY(int scroll) {
@@ -1178,7 +1178,7 @@ public class Launcher extends BaseActivity
     public void resetQSBScroll() {
         mSearchDropTargetBar.animate().translationY(0).start();
         getQsbBar().animate().translationY(0).start();
-    }
+ }
 
     public interface CustomContentCallbacks {
         // Custom content is completely shown. {@code fromResume} indicates whether this was caused
@@ -1206,7 +1206,7 @@ public class Launcher extends BaseActivity
     public QSBScroller addToCustomContentPage(View customContent, CustomContentCallbacks callbacks, String description) {
         mWorkspace.addToCustomContentPage(customContent, callbacks, description);
         return mQsbScroller;
-    }
+ }
 
     // The custom content needs to offset its content to account for the QSB
     public int getTopOffsetForCustomContent() {
@@ -1218,7 +1218,7 @@ public class Launcher extends BaseActivity
         // Flag the loader to stop early before switching
         if (mModel.isCurrentCallbacks(this)) {
             mModel.stopLoader();
-        }
+ }
         if (mAppsCustomizeContent != null) {
             mAppsCustomizeContent.surrender();
         }
@@ -1230,7 +1230,7 @@ public class Launcher extends BaseActivity
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         mHasFocus = hasFocus;
-    }
+ }
 
     private boolean acceptFilter() {
         final InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -1246,7 +1246,7 @@ public class Launcher extends BaseActivity
             boolean gotKey = TextKeyListener.getInstance().onKeyDown(mWorkspace, mDefaultKeySsb, keyCode, event);
             if (gotKey && mDefaultKeySsb != null && mDefaultKeySsb.length() > 0) {
                 // something usable has been typed - start a search
-                // the typed text will be retrieved and cleared by
+                // the typed text will be retrieved and clearedby
                 // showSearchDialog()
                 // If there are multiple keystrokes before the search dialog takes focus,
                 // onSearchRequested() will be called for every keystroke,
@@ -1258,7 +1258,7 @@ public class Launcher extends BaseActivity
         // Eat the long press event so the keyboard doesn't come up.
         if (keyCode == KeyEvent.KEYCODE_MENU && event.isLongPress()) {
             return true;
-        }
+ }
 
         return handled;
     }
@@ -1298,7 +1298,7 @@ public class Launcher extends BaseActivity
     private void restoreState(Bundle savedState) {
         if (savedState == null) {
             return;
-        }
+ }
 
         State state = intToState(savedState.getInt(RUNTIME_STATE, State.WORKSPACE.ordinal()));
         if (state == State.APPS_CUSTOMIZE) {
@@ -1382,7 +1382,7 @@ public class Launcher extends BaseActivity
                 if (!mWorkspace.isSwitchingState()) {
                     onClickAddWidgetButton(arg0);
                 }
-            }
+ }
         });
         widgetButton.setOnTouchListener(getHapticFeedbackTouchListener());
 
@@ -1450,7 +1450,7 @@ public class Launcher extends BaseActivity
 
             boolean show = shouldShowWeightWatcher();
             mWeightWatcher.setVisibility(show ? View.VISIBLE : View.GONE);
-        }
+ }
     }
 
     /**
@@ -1458,31 +1458,31 @@ public class Launcher extends BaseActivity
      */
     public void setAllAppsButton(View allAppsButton) {
         mAllAppsButton = allAppsButton;
-    }
+ }
 
     public View getAllAppsButton() {
         return mAllAppsButton;
-    }
+ }
 
     /**
      * Creates a view representing a shortcut.
-     *
+ *
      * @param info The data structure describing the shortcut.
      *
      * @return A View inflated from R.layout.application.
-     */
+*/
     View createShortcut(ShortcutInfo info) {
         return createShortcut(R.layout.application, (ViewGroup) mWorkspace.getChildAt(mWorkspace.getCurrentPage()),
                 info);
-    }
+ }
 
     /**
      * Creates a view representing a shortcut inflated from the specified resource.
-     *
+ *
      * @param layoutResId The id of the XML layout used to create the shortcut.
      * @param parent The group the shortcut belongs to.
      * @param info The data structure describing the shortcut.
-     *
+ *
      * @return A View inflated from layoutResId.
      */
     View createShortcut(int layoutResId, ViewGroup parent, ShortcutInfo info) {
@@ -1498,7 +1498,7 @@ public class Launcher extends BaseActivity
      *
      * @param data The intent describing the shortcut.
      * @param screenId The position on screen where to create the shortcut.
-     */
+*/
     private void completeAddShortcut(Intent data, long container, long screenId, int cellX, int cellY) {
         int[] cellXY = mTmpAddItemCellCoordinates;
         int[] touchXY = mPendingAddInfo.dropPos;
@@ -1526,7 +1526,7 @@ public class Launcher extends BaseActivity
             dragObject.dragInfo = info;
             if (mWorkspace.addToExistingFolderIfNecessary(view, layout, cellXY, 0, dragObject, true)) {
                 return;
-            }
+ }
         } else if (touchXY != null) {
             // when dragging and dropping, just find the closest free spot
             int[] result = layout.findNearestVacantArea(touchXY[0], touchXY[1], 1, 1, cellXY);
@@ -1538,7 +1538,7 @@ public class Launcher extends BaseActivity
         if (!foundCellSpan) {
             showOutOfSpaceMessage(isHotseatLayout(layout));
             return;
-        }
+ }
 
         LauncherModel.addItemToDatabase(this, info, container, screenId, cellXY[0], cellXY[1], false);
 
@@ -1554,27 +1554,27 @@ public class Launcher extends BaseActivity
         int requiredWidth = minWidth + padding.left + padding.right;
         int requiredHeight = minHeight + padding.top + padding.bottom;
         return CellLayout.rectToCell(requiredWidth, requiredHeight, null);
-    }
+ }
 
     static int[] getSpanForWidget(Context context, AppWidgetProviderInfo info) {
         return getSpanForWidget(context, info.provider, info.minWidth, info.minHeight);
-    }
+ }
 
     static int[] getMinSpanForWidget(Context context, AppWidgetProviderInfo info) {
         return getSpanForWidget(context, info.provider, info.minResizeWidth, info.minResizeHeight);
-    }
+ }
 
     static int[] getSpanForWidget(Context context, PendingAddWidgetInfo info) {
         return getSpanForWidget(context, info.componentName, info.minWidth, info.minHeight);
-    }
+ }
 
     static int[] getMinSpanForWidget(Context context, PendingAddWidgetInfo info) {
         return getSpanForWidget(context, info.componentName, info.minResizeWidth, info.minResizeHeight);
-    }
+ }
 
     /**
      * Add a widget to the workspace.
-     *
+ *
      * @param appWidgetId The app widget id
      * @param screenId The position on screen where to create the widget.
      */
@@ -1582,7 +1582,7 @@ public class Launcher extends BaseActivity
             AppWidgetProviderInfo appWidgetInfo) {
         if (appWidgetInfo == null) {
             appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
-        }
+ }
 
         // Calculate the grid spans needed to fit this widget
         CellLayout layout = getCellLayout(container, screenId);
@@ -1658,7 +1658,7 @@ public class Launcher extends BaseActivity
                     launcherInfo.spanX, launcherInfo.spanY, isWorkspaceLocked());
 
             addWidgetToAutoAdvanceIfNeeded(launcherInfo.hostView, appWidgetInfo);
-        }
+ }
         resetAddInfo();
     }
 
@@ -1690,7 +1690,7 @@ public class Launcher extends BaseActivity
                     || LauncherAppsCompat.ACTION_MANAGED_PROFILE_REMOVED.equals(action)) {
                 getModel().forceReload();
             }
-        }
+ }
     };
 
     @Override
@@ -1718,7 +1718,7 @@ public class Launcher extends BaseActivity
     /**
      * Sets up transparent navigation and status bars in LMP. This method is a no-op for other
      * platform versions.
-     */
+*/
     @TargetApi(19)
     private void setupTransparentSystemBarsForLmp() {
         // TODO(sansid): use the APIs directly when compiling against L sdk.
@@ -1726,7 +1726,7 @@ public class Launcher extends BaseActivity
         // on the System bars.
         if (Utilities.isLmpOrAbove()) {
             try {
-                getWindow().getAttributes().systemUiVisibility |=
+                getWindow().getAttributes().systemUiVisibility|=
                         (View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
                 getWindow().clearFlags(
                         WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
@@ -1750,7 +1750,7 @@ public class Launcher extends BaseActivity
             } catch (InvocationTargetException e) {
                 Log.w(TAG, "InvocationTargetException while setting up transparent bars");
             } finally {}
-        }
+ }
     }
 
     @Override
@@ -1838,7 +1838,7 @@ public class Launcher extends BaseActivity
                 int i = 0;
                 for (View key : mWidgetsToAdvance.keySet()) {
                     final View v = key.findViewById(mWidgetsToAdvance.get(key).autoAdvanceViewId);
-                    final int delay = mAdvanceStagger * i;
+                    final int delay = mAdvanceStagger *i;
                     if (v instanceof Advanceable) {
                         postDelayed(new Runnable() {
                             public void run() {
@@ -1850,7 +1850,7 @@ public class Launcher extends BaseActivity
                 }
                 sendAdvanceMessage(mAdvanceInterval);
             }
-        }
+ }
     };
 
     void addWidgetToAutoAdvanceIfNeeded(View hostView, AppWidgetProviderInfo appWidgetInfo) {
@@ -1878,39 +1878,39 @@ public class Launcher extends BaseActivity
     void showOutOfSpaceMessage(boolean isHotseatLayout) {
         int strId = (isHotseatLayout ? R.string.hotseat_out_of_space : R.string.out_of_space);
         Toast.makeText(this, getString(strId), Toast.LENGTH_SHORT).show();
-    }
+ }
 
     public DragLayer getDragLayer() {
         return mDragLayer;
-    }
+ }
 
     public Workspace getWorkspace() {
         return mWorkspace;
-    }
+ }
 
     public Hotseat getHotseat() {
         return mHotseat;
-    }
+ }
 
     public ViewGroup getOverviewPanel() {
         return mOverviewPanel;
-    }
+ }
 
     public SearchDropTargetBar getSearchBar() {
         return mSearchDropTargetBar;
-    }
+ }
 
     public LauncherAppWidgetHost getAppWidgetHost() {
         return mAppWidgetHost;
-    }
+ }
 
     public LauncherModel getModel() {
         return mModel;
-    }
+ }
 
     protected SharedPreferences getSharedPrefs() {
         return mSharedPrefs;
-    }
+ }
 
     public void closeSystemDialogs() {
         getWindow().closeAllPanels();
@@ -1942,7 +1942,7 @@ public class Launcher extends BaseActivity
             if (mWorkspace == null) {
                 // Can be cases where mWorkspace is null, this prevents a NPE
                 return;
-            }
+ }
             FolderBase openFolder = mWorkspace.getOpenFolder();
             // In all these cases, only animate if we're already on home
             mWorkspace.exitWidgetResizeMode();
@@ -1954,7 +1954,7 @@ public class Launcher extends BaseActivity
             if (isAllAppListViewVisile())
             	mAllAppListView.animateClose();
             exitSpringLoadedDragMode();
-            
+  
             // If we are already on home, then just animate back to the workspace,
             // otherwise, just wait until onResume to set the state back to Workspace
             if (alreadyOnHome) {
@@ -2002,7 +2002,7 @@ public class Launcher extends BaseActivity
         super.onRestoreInstanceState(state);
         for (int page : mSynchronouslyBoundPages) {
             mWorkspace.restoreInstanceStateForChild(page);
-        }
+ }
     }
 
     @Override
@@ -2046,7 +2046,7 @@ public class Launcher extends BaseActivity
             outState.putInt("apps_customize_currentIndex", currentIndex);
         }
         outState.putSerializable(RUNTIME_STATE_VIEW_IDS, mItemIdToViewId);
-    }
+ }
 
     @Override
     public void onDestroy() {
@@ -2082,7 +2082,7 @@ public class Launcher extends BaseActivity
         // to prevent leaking Launcher activities on orientation change.
         if (mModel != null) {
             mModel.unbindItemInfosAndClearQueuedBindRunnables();
-        }
+ }
 
         getContentResolver().unregisterContentObserver(mWidgetObserver);
         unregisterReceiver(mCloseSystemDialogsReceiver);
@@ -2114,7 +2114,7 @@ public class Launcher extends BaseActivity
     /**
      * Indicates that we want global search for this activity by setting the globalSearch argument
      * for {@link #startSearch} to true.
-     */
+*/
     @Override
     public void startSearch(String initialQuery, boolean selectInitialQuery, Bundle appSearchData, boolean globalSearch) {
 
@@ -2142,7 +2142,7 @@ public class Launcher extends BaseActivity
     /**
      * Start a text search.
      *
-     * @return {@code true} if the search will start immediately, so any further keypresses will be
+     * @return {@code true} if the search will start immediately, so any further keypresses willbe
      *         handled directly by the search UI. {@code false} if {@link Launcher} should continue
      *         to buffer keypresses.
      */
@@ -2170,15 +2170,15 @@ public class Launcher extends BaseActivity
             appSearchData = new Bundle();
         } else {
             appSearchData = new Bundle(appSearchData);
-        }
+ }
         // Set source to package name of app that starts global search, if not set already.
         if (!appSearchData.containsKey("source")) {
             appSearchData.putString("source", getPackageName());
-        }
+ }
         intent.putExtra(SearchManager.APP_DATA, appSearchData);
         if (!TextUtils.isEmpty(initialQuery)) {
             intent.putExtra(SearchManager.QUERY, initialQuery);
-        }
+ }
         if (selectInitialQuery) {
             intent.putExtra(SearchManager.EXTRA_SELECT_QUERY, selectInitialQuery);
         }
@@ -2210,7 +2210,7 @@ public class Launcher extends BaseActivity
             }
         }
         return false;
-    }
+ }
 
     @Override
     public boolean onSearchRequested() {
@@ -2258,7 +2258,7 @@ public class Launcher extends BaseActivity
     void addAppWidgetImpl(final int appWidgetId, final ItemInfo info, final AppWidgetHostView boundWidget,
             final AppWidgetProviderInfo appWidgetInfo) {
         addAppWidgetImpl(appWidgetId, info, boundWidget, appWidgetInfo, 0);
-    }
+ }
 
     void addAppWidgetImpl(final int appWidgetId, final ItemInfo info, final AppWidgetHostView boundWidget,
             final AppWidgetProviderInfo appWidgetInfo, int delay) {
@@ -2278,11 +2278,11 @@ public class Launcher extends BaseActivity
                     // Exit spring loaded mode if necessary after adding the widget
                     exitSpringLoadedDragModeDelayed(true, EXIT_SPRINGLOADED_MODE_SHORT_TIMEOUT, null);
                 }
-            };
+};
             completeAddAppWidget(appWidgetId, info.container, info.screenId, boundWidget, appWidgetInfo);
             mWorkspace.removeExtraEmptyScreenDelayed(true, onComplete, delay, false);
         }
-    }
+ }
 
     protected void moveToCustomContentScreen(boolean animate) {
         // Close any folders that may be open.
@@ -2334,11 +2334,11 @@ public class Launcher extends BaseActivity
         if (cell != null) {
             mPendingAddInfo.cellX = cell[0];
             mPendingAddInfo.cellY = cell[1];
-        }
+ }
         if (span != null) {
             mPendingAddInfo.spanX = span[0];
             mPendingAddInfo.spanY = span[1];
-        }
+ }
 
         AppWidgetHostView hostView = info.boundWidget;
         int appWidgetId;
@@ -2366,15 +2366,15 @@ public class Launcher extends BaseActivity
                 startActivityForResult(intent, REQUEST_BIND_APPWIDGET);
             }
         }
-    }
+ }
 
     void processShortcut(Intent intent) {
         Utilities.startActivityForResultSafely(this, intent, REQUEST_CREATE_SHORTCUT);
-    }
+ }
 
     void processWallpaper(Intent intent) {
         startActivityForResult(intent, REQUEST_PICK_WALLPAPER);
-    }
+ }
 
     /**
      * 创建文件夹
@@ -2426,7 +2426,7 @@ public class Launcher extends BaseActivity
                         return true;
                     }
                     break;
-            }
+ }
         } else if (event.getAction() == KeyEvent.ACTION_UP) {
             switch (event.getKeyCode()) {
                 case KeyEvent.KEYCODE_HOME:
@@ -2462,15 +2462,15 @@ public class Launcher extends BaseActivity
             // Back button is a no-op here, but give at least some feedback for the button press
             mWorkspace.showOutlinesTemporarily();
         }
-    }
+ }
 
     /**
      * Re-listen when widgets are reset.
-     */
+*/
     private void onAppWidgetReset() {
         if (mAppWidgetHost != null) {
             mAppWidgetHost.startListening();
-        }
+ }
     }
 
     /**
@@ -2494,7 +2494,7 @@ public class Launcher extends BaseActivity
                 mWorkspace.exitOverviewMode(true);
             }
             return;
-        }
+ }
 
         if (v instanceof CellLayout) {
             if (mWorkspace.isInOverviewMode()) {
@@ -2518,19 +2518,19 @@ public class Launcher extends BaseActivity
                 onClickPendingWidget((PendingAppWidgetHostView) v);
             }
         }
-    }
+ }
 
     public void onClickPagedViewIcon(View v) {
         startAppShortcutOrInfoActivity(v);
-    }
+ }
 
     public boolean onTouch(View v, MotionEvent event) {
         return false;
-    }
+ }
 
     /**
      * Event handler for the app widget view which has not fully restored.
-     */
+*/
     public void onClickPendingWidget(final PendingAppWidgetHostView v) {
         final LauncherAppWidgetInfo info = (LauncherAppWidgetInfo) v.getTag();
         if (v.isReadyForClickSetup()) {
@@ -2550,7 +2550,7 @@ public class Launcher extends BaseActivity
             showBrokenAppInstallDialog(packageName, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     startActivitySafely(v, LauncherModel.getMarketIntent(packageName), info);
-                }
+ }
             });
         } else {
             // Download has started.
@@ -2574,15 +2574,15 @@ public class Launcher extends BaseActivity
      * Event handler for the voice button
      *
      * @param v The view that was clicked.
-     */
+*/
     public void onClickVoiceButton(View v) {
     	if (true){
     		return;
-    	}
+	}
         v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 
         startVoice();
-    }
+ }
 
     public void startVoice() {
         try {
@@ -2598,7 +2598,7 @@ public class Launcher extends BaseActivity
             Intent intent = new Intent(RecognizerIntent.ACTION_WEB_SEARCH);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivitySafely(null, intent, "onClickVoiceButton");
-        }
+ }
     }
 
     /**
@@ -2606,7 +2606,7 @@ public class Launcher extends BaseActivity
      * mode.
      *
      * @param v The view that was clicked.
-     */
+*/
     protected void onClickAllAppsButton(View v) {
         if (LOGD) Log.d(TAG, "onClickAllAppsButton");
         if (isAllAppsVisible()) {
@@ -2614,7 +2614,7 @@ public class Launcher extends BaseActivity
         } else {
             showAllApps(true, AppsCustomizePagedView.ContentType.Applications, false);
         }
-    }
+ }
 
     private void showBrokenAppInstallDialog(final String packageName,
             DialogInterface.OnClickListener onSearchClickListener) {
@@ -2634,7 +2634,7 @@ public class Launcher extends BaseActivity
      * Event handler for an app shortcut click.
      *
      * @param v The view that was clicked. Must be a tagged with a {@link ShortcutInfo}.
-     */
+*/
     protected void onClickAppShortcut(final View v) {
         if (LOGD) Log.d(TAG, "onClickAppShortcut");
         Object tag = v.getTag();
@@ -2666,7 +2666,7 @@ public class Launcher extends BaseActivity
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             startAppShortcutOrInfoActivity(v);
-                        }
+ }
                     });
             return;
         }
@@ -2690,7 +2690,7 @@ public class Launcher extends BaseActivity
             if (shortcut.itemType != LauncherSettings.BaseLauncherColumns.ITEM_TYPE_SHORTCUT
             		|| (getPackageName().equals(shortcut.getPckName()) && !getString(R.string.all_apps_name).equals(shortcut.title))){
             	RecentUserAppInfo.updateData(this, shortcut.packName, shortcut.title.toString(), intent.toUri(0));
-            }
+ }
         } else if (tag instanceof AppInfo) {
             shortcut = null;
             intent = ((AppInfo) tag).intent;
@@ -2710,11 +2710,11 @@ public class Launcher extends BaseActivity
             mWaitingForResume = (BubbleTextView) v;
             mWaitingForResume.setStayPressed(true);
         }
-    }
+ }
 
     /**
      * Event handler for a folder icon click.
-     *
+ *
      * @param v The view that was clicked. Must be an instance of {@link FolderIcon}.
      */
     protected void onClickFolderIcon(View v) {
@@ -2730,7 +2730,7 @@ public class Launcher extends BaseActivity
         // If the folder info reports that the associated folder is open, then verify that
         // it is actually opened. There have been a few instances where this gets out of sync.
         if (info.opened && openFolder == null) {
-            Log.d(TAG, "Folder info marked as open, but associated folder is not open. Screen: " + info.screenId + " ("
+            Log.d(TAG, "Folder info marked as open, but associated folder is not open. Screen: " + info.screenId + "("
                     + info.cellX + ", " + info.cellY + ")");
             info.opened = false;
         }
@@ -2754,7 +2754,7 @@ public class Launcher extends BaseActivity
                     openFolder(folderIcon);
                 }
             }
-        }
+ }
     }
 
     /**
@@ -2782,7 +2782,7 @@ public class Launcher extends BaseActivity
     /**
      * Event handler for a click on the settings button that appears after a long press on the home
      * screen.
-     */
+*/
     protected void onClickSettingsButton(View v) {
         if (LOGD) Log.d(TAG, "onClickSettingsButton");
         Util.startSettings(this);
@@ -2806,15 +2806,15 @@ public class Launcher extends BaseActivity
                 public boolean onTouch(View v, MotionEvent event) {
                     if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
                         v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                    }
+ }
                     return false;
                 }
             };
-        }
+ }
         return mHapticFeedbackTouchListener;
     }
 
-    public void onDragStarted(View view) {}
+    public void onDragStarted(View view){}
 
     /**
      * Called when the user stops interacting with the launcher. This implies that the user is now
@@ -2842,7 +2842,7 @@ public class Launcher extends BaseActivity
         } catch (ActivityNotFoundException e) {
             Toast.makeText(this, R.string.activity_not_found, Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Unable to launch settings");
-        }
+ }
     }
 
     // returns true if the activity was started
@@ -2866,7 +2866,7 @@ public class Launcher extends BaseActivity
             exitDragMode();
             return true;
         }
-    }
+ }
 
     boolean startActivity(View v, Intent intent, Object tag) {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -2890,7 +2890,7 @@ public class Launcher extends BaseActivity
                                 R.anim.no_anim) : ActivityOptions.makeScaleUpAnimation(v, 0, 0, v.getMeasuredWidth(),
                                 v.getMeasuredHeight());
                 optsBundle = opts.toBundle();
-            }
+ }
 
             if (user == null || user.equals(UserHandleCompat.myUserHandle())) {
                 // Could be launching some bookkeeping activity
@@ -2898,7 +2898,7 @@ public class Launcher extends BaseActivity
             } else {
                 // TODO Component can be null when shortcuts are supported for secondary user
                 launcherApps.startActivityForProfile(intent.getComponent(), user, intent.getSourceBounds(), optsBundle);
-            }
+ }
             return true;
         } catch (SecurityException e) {
             Toast.makeText(this, R.string.activity_not_found, Toast.LENGTH_SHORT).show();
@@ -2914,7 +2914,7 @@ public class Launcher extends BaseActivity
         if (mIsSafeModeEnabled && !Utilities.isSystemApp(this, intent)) {
             Toast.makeText(this, R.string.safemode_shortcut_error, Toast.LENGTH_SHORT).show();
             return false;
-        }
+ }
         try {
             success = startActivity(v, intent, tag);
         } catch (ActivityNotFoundException e) {
@@ -2922,7 +2922,7 @@ public class Launcher extends BaseActivity
             Log.e(TAG, "Unable to launch. tag=" + tag + " intent=" + intent, e);
         }
         return success;
-    }
+ }
 
     /**
      * This method draws the FolderIcon to an ImageView and then adds and positions that ImageView
@@ -2974,7 +2974,7 @@ public class Launcher extends BaseActivity
         if (fi.getFolder() != null) {
             fi.getFolder().bringToFront();
         }
-    }
+ }
 
     private void growAndFadeOutFolderIcon(FolderIcon fi) {
         if (fi == null) return;
@@ -3074,7 +3074,7 @@ public class Launcher extends BaseActivity
             }
             closeFolder(folder);
         }
-    }
+ }
 
     void closeFolder(FolderBase folder) {
         folder.getInfo().opened = false;
@@ -3086,11 +3086,11 @@ public class Launcher extends BaseActivity
         }
         folder.animateClosed();
 
-        // Notify the accessibility manager that this folder "window" has disappeard and no
+        // Notify the accessibility manager that this folder "window" has disappeard andno
         // longer occludeds the workspace items
         getDragLayer().sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
         mCurrentFolder = null;
-    }
+ }
 
     public boolean onLongClick(View v) {
         if (!isDraggingEnabled()) return false;
@@ -3118,7 +3118,7 @@ public class Launcher extends BaseActivity
             longClickCellInfo = new CellLayout.CellInfo(v, info);;
             itemUnderLongClick = longClickCellInfo.cell;
             resetAddInfo();
-        }
+ }
 
         // The hotseat touch handling does not go through Workspace, and we always allow long press
         // on hotseat items.
@@ -3129,6 +3129,7 @@ public class Launcher extends BaseActivity
                 // User long pressed on empty space
                 mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
                         HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                //是否处于编辑模式，如果是编辑模式，长按进入屏幕排序模式
                 if (mWorkspace.isInOverviewMode()) {
                     mWorkspace.startReordering(v);
                 } else {
@@ -3142,19 +3143,19 @@ public class Launcher extends BaseActivity
                 if (!(itemUnderLongClick instanceof FolderBase || isAllAppsButton)) {
                     // User long pressed on an item
                     mWorkspace.startDrag(longClickCellInfo);
-                }
+ }
             }
         }
         return true;
-    }
+ }
 
     boolean isHotseatLayout(View layout) {
         return mHotseat != null && layout != null && (layout instanceof CellLayout) && (layout == mHotseat.getLayout());
-    }
+ }
 
     /**
      * Returns the CellLayout of the specified container at the specified screen.
-     */
+*/
     CellLayout getCellLayout(long container, long screenId) {
         if (container == LauncherSettings.Favorites.CONTAINER_HOTSEAT) {
             if (mHotseat != null) {
@@ -3170,7 +3171,7 @@ public class Launcher extends BaseActivity
     /**
      * 是否显示所有app界面（也就是第二屏）
      * @return
-     */
+*/
     public boolean isAllAppsVisible() {
         return (mState == State.APPS_CUSTOMIZE) || (mOnResumeState == State.APPS_CUSTOMIZE);
     }
@@ -3186,11 +3187,11 @@ public class Launcher extends BaseActivity
     }
 
     protected void changeWallpaperVisiblity(boolean visible) {
-        int wpflags = visible ? WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER : 0;
+        int wpflags = visible ? WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER :0;
         int curflags = getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER;
         if (wpflags != curflags) {
             getWindow().setFlags(wpflags, WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
-        }
+ }
         setWorkspaceBackground(visible);
     }
 
@@ -3198,7 +3199,7 @@ public class Launcher extends BaseActivity
         if (v instanceof LauncherTransitionable) {
             ((LauncherTransitionable) v).onLauncherTransitionPrepare(this, animated, toWorkspace);
         }
-    }
+ }
 
     private void dispatchOnLauncherTransitionStart(View v, boolean animated, boolean toWorkspace) {
         if (v instanceof LauncherTransitionable) {
@@ -3218,11 +3219,11 @@ public class Launcher extends BaseActivity
     private void dispatchOnLauncherTransitionEnd(View v, boolean animated, boolean toWorkspace) {
         if (v instanceof LauncherTransitionable) {
             ((LauncherTransitionable) v).onLauncherTransitionEnd(this, animated, toWorkspace);
-        }
+ }
 
         // Update the workspace transition step as well
         dispatchOnLauncherTransitionStep(v, 1f);
-    }
+ }
 
     /**
      * Things to test when changing the following seven functions. - Home from workspace - from
@@ -3254,7 +3255,7 @@ public class Launcher extends BaseActivity
             mStateAnimation.setDuration(0);
             mStateAnimation.cancel();
             mStateAnimation = null;
-        }
+ }
         
         boolean material = Utilities.isLmpOrAbove();
 
@@ -3281,24 +3282,28 @@ public class Launcher extends BaseActivity
             mAppsCustomizeTabHost.setContentTypeImmediate(contentType);
         }
 
+        final AppsCustomizePagedView content =
+                (AppsCustomizePagedView) toView.findViewById(R.id.apps_customize_pane_content);
+        content.setPageBackgroundsVisible(true);
+
         // If for some reason our views aren't initialized, don't animate
         boolean initialized = getAllAppsButton() != null;
-
         if (animated && initialized) {
             mStateAnimation = LauncherAnimUtils.createAnimatorSet();
-            final AppsCustomizePagedView content =
-                    (AppsCustomizePagedView) toView.findViewById(R.id.apps_customize_pane_content);
 
             final View page = content.getPageAt(content.getCurrentPage());
             final View revealView = toView.findViewById(R.id.fake_page);
 
             final float initialPanelAlpha = 1f;
 
+            //是否是系统小部件界面
             final boolean isWidgetTray = contentType == AppsCustomizePagedView.ContentType.Widgets;
             if (isWidgetTray) {
-                revealView.setBackground(res.getDrawable(R.drawable.quantum_panel_dark));
+//                revealView.setBackground(res.getDrawable(R.drawable.quantum_panel_dark));
+                revealView.setBackground(res.getDrawable(R.color.alpha_black_1_5));
             } else {
-                revealView.setBackground(res.getDrawable(R.drawable.quantum_panel));
+//                revealView.setBackground(res.getDrawable(R.drawable.quantum_panel));
+                revealView.setBackground(res.getDrawable(R.color.alpha_black_1_5));
             }
 
             // Hide the real page background, and swap in the fake one
@@ -3318,7 +3323,7 @@ public class Launcher extends BaseActivity
             int[] allAppsToPanelDelta = Utilities.getCenterDeltaInScreenSpace(revealView, getAllAppsButton(), null);
 
             float alpha = 0;
-            float xDrift = 0;
+            float xDrift =0;
             float yDrift = 0;
             if (material) {
                 alpha = isWidgetTray ? 0.3f : 1f;
@@ -3326,7 +3331,7 @@ public class Launcher extends BaseActivity
                 xDrift = isWidgetTray ? 0 : allAppsToPanelDelta[0];
             } else {
                 yDrift = 2 * height / 3;
-                xDrift = 0;
+                xDrift =0;
             }
             final float initAlpha = alpha;
 
@@ -3362,7 +3367,7 @@ public class Launcher extends BaseActivity
                 itemsAlpha.setInterpolator(new AccelerateInterpolator(1.5f));
                 itemsAlpha.setStartDelay(itemsAlphaStagger);
                 mStateAnimation.play(itemsAlpha);
-            }
+ }
 
             View pageIndicators = toView.findViewById(R.id.apps_customize_page_indicator);
             pageIndicators.setAlpha(0.01f);
@@ -3394,7 +3399,7 @@ public class Launcher extends BaseActivity
                         if (!isWidgetTray) {
                             allApps.setVisibility(View.VISIBLE);
                         }
-                    }
+ }
                 });
                 mStateAnimation.play(reveal);
             }
@@ -3410,7 +3415,7 @@ public class Launcher extends BaseActivity
                     if (page != null) {
                         page.setLayerType(View.LAYER_TYPE_NONE, null);
                     }
-                    content.setPageBackgroundsVisible(true);
+//                    content.setPageBackgroundsVisible(true);
 
                     // Hide the search bar
                     if (mSearchDropTargetBar != null) {
@@ -3422,7 +3427,7 @@ public class Launcher extends BaseActivity
 
             if (workspaceAnim != null) {
                 mStateAnimation.play(workspaceAnim);
-            }
+ }
 
             dispatchOnLauncherTransitionPrepare(fromView, animated, false);
             dispatchOnLauncherTransitionPrepare(toView, animated, false);
@@ -3446,11 +3451,11 @@ public class Launcher extends BaseActivity
                                     attached = v.isAttachedToWindow();
                                 }
                                 if (attached) v.buildLayer();
-                            }
+ }
                         }
                     }
                     mStateAnimation.start();
-                }
+ }
             };
             toView.bringToFront();
             toView.setVisibility(View.VISIBLE);
@@ -3490,7 +3495,7 @@ public class Launcher extends BaseActivity
             mStateAnimation.setDuration(0);
             mStateAnimation.cancel();
             mStateAnimation = null;
-        }
+ }
 
         boolean material = Utilities.isLmpOrAbove();
         Resources res = getResources();
@@ -3544,9 +3549,11 @@ public class Launcher extends BaseActivity
                 final boolean isWidgetTray = contentType == AppsCustomizePagedView.ContentType.Widgets;
 
                 if (isWidgetTray) {
-                    revealView.setBackground(res.getDrawable(R.drawable.quantum_panel_dark));
+//                    revealView.setBackground(res.getDrawable(R.drawable.quantum_panel_dark));
+                    revealView.setBackground(res.getDrawable(R.color.alpha_black_1_5));
                 } else {
-                    revealView.setBackground(res.getDrawable(R.drawable.quantum_panel));
+//                    revealView.setBackground(res.getDrawable(R.drawable.quantum_panel));
+                    revealView.setBackground(res.getDrawable(R.color.alpha_black_1_5));
                 }
 
                 int width = revealView.getMeasuredWidth();
@@ -3568,7 +3575,7 @@ public class Launcher extends BaseActivity
                     xDrift = isWidgetTray ? 0 : allAppsToPanelDelta[0];
                 } else {
                     yDrift = 5 * height / 4;
-                    xDrift = 0;
+                    xDrift =0;
                 }
 
                 revealView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -3628,7 +3635,7 @@ public class Launcher extends BaseActivity
                 if (material) {
                     if (!isWidgetTray) {
                         allAppsButton.setVisibility(View.INVISIBLE);
-                    }
+ }
                     int allAppsButtonSize =
                             LauncherAppState.getInstance().getDynamicGrid().getDeviceProfile().allAppsButtonVisualSize;
                     float finalRadius = isWidgetTray ? 0 : allAppsButtonSize / 2;
@@ -3644,7 +3651,7 @@ public class Launcher extends BaseActivity
                             revealView.setVisibility(View.INVISIBLE);
                             if (!isWidgetTray) {
                                 allAppsButton.setVisibility(View.VISIBLE);
-                            }
+ }
                         }
                     });
 
@@ -3664,7 +3671,7 @@ public class Launcher extends BaseActivity
                     dispatchOnLauncherTransitionEnd(toView, animated, true);
                     if (onCompleteRunnable != null) {
                         onCompleteRunnable.run();
-                    }
+ }
 
                     revealView.setLayerType(View.LAYER_TYPE_NONE, null);
                     if (page != null) {
@@ -3676,7 +3683,7 @@ public class Launcher extends BaseActivity
                     for (int i = 0; i < count; i++) {
                         View child = content.getChildAt(i);
                         child.setVisibility(View.VISIBLE);
-                    }
+ }
 
                     // Reset page transforms
                     if (page != null) {
@@ -3728,7 +3735,7 @@ public class Launcher extends BaseActivity
                 workspaceAnim.start();
             }
         }
-    }
+ }
 
     @Override
     public void onTrimMemory(int level) {
@@ -3736,15 +3743,15 @@ public class Launcher extends BaseActivity
         if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) {
             mAppsCustomizeTabHost.onTrimMemory();
         }
-    }
+ }
     
     /**
 	 * 隐藏当前页面标识
-	 */
+*/
 	void hideDockDivider() {
 		if (mWorkspace.getPageIndicator() != null) {
 			mWorkspace.getPageIndicator().setVisibility(View.INVISIBLE);
-		}
+	}
 	}
 
 	/**
@@ -3780,7 +3787,7 @@ public class Launcher extends BaseActivity
             // Set focus to the AppsCustomize button
             if (mAllAppsButton != null) {
                 mAllAppsButton.requestFocus();
-            }
+ }
         }
 
         // Change the state *after* we've called all the transition code
@@ -3804,7 +3811,7 @@ public class Launcher extends BaseActivity
     }
 
     public void onWorkspaceShown(boolean animated) {}
-    
+  
     /**
      * 显示所有软件界面（也就是第二屏）
      * @param animated
@@ -3816,7 +3823,7 @@ public class Launcher extends BaseActivity
 
         if (resetPageToZero) {
             mAppsCustomizeTabHost.reset();
-        }
+ }
         showAppsCustomizeHelper(animated, false, contentType);
         mAppsCustomizeTabHost.post(new Runnable() {
             @Override
@@ -3836,7 +3843,7 @@ public class Launcher extends BaseActivity
 
         // Send an accessibility event to announce the context change
         getWindow().getDecorView().sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
-    }
+ }
 
     //在系统小部件页面，长按小部件，执行这个方法进入小部件的拖拽模式
     void enterSpringLoadedDragMode() {
@@ -3844,7 +3851,7 @@ public class Launcher extends BaseActivity
             hideAppsCustomizeHelper(Workspace.State.SPRING_LOADED, true, true, null);
             mState = State.APPS_CUSTOMIZE_SPRING_LOADED;
         }
-    }
+ }
     //松开拖动的系统小部件，退出小部件拖拽模式
     void exitSpringLoadedDragModeDelayed(final boolean successfulDrop, int delay, final Runnable onCompleteRunnable) {
     	if (mState != State.APPS_CUSTOMIZE_SPRING_LOADED) return;
@@ -3860,7 +3867,7 @@ public class Launcher extends BaseActivity
                 } else {
                     exitSpringLoadedDragMode();
                 }
-            }
+ }
         }, delay);
     }
 
@@ -3872,19 +3879,19 @@ public class Launcher extends BaseActivity
             mState = State.APPS_CUSTOMIZE;
         }
         // Otherwise, we are not in spring loaded mode, so don't do anything.
-    }
+ }
 
     void lockAllApps() {
         // TODO
-    }
+ }
 
     void unlockAllApps() {
         // TODO
-    }
+ }
 
     /**
      * Hides the hotseat area.
-     */
+*/
     void hideHotseat(boolean animated) {
         if (!LauncherAppState.getInstance().isScreenLarge()) {
             if (animated) {
@@ -3892,7 +3899,7 @@ public class Launcher extends BaseActivity
                     int duration = 0;
                     if (mSearchDropTargetBar != null) {
                         duration = mSearchDropTargetBar.getTransitionOutDuration();
-                    }
+ }
                     mHotseat.animate().alpha(0f).setDuration(duration);
                 }
             } else {
@@ -3904,11 +3911,11 @@ public class Launcher extends BaseActivity
     /**
      * Add an item from all apps or customize onto the given workspace screen. If layout is null,
      * add to the current screen.
-     */
+*/
     void addExternalItemToScreen(ItemInfo itemInfo, final CellLayout layout) {
         if (!mWorkspace.addExternalItemToScreen(itemInfo, layout)) {
             showOutOfSpaceMessage(isHotseatLayout(layout));
-        }
+ }
     }
 
     /** Maps the current orientation to an index for referencing orientation correct global icons */
@@ -3920,7 +3927,7 @@ public class Launcher extends BaseActivity
             default:
                 return 0;
         }
-    }
+ }
 
     private Drawable getExternalPackageToolbarIcon(ComponentName activityName, String resourceName) {
         try {
@@ -3940,7 +3947,7 @@ public class Launcher extends BaseActivity
         } catch (Resources.NotFoundException nfe) {
             // This can happen if the activity defines an invalid drawable
             Log.w(TAG, "Failed to load toolbar icon from " + activityName.flattenToShortString(), nfe);
-        }
+ }
         return null;
     }
 
@@ -3968,7 +3975,7 @@ public class Launcher extends BaseActivity
             }
             return toolbarIcon.getConstantState();
         }
-    }
+ }
 
     // if successful in getting icon, return it; otherwise, set button to use default drawable
     private Drawable.ConstantState updateButtonWithIconFromExternalActivity(int buttonId, ComponentName activityName,
@@ -3984,11 +3991,11 @@ public class Launcher extends BaseActivity
             } else {
                 button.setImageDrawable(toolbarIcon);
             }
-        }
+ }
 
         return toolbarIcon != null ? toolbarIcon.getConstantState() : null;
 
-    }
+ }
 
     private void updateTextButtonWithDrawable(int buttonId, Drawable d) {
         TextView button = (TextView) findViewById(buttonId);
@@ -4008,7 +4015,7 @@ public class Launcher extends BaseActivity
             HolographicImageView view = (HolographicImageView) button;
             view.invalidatePressedFocusedStates();
         }
-    }
+ }
 
     public View getQsbBar() {
         if (mQsb == null) {
@@ -4016,7 +4023,7 @@ public class Launcher extends BaseActivity
             mSearchDropTargetBar.addView(mQsb);
             if (!Const.SEARCHA_VOICE_VISIBLE)
             	mQsb.setVisibility(View.GONE);
-        }
+ }
         return mQsb;
     }
 
@@ -4052,7 +4059,7 @@ public class Launcher extends BaseActivity
             updateVoiceButtonProxyVisible(false);
             return false;
         }
-    }
+ }
 
     protected void updateGlobalSearchIcon(Drawable.ConstantState d) {
         final View searchButtonContainer = findViewById(R.id.search_button_container);
@@ -4092,7 +4099,7 @@ public class Launcher extends BaseActivity
                 sVoiceSearchIcon[coi] =
                         updateButtonWithIconFromExternalActivity(R.id.voice_button, activityName,
                                 R.drawable.ic_home_voice_search_holo, TOOLBAR_ICON_METADATA_NAME);
-            }
+ }
             if (voiceButtonContainer != null) voiceButtonContainer.setVisibility(View.VISIBLE);
             voiceButton.setVisibility(View.VISIBLE);
             updateVoiceButtonProxyVisible(false);
@@ -4104,7 +4111,7 @@ public class Launcher extends BaseActivity
             updateVoiceButtonProxyVisible(false);
             return false;
         }
-    }
+ }
 
     protected void updateVoiceSearchIcon(Drawable.ConstantState d) {
         final View voiceButtonContainer = findViewById(R.id.voice_button_container);
@@ -4120,7 +4127,7 @@ public class Launcher extends BaseActivity
             voiceButtonProxy.setVisibility(visible ? View.VISIBLE : View.GONE);
             voiceButtonProxy.bringToFront();
         }
-    }
+ }
 
     /**
      * This is an overrid eot disable the voice button proxy. If disabled is true, then the voice
@@ -4128,7 +4135,7 @@ public class Launcher extends BaseActivity
      */
     public void disableVoiceButtonProxy(boolean disabled) {
         updateVoiceButtonProxyVisible(disabled);
-    }
+ }
 
     @Override
     public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
@@ -4140,7 +4147,7 @@ public class Launcher extends BaseActivity
             text.add(mAppsCustomizeTabHost.getContentTag());
         } else {
             text.add(getString(R.string.all_apps_home_button_label));
-        }
+ }
         return result;
     }
 
@@ -4152,15 +4159,15 @@ public class Launcher extends BaseActivity
         public void onReceive(Context context, Intent intent) {
             closeSystemDialogs();
         }
-    }
+ }
 
     /**
      * Receives notifications whenever the appwidgets are reset.
-     */
+*/
     private class AppWidgetResetObserver extends ContentObserver {
         public AppWidgetResetObserver() {
             super(new Handler());
-        }
+ }
 
         @Override
         public void onChange(boolean selfChange) {
@@ -4172,7 +4179,7 @@ public class Launcher extends BaseActivity
      * If the activity is currently paused, signal that we need to run the passed Runnable in
      * onResume.
      *
-     * This needs to be called from incoming places where resources might have been loaded while we
+     * This needs to be called from incoming places where resources might have been loaded whilewe
      * are paused. That is becaues the Configuration might be wrong when we're not running, and if
      * it comes back to what it was when we were paused, we are not restarted.
      *
@@ -4180,7 +4187,7 @@ public class Launcher extends BaseActivity
      *
      * @return true if we are currently paused. The caller might be able to skip some work in that
      *         case since we will come back again.
-     */
+*/
     private boolean waitUntilResume(Runnable run, boolean deletePreviousRunnables) {
         if (mPaused) {
             Log.i(TAG, "Deferring update until onResume");
@@ -4192,11 +4199,11 @@ public class Launcher extends BaseActivity
         } else {
             return false;
         }
-    }
+ }
 
     private boolean waitUntilResume(Runnable run) {
         return waitUntilResume(run, false);
-    }
+ }
 
     public void addOnResumeCallback(Runnable run) {
         mOnResumeCallbacks.add(run);

@@ -101,7 +101,8 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
 
     // We are disabling touch interaction of the widget region for factory ROM.
     private static final boolean DISABLE_TOUCH_INTERACTION = false;
-    private static final boolean DISABLE_TOUCH_SIDE_PAGES = true;
+    //是否可以点击屏幕的边缘，自动触发滑到下一页或上一页      false表示可以触发
+    private static final boolean DISABLE_TOUCH_SIDE_PAGES = false;
     private static final boolean DISABLE_FLING_TO_DELETE = true;
 
     public static final int INVALID_RESTORE_PAGE = -1001;
@@ -151,10 +152,11 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     private int[] mPageScrolls;   
 
     protected final static int TOUCH_STATE_REST = 0;
-    protected final static int TOUCH_STATE_SCROLLING = 1;
-    protected final static int TOUCH_STATE_PREV_PAGE = 2;
-    protected final static int TOUCH_STATE_NEXT_PAGE = 3;
-    protected final static int TOUCH_STATE_REORDERING = 4;
+    protected final static int TOUCH_STATE_SCROLLING = 1;  //滑动状态
+    //点击屏幕边缘，自动触发滑向前后页时
+    protected final static int TOUCH_STATE_PREV_PAGE = 2;  //滑向前一页状态
+    protected final static int TOUCH_STATE_NEXT_PAGE = 3;  //滑向后一页状态
+    protected final static int TOUCH_STATE_REORDERING = 4; //排序状态
 
     protected final static float ALPHA_QUANTIZE_LEVEL = 0.0001f;
 
@@ -238,7 +240,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     private boolean mReorderingStarted = false;
     // This variable's scope is for the duration of startReordering() and after the zoomIn()
     // animation after endReordering()
-    private boolean mIsReordering;
+    private boolean mIsReordering;   //是否正在排序
     // The runnable that settles the page after snapToPage and animateDragViewToOriginalPosition
     private int NUM_ANIMATIONS_RUNNING_BEFORE_ZOOM_OUT = 2;
     private int mPostReorderingPreZoomInRemainingAnimationCount;
@@ -316,7 +318,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
      * Initializes various states for this workspace.
      */
     protected void init() {
-        mDirtyPageContent = new ArrayList<Boolean>();
+        mDirtyPageContent = new ArrayList<>();
         mDirtyPageContent.ensureCapacity(32);
         mScroller = new LauncherScroller(getContext());
         setDefaultInterpolator(new ScrollInterpolator());
@@ -380,6 +382,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
 
     protected void onDetachedFromWindow() {
         // Unhook the page indicator
+        super.onDetachedFromWindow();
         mPageIndicator = null;
     }
 
@@ -2629,6 +2632,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         mIsReordering = false;
     }
 
+    //Workspace中的Celllayout，开始拖动排序
     public boolean startReordering(View v) {
         int dragViewIndex = indexOfChild(v);
 
@@ -3007,7 +3011,8 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     public boolean onHoverEvent(MotionEvent event) {
         return true;
     }
-    
+
+    //设置是否支持回弹效果
     public void setEffectOverScroll(boolean effectOverScroll){
 		mEffectOverScroll = effectOverScroll;
 		mAllowOverScroll = !mEffectOverScroll;

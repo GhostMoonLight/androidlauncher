@@ -1246,7 +1246,7 @@ public class LauncherModel extends BroadcastReceiver
     /**
      * Removes the specified items from the database
      * @param context
-     * @param item
+     * @param items
      */
     static void deleteItemsFromDatabase(Context context, final ArrayList<ItemInfo> items) {
         final ContentResolver cr = context.getContentResolver();
@@ -2152,16 +2152,30 @@ public class LauncherModel extends BroadcastReceiver
                                                 launcherApps.isActivityEnabledForProfile(cn, user);
 
                                         if (validComponent) {
+                                            //intent有效
                                             if (restored) {
                                                 // no special handling necessary for this item
                                                 restoredRows.add(id);
                                                 restored = false;
                                             }
                                         } else if (validPkg) {
+                                            //包名有效
                                             intent = null;
                                             if ((promiseType & ShortcutInfo.FLAG_AUTOINTALL_ICON) != 0) {
                                                 // We allow auto install apps to have their intent
                                                 // updated after an install.
+                                                intent = manager.getLaunchIntentForPackage(
+                                                        cn.getPackageName());
+                                                if (intent != null) {
+                                                    ContentValues values = new ContentValues();
+                                                    values.put(LauncherSettings.Favorites.INTENT,
+                                                            intent.toUri(0));
+                                                    String where = BaseColumns._ID + "= ?";
+                                                    String[] args = {Long.toString(id)};
+                                                    contentResolver.update(contentUri, values, where, args);
+                                                }
+                                            }else{
+                                               //包名有效，ComponentName无效，说明该应用的入口发生了变化，重新获取启动类
                                                 intent = manager.getLaunchIntentForPackage(
                                                         cn.getPackageName());
                                                 if (intent != null) {
@@ -2210,7 +2224,7 @@ public class LauncherModel extends BroadcastReceiver
                                                 itemsToRemove.add(id);
                                                 continue;
                                             }
-                                        } else if (isSdCardReady) {
+                                        } else if (isSdCardReady || !validPkg) {
                                             // Do not wait for external media load anymore.
                                             // Log the invalid package, and remove it
                                             Launcher.addDumpLog(TAG,

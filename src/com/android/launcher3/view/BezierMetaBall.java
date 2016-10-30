@@ -53,10 +53,10 @@ public class BezierMetaBall extends View {
     }
 
     private void init(){
-        mDefaultWidth = Util.dip2px(getContext(), 40);
-        mDefaultHeight = Util.dip2px(getContext(), 40);
-        mFirstCircleRadius = Util.dip2px(getContext(), 11);
-        mSecondCircleRadius = Util.dip2px(getContext(), 12);
+        mDefaultWidth = Util.dip2px(40);
+        mDefaultHeight = Util.dip2px(40);
+        mFirstCircleRadius = Util.dip2px(11);
+        mSecondCircleRadius = Util.dip2px(12);
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.FILL);

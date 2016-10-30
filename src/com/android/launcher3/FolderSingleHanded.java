@@ -85,7 +85,7 @@ public class FolderSingleHanded extends FolderBase {
         mScrollView = (SingleHandedView) findViewById(R.id.scroll_view);
         mScrollView.setFolder(this);
         mContent = (CellLayout) findViewById(R.id.folder_content);
-        mContent.setPadding(0, 0, 0, Util.dip2px(getContext(), 7));
+        mContent.setPadding(0, 0, 0, Util.dip2px(7));
 
         mContent.addView(mFocusIndicatorHandler, 0);
         mFocusIndicatorHandler.getLayoutParams().height = FocusIndicatorView.DEFAULT_LAYOUT_SIZE;
@@ -119,7 +119,7 @@ public class FolderSingleHanded extends FolderBase {
         mAutoScrollHelper = new FolderSingleHandedAutoScrollHelper(mScrollView);
         
         if (mLauncher.isFullScreen()){
-        	setPadding(0, mLauncher.getStatusBarHeight(), 0, Util.dip2px(getContext(), 6));
+        	setPadding(0, mLauncher.getStatusBarHeight(), 0, Util.dip2px(6));
         }
     }
     

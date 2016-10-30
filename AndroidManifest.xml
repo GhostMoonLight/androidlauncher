@@ -112,7 +112,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:theme="@style/Theme">
+            android:theme="@style/AppTheme.Wallpaper">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -265,6 +265,10 @@
             android:authorities="com.cuan.launcher.otherdb"
             android:exported="false">
         </provider>
+
+        <activity android:name="com.android.launcher3.demoactivity.MainActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

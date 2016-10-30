@@ -119,8 +119,8 @@ public class DeviceProfile {
     int hotseatIconSizePx;         // Hotseat中图标的大小
     int hotseatBarHeightPx;
     int hotseatAllAppsRank;
-    int allAppsNumRows;            // 应用行数  
-    int allAppsNumCols;            // 应用列数  
+    int allAppsNumRows;            // 抽屉页应用行数
+    int allAppsNumCols;            // 抽屉页用列数
     int searchBarSpaceWidthPx;
     int searchBarSpaceMaxWidthPx;
     int searchBarSpaceHeightPx;

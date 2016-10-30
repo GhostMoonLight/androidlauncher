@@ -52,6 +52,7 @@
     <color name="menu_bg">#FFFFFB</color>
     
     <color name="alpha_black_1">#19000000</color>
+    <color name="alpha_black_1.5">#27000000</color>
     <color name="alpha_black_2">#33000000</color>
     <color name="alpha_black_3">#4c000000</color>
     <color name="alpha_black_4">#66000000</color>
@@ -60,5 +61,9 @@
     <color name="alpha_black_7">#b2000000</color>
     <color name="alpha_black_8">#cc000000</color>
     <color name="alpha_black_9">#e5000000</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
 	
 </resources>

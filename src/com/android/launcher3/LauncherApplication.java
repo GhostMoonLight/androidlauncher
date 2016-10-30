@@ -14,6 +14,7 @@
 
 package com.android.launcher3;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
@@ -43,10 +44,13 @@ public class LauncherApplication extends Application {
         super.onCreate();
         Log.w(TAG, "LauncherApplication#onCreate");
         instance = this;
-        LauncherAppState.setApplicationContext(this);
-        LauncherAppState.getInstance();
-        CrashExceptionHandler.getInstance().init(getApplicationContext());
-        initImageLoader(this);
+		String procressName = getCurProcessName(this);
+		if ("com.cuan.launcher".equals(procressName)) {
+			LauncherAppState.setApplicationContext(this);
+			LauncherAppState.getInstance();
+			CrashExceptionHandler.getInstance().init(getApplicationContext());
+			initImageLoader(this);
+		}
     }
     
     public static LauncherApplication getInstance(){
@@ -119,5 +123,15 @@ public class LauncherApplication extends Application {
 		cacheFile.mkdirs();
 		strCacheDir = cacheFile.getAbsolutePath();
 		return strCacheDir;
+	}
+
+	private static String getCurProcessName(Context context) {
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context. ACTIVITY_SERVICE);
+		for (ActivityManager.RunningAppProcessInfo appProcess : activityManager.getRunningAppProcesses()) {
+			if ( appProcess. pid == android.os.Process. myPid()) {
+				return appProcess. processName;
+			}
+		}
+		return "";
 	}
 }

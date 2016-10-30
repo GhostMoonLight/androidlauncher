@@ -53,6 +53,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.FloatMath;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Choreographer;
@@ -1127,6 +1128,7 @@ public class Workspace extends SmoothPagedView
         return super.dispatchUnhandledMove(focused, direction);
     }
 
+    private float oldDistance;
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction() & MotionEvent.ACTION_MASK) {
@@ -1135,7 +1137,19 @@ public class Workspace extends SmoothPagedView
             mYDown = ev.getY();
             mTouchDownTime = System.currentTimeMillis();
             break;
-        case MotionEvent.ACTION_POINTER_UP:
+        case MotionEvent.ACTION_POINTER_DOWN:  //当屏幕上已经有一个点被按住，此时再按下其他点时触发。
+            oldDistance = spacing(ev);
+            break;
+        case MotionEvent.ACTION_POINTER_UP:   //当屏幕上有多个点被按住，松开其中一个点时触发（即非最后一个点被放开时）
+            //双指捏合进入编辑模式
+            float newDistance = spacing(ev);
+            int minDistance = getResources().getDisplayMetrics().heightPixels / 11;
+            if (oldDistance - newDistance > minDistance){
+                if(mState == State.NORMAL){
+                    enterOverviewMode();
+                }
+            }
+            break;
         case MotionEvent.ACTION_UP:
             if (mTouchState == TOUCH_STATE_REST) {
                 final CellLayout currentPage = (CellLayout) getChildAt(mCurrentPage);
@@ -1145,6 +1159,12 @@ public class Workspace extends SmoothPagedView
             }
         }
         return super.onInterceptTouchEvent(ev);
+    }
+
+    private float spacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return FloatMath.sqrt(x * x + y * y);
     }
 
     @Override

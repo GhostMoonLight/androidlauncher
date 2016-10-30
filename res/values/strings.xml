@@ -18,7 +18,7 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- General -->
-    <skip />
+    <skip/>
 
     <!-- URI used to import old favorites. [DO NOT TRANSLATE] -->
     <string name="old_launcher_provider_uri" translatable="false">content://com.android.launcher2.settings/favorites?notify=true</string>
@@ -70,7 +70,7 @@
     <string name="external_drop_widget_pick_title">Choose widget to create</string>
 
     <!-- Folders -->
-    <skip />
+    <skip/>
     <!-- Label of Folder name field in Rename folder dialog box -->
     <string name="rename_folder_label">Folder name</string>
     <!-- Title of dialog box -->
@@ -81,7 +81,7 @@
     <string name="cancel_action">Cancel</string>
 
     <!-- Shortcuts -->
-    <skip />
+    <skip/>
     <!-- Title of dialog box -->
     <string name="menu_item_add_item">Add to Home screen</string>
     <!-- Options in "Add to Home" dialog box; Title of the group containing the list of all apps -->
@@ -147,7 +147,7 @@ s -->
     <string name="help_url" translatable="false"></string>
 
     <!--  Strings for the contextual action bar (CAB) in All Apps -->
-    <skip />
+    <skip/>
     <!-- Describes the button for uninstalling the currently selected application.
          Text is not displayed, but provided for accessibility. [CHAR_LIMIT=none] -->
     <string name="cab_menu_delete_app">Uninstall app</string>
@@ -164,7 +164,7 @@ s -->
     <string name="cab_shortcut_selection_text">1 shortcut selected</string>
 
     <!-- Permissions: -->
-    <skip />
+    <skip/>
     <!-- Permission short label -->
     <string name="permlab_install_shortcut">install shortcuts</string>
     <!-- Permission description -->
@@ -187,7 +187,7 @@ s -->
         shortcuts in Home.</string>
 
     <!-- Widgets: -->
-    <skip />
+    <skip/>
 
     <!-- Text to show user in place of a gadget when we can't display it properly -->
     <string name="gadget_error_text">Problem loading widget</string>
@@ -205,7 +205,7 @@ s -->
     <string name="folder_hint_text">Unnamed Folder</string>
 
     <!-- Accessibility -->
-    <skip />
+    <skip/>
 
     <!-- The format string for Workspace descriptions [CHAR_LIMIT=none] -->
     <string name="workspace_description_format">Home screen %1$d</string>
@@ -306,9 +306,9 @@ s -->
     <string name="abandoned_promise_explanation">The app for this icon isn\'t installed.
         You can remove it, or search for the app and install it manually.
     </string>
-    
+
     <string name="uninstall_folder_text">This is non-empty folder and can\'t be deleted.</string>
-    
+
     <!-- Label on button to delete wallpaper(s) -->
     <string name="wallpaper_delete">Delete</string>
     <!-- Label on button in Wallpaper Picker to pick an image -->
@@ -317,7 +317,7 @@ s -->
     <string name="pick_wallpaper">Wallpapers</string>
     <!-- Title of activity for cropping wallpapers -->
     <string name="crop_wallpaper">Crop wallpaper</string>
-     <!-- Button label on Wallpaper picker screen; user selects this button to set a specific wallpaper -->
+    <!-- Button label on Wallpaper picker screen; user selects this button to set a specific wallpaper -->
     <string name="wallpaper_instructions">Set wallpaper</string>
     <!-- Error message when an image is selected as a wallpaper,
          but the wallpaper picker cannot load it -->
@@ -329,14 +329,14 @@ s -->
     <string name="wallpaper_load_fail">Couldn\'t load image as wallpaper</string>
     <string name="wallpaper_accessibility_name">Wallpaper %1$d of %2$d</string>
     <!-- Accessibility string used to announce that a wallpaper has been selected. -->
-    <string name="announce_selection">Selected <xliff:g id="label" example="Wallpaper 3 of 10">%1$s</xliff:g></string>
-	<plurals name="number_of_items_selected">
+    <string name="announce_selection">Selected <xliff:g example="Wallpaper 3 of 10" id="label">%1$s</xliff:g></string>
+    <plurals name="number_of_items_selected">
         <item quantity="zero">%1$d selected</item>
         <item quantity="one">%1$d selected</item>
         <item quantity="other">%1$d selected</item>
     </plurals>
-    
-	<string name="folder_system">系统工具</string>
+
+    <string name="folder_system">系统工具</string>
     <string name="folder_classify_1">金融理财</string>
     <string name="folder_classify_2">聊天社交</string>
     <string name="folder_classify_3">出行指南</string>
@@ -354,7 +354,7 @@ s -->
     <string name="folder_classify_10027">影音视听</string>
     <string name="folder_classify_1609">微信游戏</string>
     <string name="folder_other">其它</string>
-    <string name="all_apps_name">所有应用</string>	
+    <string name="all_apps_name">所有应用</string>
     <string name="crash_exception">程序遇到了未知的错误，即将重启!</string>
     <string name="time_format1" formatted="false">%d月%d日</string>
 </resources>

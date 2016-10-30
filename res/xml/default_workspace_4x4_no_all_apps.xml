@@ -12,7 +12,9 @@
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
-     limitations under the License.
+     limitations under the License.
+
+
 -->
 
 <favorites xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3" >
@@ -27,7 +29,8 @@
 
     <!--
     Hotseat (We use the screen as the position of the item in the hotseat) 
-    screen表示这个图标在Hotseat中的位置从左到右依次为0 1 2 3    -->
+    screen表示这个图标在Hotseat中的位置从左到右依次为0 1 2 3
+    -->
     <!-- Dialer, Contacts, [All Apps], Messaging, Browser -->
     <favorite
         launcher:container="-101"
@@ -62,6 +65,15 @@
             launcher:className="com.android.settings.Settings"
             launcher:packageName="com.android.settings" /> -->
     </folder>
+
+    <shortcut
+        launcher:container="-100"
+        launcher:screen="0"
+        launcher:x="0"
+        launcher:y="2"
+        launcher:uri="#Intent;component=com.cuan.launcher/com.android.launcher3.demoactivity.MainActivity;end"
+        launcher:icon="@com.cuan.launcher:drawable/all_apps"
+        launcher:title="@com.cuan.launcher:string/all_apps_name" />
     
     <!-- 时钟 -->
     <systemapp

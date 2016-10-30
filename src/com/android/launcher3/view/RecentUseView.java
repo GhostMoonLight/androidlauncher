@@ -40,7 +40,7 @@ public class RecentUseView extends FrameLayout{
 
     //初始化
     private void init() {
-    	realHeight = viewHeight = 2*getResources().getDimensionPixelOffset(R.dimen.folder_cell_height)+ Util.dip2px(getContext(), 7);
+    	realHeight = viewHeight = 2*getResources().getDimensionPixelOffset(R.dimen.folder_cell_height)+ Util.dip2px(7);
     }
 
     @Override

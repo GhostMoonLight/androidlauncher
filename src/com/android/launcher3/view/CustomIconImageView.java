@@ -1,26 +1,10 @@
 package com.android.launcher3.view;
 
-import java.util.Calendar;
-import java.util.Locale;
-
-import com.android.launcher3.Launcher.TimeChangeListener;
-import com.android.launcher3.LauncherAppState;
-import com.android.launcher3.ShortcutInfo;
-import com.android.launcher3.Utilities;
-import com.android.launcher3.utils.Util;
-import com.android.launcher3.wallpaper.BitmapUtils;
-import com.cuan.launcher.R;
-
-import android.R.color;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
@@ -28,6 +12,17 @@ import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import com.android.launcher3.ItemInfo;
+import com.android.launcher3.Launcher.TimeChangeListener;
+import com.android.launcher3.LauncherAppState;
+import com.android.launcher3.Utilities;
+import com.android.launcher3.utils.Util;
+import com.android.launcher3.wallpaper.BitmapUtils;
+import com.cuan.launcher.R;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * 支持动态日历，动态时钟的ImageView
@@ -58,7 +53,7 @@ public class CustomIconImageView extends ImageView implements TimeChangeListener
 	
 	@Override
 	public Drawable getDrawable() {
-		final ShortcutInfo info = (ShortcutInfo) getTag();
+		final ItemInfo info = (ItemInfo) getTag();
 		if ((isDynamicCalendar || isDynamicClock) && info != null){
 			return info.iconBg;
 		}
@@ -115,7 +110,7 @@ public class CustomIconImageView extends ImageView implements TimeChangeListener
 	}
 	
 	public void updateClockOrDate(){
-		final ShortcutInfo info = (ShortcutInfo) getTag();
+		final ItemInfo info = (ItemInfo) getTag();
 		Calendar sCalendar = Calendar.getInstance();
 		mHour = sCalendar.get(Calendar.HOUR_OF_DAY);
 		mMinute = sCalendar.get(Calendar.MINUTE);
@@ -161,7 +156,7 @@ public class CustomIconImageView extends ImageView implements TimeChangeListener
 			//画周
 			Bitmap weekBitmap = getWeekBitmap(mWeek);
 			startX = (int) ((getWidth() - weekBitmap.getWidth()) * 0.5f);
-			startY = -Util.dip2px(getContext(), 2);
+			startY = -Util.dip2px(2);
 			canvas.drawBitmap(weekBitmap, startX, startY, paint);
 			weekBitmap.recycle();
 			

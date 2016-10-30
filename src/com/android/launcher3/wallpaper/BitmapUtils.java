@@ -940,5 +940,46 @@ public class BitmapUtils {
 //			} catch (Exception ex) {
 //			}
 		}			
-	}	
+	}
+
+	//计算适当的缩放比例
+	private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+		// 获得内存中图片的宽高
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
+
+			// 计算出一个数值，必须符合为2的幂（1，2，4，8，tec），赋值给inSampleSize
+			// 图片宽高应大于期望的宽高的时候，才进行计算
+			while ((halfHeight / inSampleSize) > reqHeight
+					&& (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
+
+		return inSampleSize;
+	}
+
+	//从资源文件夹中加载需要宽高的图片
+	public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+														 int reqWidth, int reqHeight) {
+
+		// 第一次解析 inJustDecodeBounds=true 只是用来获取bitmap在内存中的尺寸和类型，系统并不会为其分配内存，
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeResource(res, resId, options);
+
+		// 计算出一个数值
+		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+		// 根据inSampleSize 数值来解析bitmap
+		options.inJustDecodeBounds = false;
+		return BitmapFactory.decodeResource(res, resId, options);
+	}
+
 }

@@ -169,13 +169,28 @@ public class BubbleTextView extends RelativeLayout implements OnClickListener {
         LauncherAppState app = LauncherAppState.getInstance();
         DeviceProfile grid = app.getDynamicGrid().getDeviceProfile();
 
-        Drawable topDrawable = Utilities.createIconDrawable(info.iconBitmap);
-        topDrawable.setBounds(0, 0, grid.allAppsIconSizePx, grid.allAppsIconSizePx);
-        setCompoundDrawablesWithIntrinsicBounds(topDrawable);
-        mTextView.setText(info.title);
+        Bitmap b = info.iconBitmap;
+        FastBitmapDrawable iconDrawable;
+        info.resName = IconCache.getDefaultIconResourceName(getContext(), info.title.toString(), ItemInfo.getPackageName(info.getIntent()), PackageDbUtil.getInstance(getContext()).getTargetPackages(ItemInfo.getPackageName(info.getIntent())));
+
+        if (!TextUtils.isEmpty(info.resName)){
+            Bitmap bitmap = BitmapUtils.getBitmap(info.resName);
+            if(bitmap == null){
+                bitmap = b;
+            }
+            iconDrawable = Utilities.createIconDrawable(bitmap);
+        }else{
+            iconDrawable = Utilities.createIconDrawable(b);
+        }
+        info.themeDrawable = iconDrawable;
+        setCompoundDrawablesWithIntrinsicBounds(info.themeDrawable);
+
         if (info.contentDescription != null) {
             setContentDescription(info.contentDescription);
         }
+        mImageView.setResourceName(info.resName);
+        mImageView.setTag(info);
+        mTextView.setText(info.title);
         setTag(info);
     }
     
@@ -203,23 +218,24 @@ public class BubbleTextView extends RelativeLayout implements OnClickListener {
 	}
     
     public Drawable getCompoundDrawable() {
-    	ShortcutInfo info = (ShortcutInfo) getTag();
     	Drawable drawable = mImageView.getDrawable();
-    	if (drawable == null){
-	    	if("ic_alarmclock".equals(info.resName)){
-	    		if (iconBg == null){
-	    			Bitmap bitmap = BitmapUtils.getBitmap("ic_alarmclock_bg");
-	    			iconBg = Utilities.createIconDrawable(bitmap);
-	    		}
-				return iconBg;
-			} else if ("ic_calendar".equals(info.resName)){
-				if (iconBg == null){
-					Bitmap bitmap = BitmapUtils.getBitmap("ic_calendar_bg");
-	    			iconBg = Utilities.createIconDrawable(bitmap);
-				}
-				return iconBg;
-			}
-    	}
+
+        ItemInfo info = (ItemInfo) getTag();
+        if (drawable == null) {
+            if ("ic_alarmclock".equals(info.resName)) {
+                if (iconBg == null) {
+                    Bitmap bitmap = BitmapUtils.getBitmap("ic_alarmclock_bg");
+                    iconBg = Utilities.createIconDrawable(bitmap);
+                }
+                return iconBg;
+            } else if ("ic_calendar".equals(info.resName)) {
+                if (iconBg == null) {
+                    Bitmap bitmap = BitmapUtils.getBitmap("ic_calendar_bg");
+                    iconBg = Utilities.createIconDrawable(bitmap);
+                }
+                return iconBg;
+            }
+        }
 		return drawable;
 	}
     

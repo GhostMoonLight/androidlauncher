@@ -440,6 +440,21 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     @Override
     public void onClick(View v) {
         // When we have exited all apps or are in transition, disregard clicks
+
+        if (mLauncher.isAllAppsVisible()
+                && !mLauncher.getWorkspace().isSwitchingState()
+                && v instanceof AppsCustomizeCellLayout){
+            mLauncher.showWorkspace(true);
+            return;
+        }
+
+        if (mLauncher.isAllAppsVisible()
+                && !mLauncher.getWorkspace().isSwitchingState()
+                && v instanceof PagedViewGridLayout){
+            mLauncher.showWorkspace(true);
+            return;
+        }
+
         if (!mLauncher.isAllAppsVisible()
                 || mLauncher.getWorkspace().isSwitchingState()
                 || !(v instanceof PagedViewWidget)) return;
@@ -923,6 +938,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         int heightSpec = MeasureSpec.makeMeasureSpec(mContentHeight, MeasureSpec.AT_MOST);
         layout.measure(widthSpec, heightSpec);
 
+        //抽屉页，背景颜色
         Drawable bg = getContext().getResources().getDrawable(R.drawable.quantum_panel);
         if (bg != null) {
             bg.setAlpha(mPageBackgroundsVisible ? 255: 0);
@@ -930,6 +946,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         }
 
         setVisibilityOnChildren(layout, View.VISIBLE);
+        layout.setOnClickListener(this);
     }
 
     public void setPageBackgroundsVisible(boolean visible) {
@@ -1093,6 +1110,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             layout.setBackground(bg);
         }
         layout.measure(widthSpec, heightSpec);
+        layout.setOnClickListener(this);
     }
 
     public void syncWidgetPageItems(final int page, final boolean immediate) {

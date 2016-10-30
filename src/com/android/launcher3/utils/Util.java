@@ -1,14 +1,18 @@
 package com.android.launcher3.utils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -20,46 +24,68 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Util {
-	
-	/**
-	 * 将dip转成px
-	 */
-	public static int dip2px(Context context, float dip) {
-		float scale = context.getResources().getDisplayMetrics().density;
-		return (int) (dip * scale + 0.5f);
-	}
 
-	/**
-	 * px转成dip
-	 */
-	public static int px2dip(Context context, float pxValue) {
-		float scale = context.getResources().getDisplayMetrics().density;
-		return (int) (pxValue / scale + 0.5f);
-	}
+    /**
+     * 获取屏幕高度
+     *
+     * @return 屏幕高度
+     */
+    public static int getScreenH() {
+        DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
+        return dm.heightPixels;
+    }
 
-	/**
-	 * 将px值转换为sp值，保证文字大小不变
-	 */
-	public static int px2sp(Context context, float pxValue) {
-		final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-		return (int) (pxValue / fontScale + 0.5f);
-	}
+    /**
+     * 获取屏幕宽度
+     *
+     * @return 屏幕宽度
+     */
+    public static int getScreenW() {
+        DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
+        return dm.widthPixels;
+    }
 
-	/**
-	 * 将sp值转换为px值，保证文字大小不变
-	 */
-	public static int sp2px(Context context, float spValue) {
-		final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-		return (int) (spValue * fontScale + 0.5f);
-	}
+    /**
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     */
+    public static int dip2px(float dpValue) {
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpValue, Resources.getSystem().getDisplayMetrics());
+        return (int) px;
+    }
+
+    /**
+     * 根据手机的分辨率从 px 的单位 转成为 dp
+     */
+    public static int px2dip(float px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
+
+    /**
+     * 根据手机的分辨率从 px 的单位 转成为 sp
+     */
+    public static int px2sp(float px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().scaledDensity);
+    }
+
+    /**
+     * 根据手机的分辨率从 sp 的单位 转成为 px(像素)
+     */
+    public static int sp2px(float spValue) {
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                spValue, Resources.getSystem().getDisplayMetrics());
+        return (int) px;
+    }
 	
 	/**
 	 * 打开设置界面
@@ -405,31 +431,129 @@ public class Util {
 	}
 	
 	public static String getWeek() {
-		String Week = "星期";
-		Calendar c = Calendar.getInstance();
-		
-		if (c.get(Calendar.DAY_OF_WEEK) == 1) {
-			Week += "天";
-		}
-		if (c.get(Calendar.DAY_OF_WEEK) == 2) {
-			Week += "一";
-		}
-		if (c.get(Calendar.DAY_OF_WEEK) == 3) {
-			Week += "二";
-		}
-		if (c.get(Calendar.DAY_OF_WEEK) == 4) {
-			Week += "三";
-		}
-		if (c.get(Calendar.DAY_OF_WEEK) == 5) {
-			Week += "四";
-		}
-		if (c.get(Calendar.DAY_OF_WEEK) == 6) {
-			Week += "五";
-		}
-		if (c.get(Calendar.DAY_OF_WEEK) == 7) {
-			Week += "六";
-		}
-
-		return Week;
+//		String Week = "星期";
+//		Calendar c = Calendar.getInstance();
+//
+//		if (c.get(Calendar.DAY_OF_WEEK) == 1) {
+//			Week += "天";
+//		}
+//		if (c.get(Calendar.DAY_OF_WEEK) == 2) {
+//			Week += "一";
+//		}
+//		if (c.get(Calendar.DAY_OF_WEEK) == 3) {
+//			Week += "二";
+//		}
+//		if (c.get(Calendar.DAY_OF_WEEK) == 4) {
+//			Week += "三";
+//		}
+//		if (c.get(Calendar.DAY_OF_WEEK) == 5) {
+//			Week += "四";
+//		}
+//		if (c.get(Calendar.DAY_OF_WEEK) == 6) {
+//			Week += "五";
+//		}
+//		if (c.get(Calendar.DAY_OF_WEEK) == 7) {
+//			Week += "六";
+//		}
+//
+//		return Week;
+        return getDataTime("EEEE");
 	}
+
+	/**
+	 * 注：格式化字符串存在区分大小写
+	 * 对于创建SimpleDateFormat传入的参数：EEEE代表星期，如“星期四”；
+	 * MMMM代表中文月份，如“十一月”；MM代表月份，如“11”；
+	 * yyyy代表年份，如“2010”；dd代表天，如“25”
+	 * @return
+     */
+	public static String getWeeK(){
+		Date date=new Date();
+		SimpleDateFormat dateFm = new SimpleDateFormat("EEEE");
+		dateFm.format(date);
+		return dateFm.format(date);
+	}
+
+    /**
+     * 指定格式返回当前系统时间
+     */
+    public static String getDataTime(String format) {
+        SimpleDateFormat df = new SimpleDateFormat(format, Locale.getDefault());
+        return df.format(new Date());
+    }
+
+    /**
+     * 返回当前系统时间(格式以HH:mm形式)
+     */
+    public static String getDataTime() {
+        return getDataTime("HH:mm");
+    }
+
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
+    public static boolean isToday(long when) {
+        android.text.format.Time time = new android.text.format.Time();
+        time.set(when);
+
+        int thenYear = time.year;
+        int thenMonth = time.month;
+        int thenMonthDay = time.monthDay;
+
+        time.set(System.currentTimeMillis());
+        return (thenYear == time.year)
+                && (thenMonth == time.month)
+                && (time.monthDay == thenMonthDay);
+    }
+
+    public static String getFriendlyTime2(Date date) {
+        String showStr = "";
+        if (isToday(date.getTime())) {
+            showStr = "今天";
+        } else {
+            showStr = getFriendlyTime(date);
+        }
+        return showStr;
+    }
+
+    /**
+     * 转换日期到指定格式方便查看的描述说明
+     *
+     * @return 几秒前，几分钟前，几小时前，几天前，几个月前，几年前，很久以前（10年前）,如果出现之后的时间，则提示：未知
+     */
+    public static String getFriendlyTime(Date date) {
+        String showStr = "";
+        long yearSeconds = 31536000L;//365 * 24 * 60 * 60;
+        long monthSeconds = 2592000L;//30 * 24 * 60 * 60;
+        long daySeconds = 86400L;//24 * 60 * 60;
+        long hourSeconds = 3600L;//60 * 60;
+        long minuteSeconds = 60L;
+
+        long time = (System.currentTimeMillis() - date.getTime()) / 1000;
+        if (time <= 50) {
+            showStr = "刚刚";
+            return showStr;
+        }
+        if (time / yearSeconds > 0) {
+            int year = (int) (time / yearSeconds);
+            if (year > 10)
+                showStr = "很久以前";
+            else {
+                showStr = year + "年前";
+            }
+        } else if (time / monthSeconds > 0) {
+            showStr = time / monthSeconds + "个月前";
+        } else if (time / daySeconds > 7) {
+            SimpleDateFormat formatter = new SimpleDateFormat("MM-dd", Locale.getDefault());
+            showStr = formatter.format(date);
+        } else if (time / daySeconds > 0) {
+            showStr = time / daySeconds + "天前";
+        } else if (time / hourSeconds > 0) {
+            showStr = time / hourSeconds + "小时前";
+        } else if (time / minuteSeconds > 0) {
+            showStr = time / minuteSeconds + "分钟前";
+        } else if (time > 0) {
+            showStr = time + "秒前";
+        }
+        return showStr;
+    }
+
 }

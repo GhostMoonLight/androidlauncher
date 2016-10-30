@@ -20,6 +20,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 
@@ -35,6 +36,10 @@ import java.util.Comparator;
  * Represents an item in the launcher.
  */
 public class ItemInfo {
+
+    public Drawable iconBg;  //日历和时钟的实时icon  只有时钟和日历的ShortcutInfo对象该字段有值
+    public Drawable themeDrawable; //当前改图标显示的图片
+    public String resName;   //该图标的资源名称，没有值或者长度为0，说明桌面包中没有该软件的资源图片，显示它本身的
 
     /**
      * Intent extra to store the profile. Format: UserHandle

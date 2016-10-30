@@ -300,6 +300,5 @@ public class LauncherSettings {
          * <P>Type: INTEGER</P>
          */
         static final String RESTORED = "restored";
-        static final String EXTENDID = "extendid";
     }
 }

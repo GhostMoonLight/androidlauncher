@@ -1,9 +1,6 @@
 package com.android.launcher3.view;
 
-import com.android.launcher3.FolderBase;
-
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -14,6 +11,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
+
+import com.android.launcher3.FolderBase;
 
 /**
  * 可以滑半屏的view 该布局最好是屏幕宽高  类似ScrollView
@@ -213,7 +212,8 @@ public class SingleHandedView extends FrameLayout {
             break;
         case MotionEvent.ACTION_POINTER_UP:
             onSecondaryPointerUp(ev);
-            break;		}
+            break;
+        }
 		return false;
 	}
 
