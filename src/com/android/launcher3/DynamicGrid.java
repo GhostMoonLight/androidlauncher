@@ -65,16 +65,16 @@ public class DynamicGrid {
         DEFAULT_ICON_SIZE_PX = pxFromDp(DEFAULT_ICON_SIZE_DP, dm);
         // Our phone profiles include the bar sizes in each orientation
         deviceProfiles.add(new DeviceProfile("Nexus 4",
-                335, 567,  5, 4,  DEFAULT_ICON_SIZE_DP, 13, (hasAA ? 5 : 4), (hasAA ? 50 : DEFAULT_ICON_SIZE_DP), R.xml.default_workspace_4x4,
+                335, 567,  5, 4,  DEFAULT_ICON_SIZE_DP, 14, (hasAA ? 5 : 4), (hasAA ? 50 : DEFAULT_ICON_SIZE_DP), R.xml.default_workspace_4x4,
                 R.xml.default_workspace_4x4_no_all_apps));
         deviceProfiles.add(new DeviceProfile("Nexus 5",
-                359, 567,  5, 4,  DEFAULT_ICON_SIZE_DP, 13, (hasAA ? 5 : 4), (hasAA ? 50 : DEFAULT_ICON_SIZE_DP), R.xml.default_workspace_4x4,
+                359, 567,  5, 4,  DEFAULT_ICON_SIZE_DP, 14, (hasAA ? 5 : 4), (hasAA ? 50 : DEFAULT_ICON_SIZE_DP), R.xml.default_workspace_4x4,
                 R.xml.default_workspace_4x4_no_all_apps));
         deviceProfiles.add(new DeviceProfile("Nexus 6",
-        		380, 700,  5, 4,  55, 13, (hasAA ? 5 : 4), (hasAA ? 52 : 55), R.xml.default_workspace_4x4,
+        		380, 700,  5, 4,  55, 14, (hasAA ? 5 : 4), (hasAA ? 52 : 55), R.xml.default_workspace_4x4,
                 R.xml.default_workspace_4x4_no_all_apps));
         deviceProfiles.add(new DeviceProfile("Nexus 7",
-        		415, 738,  5, 4,  55, 13, (hasAA ? 5 : 4), (hasAA ? 52 : 65), R.xml.default_workspace_4x4,
+        		415, 738,  5, 4,  55, 14, (hasAA ? 5 : 4), (hasAA ? 52 : 65), R.xml.default_workspace_4x4,
                 R.xml.default_workspace_4x4_no_all_apps));
         mMinWidth = dpiFromPx(minWidthPx, dm);
         mMinHeight = dpiFromPx(minHeightPx, dm);

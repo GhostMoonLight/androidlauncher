@@ -50,6 +50,8 @@ import com.android.launcher3.utils.ScreenShot;
 import com.android.launcher3.utils.Util;
 import com.cuan.launcher.R;
 
+import net.qiujuer.genius.blur.StackBlur;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -619,14 +621,15 @@ public class BitmapUtils {
 			if (screenShot == null) return null;
 			
 			Bitmap bluredBitmap = null;
+            bluredBitmap = StackBlur.blurNatively(screenShot, 25, true);
+
+//			if (Util.getSdkVersionCode() >= 17) {
+//				bluredBitmap = doBlur(launcher, screenShot, 1, 25);
+//			}
 			
-			if (Util.getSdkVersionCode() >= 17) {
-				bluredBitmap = doBlur(launcher, screenShot, 1, 25);
-			}
-			
-			if (bluredBitmap == null) {
-				bluredBitmap = doBlur(screenShot, 16, true);
-			}
+//			if (bluredBitmap == null) {
+//				bluredBitmap = doBlur(screenShot, 16, true);
+//			}
 
 			if (screenShot != bluredBitmap) {
 				recycleBitmap(screenShot);
