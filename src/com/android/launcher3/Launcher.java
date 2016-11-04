@@ -1948,6 +1948,8 @@ public class Launcher extends BaseActivity
             mWorkspace.exitWidgetResizeMode();
             if (alreadyOnHome && mState == State.WORKSPACE && !mWorkspace.isTouchActive() && openFolder == null
                     && shouldMoveToDefaultScreenOnHomeIntent() && !isAllAppListViewVisile()) {
+                //点击Home键回到主屏幕时，不使用页面指示器动画, 在PagedView中的down事件中重新设置使用页面指示器动画
+                ((PageIndicator)mPageIndicators).setUseBezierScrollAnimal(false);
                 mWorkspace.moveToDefaultScreen(true);
             }
             closeFolder();

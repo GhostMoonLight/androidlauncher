@@ -556,8 +556,8 @@ public class LauncherModel extends BroadcastReceiver
                         // Otherwise, we add them to the next pages.
                         // icon从哪一个屏幕开始显示
                         int startSearchPageIndex = workspaceScreens.isEmpty() ? 0 : 1;
-                        if (workspaceScreens.size() > 2){
-                        	startSearchPageIndex = 2;
+                        if (workspaceScreens.size() > 1){
+                        	startSearchPageIndex = 1;
                         }
                         Pair<Long, int[]> coords = LauncherModel.findNextAvailableIconSpace(context,
                                 name, launchIntent, startSearchPageIndex, workspaceScreens);

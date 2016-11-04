@@ -20,17 +20,22 @@ import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 
+import com.android.launcher3.utils.Util;
 import com.cuan.launcher.R;
 
 import java.util.ArrayList;
 /**
  *	桌面页面指示器
  */
-public class PageIndicator extends LinearLayout {
+public class PageIndicator extends LinearLayout implements PagedView.OnPageChangeListener{
     @SuppressWarnings("unused")
     private static final String TAG = "PageIndicator";
     // Want this to look good? Keep it odd
@@ -217,9 +222,116 @@ public class PageIndicator extends LinearLayout {
         }
         System.out.println("\tactive: " + mActiveMarkerIndex);
     }
-    
+
+    private float mFirstCircleX, mFirstCircleY;
+    private float mSecondCircleX, mSecondCircleY;
+    private float mFirstCircleRadius = 0, mSecondCircleRadius = 0;
+    private Path mPath;
+    private boolean isUseBezierScrollAnimal = false;
+    private Paint mPaint;
+
+    //是否使用页面指示器动画，屏幕滑动的时候页面指示器会显示相应的动画
+    public void setUseBezierScrollAnimal(boolean isUseBezierScrollAnimal){
+        this.isUseBezierScrollAnimal = isUseBezierScrollAnimal;
+        mPaint = new Paint();
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setStrokeCap(Paint.Cap.ROUND);
+        mPaint.setColor(Color.WHITE);
+        mPaint.setAntiAlias(true);
+
+        mPath = new Path();
+    }
+
     @Override
     protected void dispatchDraw(Canvas canvas) {
-    	super.dispatchDraw(canvas);
+        super.dispatchDraw(canvas);
+        if (getChildCount() >= 3 && isUseBezierScrollAnimal) {
+
+            canvas.drawCircle(mFirstCircleX, mFirstCircleY,
+                    mFirstCircleRadius, mPaint);
+            canvas.drawCircle(mSecondCircleX, mSecondCircleY,
+                    mSecondCircleRadius, mPaint);
+            caculate();
+            canvas.drawPath(mPath, mPaint);
+        }
+    }
+
+    private void caculate() {
+
+        float tanX1, tanY1, tanX2, tanY2, tanX3, tanY3, tanX4, tanY4;
+
+        float mControlX = (mFirstCircleX + mSecondCircleX) / 2.0f;
+        float mControlY = (mFirstCircleY + mSecondCircleY) / 2.0f;
+
+        float distance = Math.abs(mControlX - mFirstCircleX);
+        double a = Math.acos(mFirstCircleRadius / distance);
+
+        //弧度制   Math.Sin(Math.PI*30.0/180.0);   度数＊Math.PI/180.0
+        float offsetX1 = (float) (mFirstCircleRadius * Math.cos(a));
+        float offsetY1 = (float) (mFirstCircleRadius * Math.sin(a));
+        tanX1 = mFirstCircleX + offsetX1;
+        tanY1 = mFirstCircleY - offsetY1;
+
+        tanX2 = tanX1;
+        tanY2 = mFirstCircleY + offsetY1;
+
+        a = Math.acos(mSecondCircleRadius / distance);
+        offsetX1 = (float) (mSecondCircleRadius * Math.cos(a));
+        offsetY1 = (float) (mSecondCircleRadius * Math.sin(a));
+        tanX3 = mSecondCircleX - offsetX1;
+        tanY3 = mSecondCircleY - offsetY1;
+
+        tanX4 = tanX3;
+        tanY4 = mSecondCircleY + offsetY1;
+
+
+        mPath.reset();
+        mPath.moveTo(tanX1, tanY1);
+        mPath.quadTo(mControlX, mControlY, tanX3, tanY3);
+        mPath.lineTo(tanX4, tanY4);
+        mPath.quadTo(mControlX, mControlY, tanX2, tanY2);
+        mPath.close();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        if (getChildCount() >= 3) {
+
+            View view = getChildAt(position);
+            if (positionOffsetPixels >= 0) {
+                mFirstCircleRadius = Util.dip2px(8)/2;
+                mSecondCircleRadius = Util.dip2px(6.5f)/2;
+                mFirstCircleX = view.getX() + view.getWidth() / 2;
+                mFirstCircleY = view.getY() + view.getHeight() / 2;
+                if (position < getChildCount() - 1) {
+                    view = getChildAt(position + 1);
+                }
+                mSecondCircleX = view.getLeft() + view.getWidth() / 2;
+                mSecondCircleY = view.getTop() + view.getHeight() / 2;
+
+                mSecondCircleX = mFirstCircleX + (Math.abs(mSecondCircleX - mFirstCircleX) * positionOffset);
+            }else{
+                mFirstCircleRadius = Util.dip2px(6.5f)/2;
+                mSecondCircleRadius = Util.dip2px(8)/2;
+                mSecondCircleX = view.getX() + view.getWidth() / 2;
+                mSecondCircleY = view.getY() + view.getHeight() / 2;
+                if (position > 0) {
+                    view = getChildAt(position - 1);
+                }
+                mFirstCircleX = view.getLeft() + view.getWidth() / 2;
+                mFirstCircleY = view.getTop() + view.getHeight() / 2;
+
+                mFirstCircleX = mSecondCircleX + (Math.abs(mSecondCircleX - mFirstCircleX) * positionOffset);
+            }
+            invalidate();
+        }
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        View view = getChildAt(position);
+        mSecondCircleX = mFirstCircleX = view.getX() + view.getWidth() / 2;
+        mSecondCircleY = mFirstCircleY = view.getY() + view.getHeight() / 2;
+        invalidate();
     }
 }

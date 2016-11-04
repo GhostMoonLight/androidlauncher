@@ -355,6 +355,9 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         if (mPageIndicator == null && mPageIndicatorViewId > -1) {
             mPageIndicator = (PageIndicator) grandParent.findViewById(mPageIndicatorViewId);
             mPageIndicator.removeAllMarkers(mAllowPagedViewAnimations);
+            if (this instanceof  Workspace){
+                setOnPageChangeListener(mPageIndicator);
+            }
 
             ArrayList<PageIndicator.PageMarkerResources> markers =
                     new ArrayList<PageIndicator.PageMarkerResources>();
@@ -618,6 +621,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             mPageSwitchListener.onPageSwitch(getPageAt(getNextPage()), getNextPage());
         }
 
+        scrollDistance = 0;
         updatePageIndicator();
     }
 
@@ -628,6 +632,9 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             if (!isReordering(false)) {
                 mPageIndicator.setActiveMarker(getNextPage());
             }
+        }
+        if (mOnPageChangeListener != null){
+            mOnPageChangeListener.onPageSelected(getNextPage());
         }
     }
     protected void pageBeginMoving() {
@@ -676,6 +683,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         scrollTo(mUnboundedScrollX + x, getScrollY() + y);
     }
 
+    private int scrollDistance = 0; //滑动距离
     @Override
     public void scrollTo(int x, int y) {
         // In free scroll mode, we clamp the scrollX
@@ -683,6 +691,15 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             x = Math.min(x, mFreeScrollMaxScrollX);
             x = Math.max(x, mFreeScrollMinScrollX);
         }
+
+        scrollDistance += (x - mUnboundedScrollX);
+        if(Math.abs(scrollDistance) >= getWidth()){
+            scrollDistance = Math.abs(scrollDistance)/scrollDistance*getWidth();
+        }
+        if (mOnPageChangeListener != null){
+            mOnPageChangeListener.onPageScrolled(getCurrentPage(), scrollDistance*1.0f/getWidth(), scrollDistance);
+        }
+
         //布局方式Rtl Right-to-Left，正常情况下是Left-to-Right    
         //isRtl 一般为false
         final boolean isRtl = isLayoutRtl();   
@@ -757,7 +774,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     private int getGetOverScrollX(float x){
 		double per = x/mEffectOverX;
 		double angle = 90.0*per;
-		int result = (int) (mEffectOverX/4 * Math.sin(angle*Math.PI/180.0));
+		int result = (int) (mEffectOverX/4 * Math.sin(angle*Math.PI/180.0));  //Math.Sin()里面的是弧度制
 		return result;
 	}
 
@@ -1560,6 +1577,9 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
                             }
                         }
                     }
+                }
+                if (this instanceof  Workspace){
+                    mPageIndicator.setUseBezierScrollAnimal(true);
                 }
                 break;
             }
@@ -3333,4 +3353,15 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
 			}
 		}
 	}
+    private OnPageChangeListener mOnPageChangeListener;
+    public void setOnPageChangeListener(OnPageChangeListener listener){
+        mOnPageChangeListener = listener;
+    }
+
+    public interface OnPageChangeListener{
+        void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
+
+        void onPageSelected(int position);
+
+    }
 }
