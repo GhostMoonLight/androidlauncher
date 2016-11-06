@@ -45,6 +45,7 @@ public class OkHttpClientUtil {
     private OkHttpClient mOkHttpClient;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private Gson mGson;
+    private CacheControl mUseCache, mNoUseCache;
 
     private OkHttpClientUtil(){
         File sdCache = new File(LauncherApplication.getInstance().getUrlCacheDir());
@@ -54,18 +55,32 @@ public class OkHttpClientUtil {
                 .readTimeout(20, TimeUnit.DAYS)
                 .cache(new Cache(sdCache.getAbsoluteFile(), CACHE_SIZE)).build();
         mGson = new Gson();
+        initCacheControl();
+    }
+
+    private void initCacheControl(){
+        final CacheControl.Builder builder = new CacheControl.Builder();
+//        builder.onlyIfCached();//只使用缓存
+//        builder.noTransform();//禁止转码
+        builder.maxAge(12, TimeUnit.HOURS);//指示客户机可以接收生存期不大于指定时间的响应。
+//        builder.maxStale(10, TimeUnit.SECONDS);//指示客户机可以接收超出超时期间的响应消息
+//        builder.minFresh(10, TimeUnit.SECONDS);//指示客户机可以接收响应时间小于当前时间加上指定时间的响应。
+        mUseCache = builder.build();//cacheControl
+
+        final CacheControl.Builder builder1 = new CacheControl.Builder();
+        builder1.noCache();//不使用缓存，全部走网络
+        builder1.noStore();//不使用缓存，也不存储缓存
+        mNoUseCache = builder1.build();//cacheControl
     }
 
     /**
-     * 同步的Get请求
+     * 同步的Get请求,获取请求结果
      *
      * @param url
      * @return Response
      */
-    private Response getHttp(String url) throws IOException{
-        final Request request = new Request.Builder()
-                .url(url)
-                .build();
+    private Response getHttp(String url, boolean isUseCache) throws IOException{
+        final Request request = buildGetRequest(url, isUseCache);
         Call call = mOkHttpClient.newCall(request);
         Response execute = call.execute();
         return execute;
@@ -77,20 +92,20 @@ public class OkHttpClientUtil {
      * @param url
      * @return 字符串
      */
-    private String getAsString(String url) throws IOException{
-        Response execute = getHttp(url);
+    private String getAsString(String url, boolean isUseCache) throws IOException{
+        Response execute = getHttp(url, isUseCache);
         return execute.body().string();
     }
 
     /**
-     * 同步的Post请求
+     * 同步的Post请求, 获取结果
      *
      * @param url
      * @param params post的参数
      * @return
      */
-    private Response post(String url, Param... params) throws IOException {
-        Request request = buildPostRequest(url, params);
+    private Response post(String url, boolean isUseCache, Param... params) throws IOException {
+        Request request = buildPostRequest(url, params, isUseCache);
         Response response = mOkHttpClient.newCall(request).execute();
         return response;
     }
@@ -103,27 +118,23 @@ public class OkHttpClientUtil {
      * @param params post的参数
      * @return 字符串
      */
-    private String postAsString(String url, Param... params) throws IOException {
-        Response response = post(url, params);
+    private String postAsString(String url, boolean isUseCache, Param... params) throws IOException {
+        Response response = post(url, isUseCache, params);
         return response.body().string();
     }
 
     /**
      * 异步get请求
      */
-    protected void getAsynHttp(String url, ResultCallBack callback) {
-        Request.Builder requestBuilder = new Request.Builder().url(url);
-        //可以省略，默认是GET请求
-        requestBuilder.method("GET",null);
-        Request request = requestBuilder.build();
-        exectAsyncHttp(request, callback);
+    protected void getAsynHttp(String url, ResultCallBack callback, boolean isUseCache) {
+        exectAsyncHttp(buildGetRequest(url, isUseCache), callback);
     }
 
     /**
      * post异步请求
      */
-    private void postAsynHttp(String url, ResultCallBack callback, Param... params) {
-        exectAsyncHttp(buildPostRequest(url, params), callback);
+    private void postAsynHttp(String url, boolean isUseCache, ResultCallBack callback, Param... params) {
+        exectAsyncHttp(buildPostRequest(url, params, isUseCache), callback);
     }
 
     /**
@@ -138,7 +149,7 @@ public class OkHttpClientUtil {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
                 try
                 {
                     final String string = response.body().string();
@@ -179,7 +190,20 @@ public class OkHttpClientUtil {
         });
     }
 
-    private Request buildPostRequest(String url, Param[] params)
+    private Request buildGetRequest(String url, boolean isUseCache) {
+        Request.Builder requestBuilder = new Request.Builder().url(url);
+        //可以省略，默认是GET请求
+        requestBuilder.method("GET", null);
+        if (isUseCache) {
+            requestBuilder.cacheControl(mUseCache);
+        } else {
+            requestBuilder.cacheControl(mNoUseCache);
+        }
+        Request request = requestBuilder.build();
+        return request;
+    }
+
+    private Request buildPostRequest(String url, Param[] params, boolean isUseCache)
     {
         if (params == null)
         {
@@ -193,9 +217,32 @@ public class OkHttpClientUtil {
             builder.add(param.key, param.value);
         }
         RequestBody requestBody = builder.build();
-        return new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
+        if (isUseCache){
+            return new Request.Builder()
+                    .url(url)
+                    .cacheControl(mUseCache)
+                    .post(requestBody)
+                    .build();
+        }else{
+            return new Request.Builder()
+                    .url(url)
+                    .cacheControl(mNoUseCache)
+                    .post(requestBody)
+                    .build();
+        }
+    }
+
+    public void doGetAsync(String url, ResultCallBack callback, boolean isUseCache){
+        getAsynHttp(url, callback, isUseCache);
+    }
+    public String doGet(String url, boolean isUseCache) throws IOException{
+        return getAsString(url, isUseCache);
+    }
+
+    public void doPostAsync(String url, boolean isUseCache, ResultCallBack callback, Param... params){
+        postAsynHttp(url, isUseCache, callback, params);
+    }
+    public String dopost(String url, boolean isUseCache, Param... params)throws IOException{
+        return postAsString(url, isUseCache, params);
     }
 }
