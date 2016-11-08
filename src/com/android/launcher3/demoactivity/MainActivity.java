@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.WindowManager;
 
+import com.android.launcher3.net.HttpController;
 import com.cuan.launcher.R;
 
 import java.lang.ref.WeakReference;
@@ -29,6 +30,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_main);
+
+        HttpController.getInstance().getWallpaperOnline();
     }
 
     /**
