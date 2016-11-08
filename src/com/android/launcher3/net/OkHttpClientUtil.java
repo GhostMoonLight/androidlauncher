@@ -2,7 +2,9 @@ package com.android.launcher3.net;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherApplication;
 import com.google.gson.Gson;
 
@@ -11,12 +13,14 @@ import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -50,9 +54,10 @@ public class OkHttpClientUtil {
     private OkHttpClientUtil(){
         File sdCache = new File(LauncherApplication.getInstance().getUrlCacheDir());
         mOkHttpClient = (new OkHttpClient.Builder())
-                .connectTimeout(30, TimeUnit.DAYS)
-                .writeTimeout(20, TimeUnit.DAYS)
-                .readTimeout(20, TimeUnit.DAYS)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
                 .cache(new Cache(sdCache.getAbsoluteFile(), CACHE_SIZE)).build();
         mGson = new Gson();
         initCacheControl();
@@ -62,8 +67,8 @@ public class OkHttpClientUtil {
         final CacheControl.Builder builder = new CacheControl.Builder();
 //        builder.onlyIfCached();//只使用缓存
 //        builder.noTransform();//禁止转码
-        builder.maxAge(12, TimeUnit.HOURS);//指示客户机可以接收生存期不大于指定时间的响应。
-//        builder.maxStale(10, TimeUnit.SECONDS);//指示客户机可以接收超出超时期间的响应消息
+        builder.maxAge(60*60*12, TimeUnit.SECONDS);//这个是控制缓存的最大生命时间
+        builder.maxStale(60*60*12, TimeUnit.SECONDS);//这个是控制缓存的过时时间
 //        builder.minFresh(10, TimeUnit.SECONDS);//指示客户机可以接收响应时间小于当前时间加上指定时间的响应。
         mUseCache = builder.build();//cacheControl
 
@@ -126,7 +131,7 @@ public class OkHttpClientUtil {
     /**
      * 异步get请求
      */
-    protected void getAsynHttp(String url, ResultCallBack callback, boolean isUseCache) {
+    private void getAsynHttp(String url, ResultCallBack callback, boolean isUseCache) {
         exectAsyncHttp(buildGetRequest(url, isUseCache), callback);
     }
 
@@ -140,12 +145,12 @@ public class OkHttpClientUtil {
     /**
      * 异步请求
      */
-    private void exectAsyncHttp(Request request, final ResultCallBack callBack){
+    private void exectAsyncHttp(final Request request, final ResultCallBack callBack){
         Call mcall= mOkHttpClient.newCall(request);
         mcall.enqueue(new Callback() {  //请求网络后的回调，在异步线程
             @Override
             public void onFailure(Call call, IOException e) {
-
+                sendFailedStringCallback(e, callBack);
             }
 
             @Override
@@ -160,6 +165,9 @@ public class OkHttpClientUtil {
                         sendSuccessResultCallback(o, callBack);
                     }
 
+                    if (response.networkResponse() == null){
+                        Log.e("AAAAA", "使用缓存");
+                    }
 
                 } catch (IOException e) {
                     sendFailedStringCallback(e, callBack);
@@ -231,6 +239,19 @@ public class OkHttpClientUtil {
                     .build();
         }
     }
+
+    /**
+     * 云端响应头拦截器，用来配置缓存策略
+     * Dangerous interceptor that rewrites the server's cache-control header.
+     */
+    private static final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Response originalResponse = chain.proceed(chain.request());
+            return originalResponse.newBuilder().removeHeader("Pragma").removeHeader("Cache-Control")
+                    .header("Cache-Control", String.format("max-age=%d", 0)).build();
+        }
+    };
 
     public void doGetAsync(String url, ResultCallBack callback, boolean isUseCache){
         getAsynHttp(url, callback, isUseCache);
