@@ -617,16 +617,15 @@ public class BitmapUtils {
 	 */
 	public static Bitmap getBluredBackgroundImage(Launcher launcher, int outWidth, int outHeight) {
 		try {
+			long time = System.currentTimeMillis();
 			Bitmap screenShot = ScreenShot.getScreenShot(launcher, outWidth, outHeight);
 			if (screenShot == null) return null;
 			
 			Bitmap bluredBitmap = null;
-            bluredBitmap = StackBlur.blurNatively(screenShot, 16, true);
-
-//			if (Util.getSdkVersionCode() >= 17) {
-//				bluredBitmap = doBlur(launcher, screenShot, 1, 25);
+            bluredBitmap = StackBlur.blurNatively(screenShot, 8, true);
+//			if (Util.getSdkVersionCode() >= 30) {
+//				bluredBitmap = doBlur(launcher, screenShot, 1, 8);
 //			}
-			
 //			if (bluredBitmap == null) {
 //				bluredBitmap = doBlur(screenShot, 16, true);
 //			}
@@ -894,6 +893,7 @@ public class BitmapUtils {
 			
 			Bitmap bitmap = Bitmap.createBitmap(width, height, config);
 			outputAllocation.copyTo(bitmap);
+            recycleBitmap(target);
 			return bitmap;
 		} catch (OutOfMemoryError error) {
 			Log.w(TAG, "doBlur", error);

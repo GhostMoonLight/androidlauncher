@@ -72,8 +72,8 @@
         launcher:x="0"
         launcher:y="2"
         launcher:uri="#Intent;component=com.cuan.launcher/com.android.launcher3.demoactivity.MainActivity;end"
-        launcher:icon="@com.cuan.launcher:drawable/all_apps"
-        launcher:title="@com.cuan.launcher:string/all_apps_name" />
+        launcher:icon="@com.cuan.launcher:drawable/ic_wallpaper"
+        launcher:title="@com.cuan.launcher:string/wallpaper_button_text" />
     
     <!-- 时钟 -->
     <systemapp

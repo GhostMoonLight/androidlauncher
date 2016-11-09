@@ -117,7 +117,6 @@
     <orderEntry type="library" exported="" name="rxbinding-0.4.0" level="project" />
     <orderEntry type="library" exported="" name="design-22.2.1" level="project" />
     <orderEntry type="module" module-name="PushSDK" exported="" />
-    <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
     <orderEntry type="library" exported="" name="com.umeng.message_v2.8.1" level="project" />
     <orderEntry type="library" exported="" name="wire-runtime-2.1.2" level="project" />
   </component>

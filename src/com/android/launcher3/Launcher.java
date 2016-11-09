@@ -64,6 +64,7 @@ import android.os.Message;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.speech.RecognizerIntent;
+import android.support.annotation.Nullable;
 import android.text.Selection;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -156,6 +157,12 @@ public class Launcher extends BaseActivity
     static final boolean DEBUG_STRICT_MODE = false;
     static final boolean DEBUG_RESUME_TIME = true;
     static final boolean DEBUG_DUMP_LOG = true;
+
+    @Nullable
+    @Override
+    public CharSequence onCreateDescription() {
+        return super.onCreateDescription();
+    }
 
     static final boolean ENABLE_DEBUG_INTENTS = false; // allow DebugIntents to run
 

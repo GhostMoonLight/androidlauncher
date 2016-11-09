@@ -20,10 +20,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.android.launcher3.utils.ScreenShot;
+
 public class WallpaperChangedReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent data) {
         LauncherAppState.setApplicationContext(context.getApplicationContext());
         LauncherAppState appState = LauncherAppState.getInstance();
         appState.onWallpaperChanged();
+        ScreenShot.updateWallpaperBitmap(context);
     }
 }

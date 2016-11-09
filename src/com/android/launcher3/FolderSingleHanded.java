@@ -363,7 +363,6 @@ public class FolderSingleHanded extends FolderBase {
     }
 
     public void animateOpen() {
-        long time = System.currentTimeMillis();
         if (!(getParent() instanceof DragLayer)) return;
         final ViewGroup parent = ((ViewGroup)getParent());
         Bitmap bluredBitmap = BitmapUtils.getBluredBackgroundImage((Launcher)getContext());
@@ -371,7 +370,6 @@ public class FolderSingleHanded extends FolderBase {
         parent.setBackgroundDrawable(new BitmapDrawable(getResources(), bluredBitmap));
         parent.getBackground().setAlpha(0);
 		startBackgroundAnimator(true);
-        Log.w("AAAAA", "time:"+(System.currentTimeMillis()-time));
         Animator openFolderAnim = null;
         final Runnable onCompleteRunnable;
         if (!Utilities.isLmpOrAbove()) {

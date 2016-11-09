@@ -23,11 +23,14 @@ import android.util.Log;
 
 import com.android.launcher3.utils.CrashExceptionHandler;
 import com.android.launcher3.utils.Util;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.io.File;
 
@@ -68,16 +71,22 @@ public class LauncherApplication extends Application {
 		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
 				.cacheInMemory(true)
 				.cacheOnDisk(true)
+                .displayer(new FadeInBitmapDisplayer(800))//是否图片加载好后渐入的动画时间
 				.build();
-		
+
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+				.threadPoolSize(3)
 				.threadPriority(Thread.NORM_PRIORITY - 2)
 				.denyCacheImageMultipleSizesInMemory()
 				.diskCacheFileNameGenerator(new Md5FileNameGenerator())
-				.diskCacheSize(50 * 1024 * 1024) // 50 Mb
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
-				.defaultDisplayImageOptions(defaultOptions)
-				.writeDebugLogs() // Remove for release app
+				.denyCacheImageMultipleSizesInMemory()
+				.memoryCache(new WeakMemoryCache())
+				.memoryCacheSize((int) (2 * 1024 * 1024))
+				.memoryCacheSizePercentage(13)
+				.diskCacheSize(50 * 1024 * 1024).diskCacheFileCount(100)
+				.diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
+				.defaultDisplayImageOptions(defaultOptions).writeDebugLogs() // Remove
 				.build();
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);

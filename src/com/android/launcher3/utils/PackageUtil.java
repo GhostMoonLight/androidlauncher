@@ -79,13 +79,11 @@ public class PackageUtil {
 	 */
 	public static boolean canUninstall(Context context, ShortcutInfo info){
 		try {
-			LogUtil.d(TAG, " isSystemApp："+info.getPckName()+" "+isSystemApp(context, info));
 			if (isSystemApp(context, info)) {
-				LogUtil.d(TAG, " isSystemUpdateApp："+info.getPckName()+" "+isSystemUpdateApp(context, info));
 				if (isSystemUpdateApp(context, info)) {
 					return true;
 				}
-				
+
 				PackageManager sPackageManager = context.getPackageManager();
 				ApplicationInfo appInfo = sPackageManager.getApplicationInfo(info.getPckName(), 0);
 				if (appInfo == null) return false;
@@ -158,7 +156,7 @@ public class PackageUtil {
 	/**
 	 * 是否可以卸载（有的系统应用可以卸载，恢复到出厂时该应用的状态）
 	 * @param context
-	 * @param info
+	 * @param pck
 	 * @return
 	 */
 	public static boolean canUninstall(Context context, String pck){
@@ -258,7 +256,6 @@ public class PackageUtil {
 				if (PackageUtil.isSystemApp(context, packageInfo.applicationInfo)) {
 					Signature currApkSign = SignatureUtil.getApkSignatureWithPackageInfo(context, packageInfo);
 					String strSignatureCompony = SignatureUtil.getSignatureCompony(currApkSign);
-					LogUtil.d(TAG, "pkg=" + packageName + ", compony-->" + strSignatureCompony);
 					
 					if (systemSignatureCompony.contains(strSignatureCompony) || 
 							Util.isArrayContainsString(strSignatureCompony, context.getResources().getStringArray(R.array.signature_compony), false)) {

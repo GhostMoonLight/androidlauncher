@@ -100,6 +100,10 @@ public class MainActivity extends Activity {
 
         mRandom = new Random();
         imageOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .showImageOnLoading(R.drawable.default_loading_img)
+                .delayBeforeLoading(100)//载入图片前稍做延时可以提高整体滑动的流畅度
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)//设置图片以如何的编码方式显示
                 .displayer(new FadeInBitmapDisplayer(800))//是否图片加载好后渐入的动画时间
                 .build();
