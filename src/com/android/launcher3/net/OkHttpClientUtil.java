@@ -2,10 +2,9 @@ package com.android.launcher3.net;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
-import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherApplication;
-import com.android.launcher3.utils.Log;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -17,6 +16,7 @@ import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -53,6 +53,7 @@ public class OkHttpClientUtil {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
+                .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
                 .cache(new Cache(sdCache.getAbsoluteFile(), CACHE_SIZE)).build();
         mGson = new Gson();
         initCacheControl();
@@ -60,11 +61,11 @@ public class OkHttpClientUtil {
 
     private void initCacheControl(){
         final CacheControl.Builder builder = new CacheControl.Builder();
-//        builder.onlyIfCached();//只使用缓存
-//        builder.noTransform();//禁止转码
-        builder.maxAge(12, TimeUnit.HOURS);//指示客户机可以接收生存期不大于指定时间的响应。
-        builder.maxStale(10, TimeUnit.HOURS);//指示客户机可以接收超出超时期间的响应消息
-//        builder.minFresh(10, TimeUnit.SECONDS);//指示客户机可以接收响应时间小于当前时间加上指定时间的响应。
+        //        builder.onlyIfCached();//只使用缓存
+        //        builder.noTransform();//禁止转码
+        builder.maxAge(60*60*12, TimeUnit.SECONDS);//这个是控制缓存的最大生命时间
+        builder.maxStale(60*60*12, TimeUnit.SECONDS);//这个是控制缓存的过时时间
+        //        builder.minFresh(10, TimeUnit.SECONDS);//指示客户机可以接收响应时间小于当前时间加上指定时间的响应。
         mUseCache = builder.build();//cacheControl
 
         final CacheControl.Builder builder1 = new CacheControl.Builder();
@@ -140,12 +141,12 @@ public class OkHttpClientUtil {
     /**
      * 异步请求
      */
-    private void exectAsyncHttp(Request request, final ResultCallBack callBack){
+    private void exectAsyncHttp(final Request request, final ResultCallBack callBack){
         Call mcall= mOkHttpClient.newCall(request);
         mcall.enqueue(new Callback() {  //请求网络后的回调，在异步线程
             @Override
             public void onFailure(Call call, IOException e) {
-
+                sendFailedStringCallback(e, callBack);
             }
 
             @Override
@@ -160,8 +161,10 @@ public class OkHttpClientUtil {
                         sendSuccessResultCallback(o, callBack);
                     }
 
-                    Log.e("AAAAA", "cacheResponse:"+response.cacheResponse());
-                    Log.e("AAAAA", "networkResponse:"+response.networkResponse());
+                    if (response.networkResponse() == null){
+                        Log.e("AAAAA", "使用缓存");
+                    }
+
                 } catch (IOException e) {
                     sendFailedStringCallback(e, callBack);
                 } catch (com.google.gson.JsonParseException e) {//Json解析的错误
@@ -196,11 +199,7 @@ public class OkHttpClientUtil {
         //可以省略，默认是GET请求
         requestBuilder.method("GET", null);
         if (isUseCache) {
-            if (NetworkStatus.isNetWorking(LauncherAppState.getInstance().getContext())){
-                requestBuilder.cacheControl(mUseCache);
-            }else{
-                requestBuilder.cacheControl(CacheControl.FORCE_CACHE);
-            }
+            requestBuilder.cacheControl(mUseCache);
         } else {
             requestBuilder.cacheControl(mNoUseCache);
         }
@@ -237,6 +236,25 @@ public class OkHttpClientUtil {
         }
     }
 
+    /**
+     * 云端响应头拦截器，用来配置缓存策略
+     * Dangerous interceptor that rewrites the server's cache-control header.
+     */
+    private static final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Response originalResponse = chain.proceed(chain.request());
+            return originalResponse.newBuilder().removeHeader("Pragma").removeHeader("Cache-Control")
+                    .header("Cache-Control", String.format("max-age=%d", 0)).build();
+        }
+    };
+
+    /**
+     *
+     * @param url
+     * @param callback
+     * @param isUseCache   是否使用缓存，
+     */
     public void doGetAsync(String url, ResultCallBack callback, boolean isUseCache){
         getAsynHttp(url, callback, isUseCache);
     }
@@ -247,7 +265,7 @@ public class OkHttpClientUtil {
     public void doPostAsync(String url, boolean isUseCache, ResultCallBack callback, Param... params){
         postAsynHttp(url, isUseCache, callback, params);
     }
-    public String doPost(String url, boolean isUseCache, Param... params)throws IOException{
+    public String dopost(String url, boolean isUseCache, Param... params)throws IOException{
         return postAsString(url, isUseCache, params);
     }
 }
