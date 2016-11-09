@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="D:\studio\androidlauncher\PushSDK\assets"/><source path="D:\studio\androidlauncher\PushSDK\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="D:\studio\androidlauncher\PushSDK\build-types\debug\assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/Users/cuangengxuan/我的坚果云/studiolauncher/Launcher3/PushSDK/assets"/><source path="/Users/cuangengxuan/我的坚果云/studiolauncher/Launcher3/PushSDK/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/Users/cuangengxuan/我的坚果云/studiolauncher/Launcher3/PushSDK/build-types/debug/assets"/></dataSet></merger>

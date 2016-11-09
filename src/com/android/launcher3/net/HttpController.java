@@ -20,8 +20,8 @@ public class HttpController {
         mClientUtil = OkHttpClientUtil.getInstance();
     }
 
-    public void getWallpaperOnline(ResultCallBack callBack){
-        String url = "http://a.holaworld.cn/wallpapers/byTag?&page=1&tagCode=e43f0bc1ebad494891bb325aa3a3e582&cw=720&net=wifi&h=1280&w=720&lang=zh_CN&lc=22700";
-        mClientUtil.doGetAsync(url, callBack, true);
+    public void getWallpaperOnline(ResultCallBack callBack, int page){
+        String url = "http://a.holaworld.cn/wallpapers/byTag?&page="+page+"&tagCode=e43f0bc1ebad494891bb325aa3a3e582&cw=720&net=wifi&h=1280&w=720&lang=zh_CN&lc=22700";
+        mClientUtil.doGetAsync(url, callBack, false);
     }
 }

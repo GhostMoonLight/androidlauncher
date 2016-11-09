@@ -157,7 +157,8 @@ public class CustomContentPage extends LinearLayout implements Insettable{
 	   			for (ItemInfo item: LauncherModel.sBgWorkspaceItems){
 	   				if (item instanceof ShortcutInfo){
 	   					ShortcutInfo sInfo = (ShortcutInfo)item;
-	   					if (item.itemType != LauncherSettings.BaseLauncherColumns.ITEM_TYPE_SHORTCUT){
+	   					if (item.itemType != LauncherSettings.BaseLauncherColumns.ITEM_TYPE_SHORTCUT
+                                || (mLauncher.getPackageName().equals(sInfo.packName))){
 	   						for (RecentUserAppInfo info: infos){
 	   							if (info.title.equals(sInfo.title) && info.pck.equals(sInfo.packName)){
 	   								if (sInfo.iconBg != null){
@@ -168,20 +169,23 @@ public class CustomContentPage extends LinearLayout implements Insettable{
                                     }
 	   							}
 	   			   			}
-	   					} 
+	   					}
 	   				} else if (item instanceof FolderInfo){
 	   					FolderInfo fi = (FolderInfo)item;
 	   					for (ShortcutInfo sInfo: fi.contents){
-	   						for (RecentUserAppInfo info: infos){
-	   							if (info.title.equals(sInfo.title) && info.pck.equals(sInfo.packName)){
-                                    if (sInfo.iconBg != null){
-                                        //只有时钟和日历的ShortcutInfo对象该字段有值
-                                        info.icon = sInfo.iconBg;
-                                    }else{
-                                        info.icon = sInfo.themeDrawable;
+                            if (sInfo.itemType != LauncherSettings.BaseLauncherColumns.ITEM_TYPE_SHORTCUT
+                                    || (mLauncher.getPackageName().equals(sInfo.packName))) {
+                                for (RecentUserAppInfo info : infos) {
+                                    if (info.title.equals(sInfo.title) && info.pck.equals(sInfo.packName)) {
+                                        if (sInfo.iconBg != null) {
+                                            //只有时钟和日历的ShortcutInfo对象该字段有值
+                                            info.icon = sInfo.iconBg;
+                                        } else {
+                                            info.icon = sInfo.themeDrawable;
+                                        }
                                     }
-	   							}
-	   			   			}
+                                }
+                            }
 	   					}
 	   				}
 	   			}
