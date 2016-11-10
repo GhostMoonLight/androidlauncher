@@ -9,12 +9,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.launcher3.bean.WallpaperOnline;
 import com.android.launcher3.net.HttpController;
@@ -83,6 +85,7 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
         mSwipeRefreshLayout.setRefreshing(true);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        mRecycleView.setItemAnimator(new NoAlphaDefaultItemAnimator());
 
         mRandom = new Random();
         imageOptions = new DisplayImageOptions.Builder()
@@ -91,7 +94,7 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
                 .showImageOnLoading(R.drawable.default_loading_img)
                 .delayBeforeLoading(100)//载入图片前稍做延时可以提高整体滑动的流畅度
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)//设置图片以如何的编码方式显示
-                .displayer(new FadeInBitmapDisplayer(800))//是否图片加载好后渐入的动画时间
+                .displayer(new FadeInBitmapDisplayer(600))//是否图片加载好后渐入的动画时间
                 .build();
 
         mRecycleView.setOnScrollListener(new OnScrollListener() {
@@ -127,21 +130,25 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
             @Override
             public void onError(Exception e) {
                 isLoadMore = isLoading = false;
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onResponse(WallpaperOnline response) {
                 mSwipeRefreshLayout.setRefreshing(false);
-                int index = mWallpaperList.size();
-                if (isLoading){
-                    mWallpaperList.addAll(0, response.getResults());
-                    mAdapter.notifyDataSetChanged();
-                }else{
-                    mWallpaperList.addAll(response.getResults());
-                    mAdapter.notifyItemRangeChanged(index, mWallpaperList.size());
+                Log.e("AAAAA", "size:"+response.getResults().size());
+                if(response.getResults().size() > 0) {
+                    int index = mWallpaperList.size();
+                    if (isLoading) {
+                        mWallpaperList.addAll(0, response.getResults());
+                        mAdapter.notifyDataSetChanged();
+                    } else {
+                        mWallpaperList.addAll(response.getResults());
+                        mAdapter.notifyItemRangeChanged(index, mWallpaperList.size());
+                    }
+                    pageIndex++;
                 }
                 isLoadMore = isLoading = false;
-                pageIndex++;
             }
         }, pageIndex);
     }
@@ -167,7 +174,7 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
         }
 
         @Override
-        public void onBindViewHolder(WaterfallHolder holder, int position) {
+        public void onBindViewHolder(WaterfallHolder holder, final int position) {
             WallpaperOnline.WallpaperOnlineInfo info = mWallpaperList.get(position);
             if (!info.getCover().equals(holder.mImageView.getTag())) {
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.mImageView.getLayoutParams();
@@ -178,6 +185,13 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
                 holder.mImageView.setImageBitmap(null);
                 holder.mImageView.setTag(info.getCover());
                 ImageLoader.getInstance().displayImage(info.getCover(), holder.mImageView, imageOptions);
+
+                holder.mImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(MainActivity.this, "position:"+position, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
 
