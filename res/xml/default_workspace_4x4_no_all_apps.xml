@@ -71,7 +71,7 @@
         launcher:screen="0"
         launcher:x="0"
         launcher:y="2"
-        launcher:uri="#Intent;component=com.cuan.launcher/com.android.launcher3.demoactivity.MainActivity;end"
+        launcher:uri="#Intent;component=com.cuan.launcher/com.android.launcher3.demoactivity.WallpaperOnlineActivity;end"
         launcher:icon="@com.cuan.launcher:drawable/ic_wallpaper"
         launcher:title="@com.cuan.launcher:string/wallpaper_button_text" />
     

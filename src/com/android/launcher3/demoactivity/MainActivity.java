@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.android.launcher3.bean.WallpaperOnline;
 import com.android.launcher3.net.HttpController;
 import com.android.launcher3.net.ResultCallBack;
+import com.android.launcher3.swipe.NoAlphaDefaultItemAnimator;
 import com.android.launcher3.utils.Util;
 import com.cuan.launcher.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;

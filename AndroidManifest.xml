@@ -269,6 +269,10 @@
         <activity android:name="com.android.launcher3.demoactivity.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme"/>
+
+        <activity android:name="com.android.launcher3.demoactivity.WallpaperOnlineActivity"
+                  android:launchMode="singleTop"
+                  android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

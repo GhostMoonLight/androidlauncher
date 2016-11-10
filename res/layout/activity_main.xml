@@ -10,7 +10,8 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiprefreshlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycleview"
@@ -20,5 +21,12 @@
         </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    <include
+        android:id="@+id/swiperecyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/swiperecycleview"/>
 
 </android.support.design.widget.CoordinatorLayout>
