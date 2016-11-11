@@ -24,6 +24,7 @@ import com.cuan.launcher.R;
 
 /**
  * Created by cgx on 16/11/10.
+ * RecyclerView和SwipeRefreshLayout组合的下拉刷新和上拉加载控件
  */
 public class SwipeRecyclerView extends FrameLayout {
 
@@ -38,26 +39,24 @@ public class SwipeRecyclerView extends FrameLayout {
     private int mLastMotionY;
     //滑动状态
     private int mPullState;
-    //上滑
-    private int PULL_UP_STATE = 2;
+    private int PULL_UP_STATE = 2;  //手指上滑
     private int PULL_FINISH_STATE = 0;
     //当前滑动的距离
     private int curTransY;
-    //尾部的高度
     private int footerHeight;
-    //尾部局
     private View footerView;
     //是否上拉加载更多
     private boolean isLoadNext = false;
     //是否在加载中
     private boolean isLoading = false;
+    private boolean isAnimatoring = false; //动画是否正在执行，footerView消失的动画是否正在执行
+    private ObjectAnimator objectAnimator;
 
     private OnSwipeRecyclerViewListener onSwipeRecyclerViewListener;
 
     private boolean isCancelLoadNext = false;   //是否取消上拉加载
     private MaterialProgressDrawable mProgress;
     private ImageView mProgressView;
-
 
     public SwipeRecyclerView(Context context) {
         this(context, null);
@@ -120,18 +119,21 @@ public class SwipeRecyclerView extends FrameLayout {
                     footerHeight = footerParams.height;
                     curTransY = footerHeight;
                     footerView.setTranslationY(curTransY);
+                    mProgress.start();
                 }
             }
         });
         addLoadingProgress();
     }
 
+    //添加加载动画
     private void addLoadingProgress() {
         mProgress = new MaterialProgressDrawable(getContext(), this);
         mProgress.updateSizes(MaterialProgressDrawable.DEFAULT);
         mProgress.setBackgroundColor(0xFFFAFAFA);
-        mProgress.setColorSchemeColors(Color.GREEN);
+        mProgress.setAlpha(255);
         mProgress.setStartEndTrim(0, 0.8f);
+        mProgress.setColorSchemeColors(Color.parseColor("#006633"));
         mProgressView.setImageDrawable(mProgress);
     }
 
@@ -202,6 +204,9 @@ public class SwipeRecyclerView extends FrameLayout {
                     if (curTransY < 0) {
                         curTransY = 0;
                     }
+                    if (objectAnimator != null){
+                        objectAnimator.cancel();
+                    }
                     footerView.setTranslationY(curTransY);
                     if(Math.abs(curTransY) == 0){
                         isLoadNext = true;
@@ -216,7 +221,7 @@ public class SwipeRecyclerView extends FrameLayout {
                 //此时是否滑到了底部
                 if (!recyclerView.canScrollVertically(1)) {
                     if (isLoadNext) {
-                        changeFooterState(true);
+                        changeFooterState(isLoadNext);
                         mPullState = PULL_FINISH_STATE;
                         if (onSwipeRecyclerViewListener != null) {
                             onSwipeRecyclerViewListener.onLoadNext();
@@ -230,6 +235,9 @@ public class SwipeRecyclerView extends FrameLayout {
                         isLoading = false;
                     }
                     return true;
+                }else{
+                    hideTranslationY();
+                    isLoading = false;
                 }
         }
 
@@ -247,31 +255,29 @@ public class SwipeRecyclerView extends FrameLayout {
     }
 
     private void hideTranslationY() {
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(footerView, "translationY",curTransY, footerHeight).setDuration(1000);
-                objectAnimator.setInterpolator(new DecelerateInterpolator());
-                objectAnimator.start();
+        objectAnimator = ObjectAnimator.ofFloat(footerView, "translationY",curTransY, footerHeight).setDuration(800);
+        objectAnimator.setInterpolator(new DecelerateInterpolator());
+        objectAnimator.start();
 
-                objectAnimator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        curTransY = footerHeight;
-                        changeFooterState(false);
-                    }
-                });
+        objectAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
             }
-        }, 200);
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                curTransY = footerHeight;
+                changeFooterState(false);
+            }
+        });
     }
 
     private void changeFooterState(boolean loading){
         if(loading){
             tvLoadingText.setText("正在努力的加载中...");
-            mProgress.start();
         }else{
-            tvLoadingText.setText("加载更多");
-            mProgress.stop();
+            tvLoadingText.setText("松手加载更多");
         }
     }
 

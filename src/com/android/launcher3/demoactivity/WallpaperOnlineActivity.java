@@ -1,22 +1,28 @@
 package com.android.launcher3.demoactivity;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.launcher3.bean.WallpaperOnline;
 import com.android.launcher3.net.HttpController;
 import com.android.launcher3.net.ResultCallBack;
 import com.android.launcher3.swipe.NoAlphaDefaultItemAnimator;
+import com.android.launcher3.swipe.OutlineContainer;
 import com.android.launcher3.swipe.SwipeRecyclerView;
+import com.android.launcher3.swipe.SwitchViewPager;
 import com.android.launcher3.utils.Util;
 import com.cuan.launcher.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -39,10 +45,12 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
     private ArrayList<WallpaperOnline.WallpaperOnlineInfo> mWallpaperList;
     private WaterfallAdapter mAdapter;
     private DisplayImageOptions imageOptions;
+    private SwitchViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_main);
 
         mSwipeRecyclerView = (SwipeRecyclerView) findViewById(R.id.swiperecyclerview);
@@ -58,6 +66,9 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
         mAdapter = new WaterfallAdapter();
         mWallpaperList = new ArrayList<>();
         mRecyclerView.setAdapter(mAdapter);
+
+        mViewPager = (SwitchViewPager) findViewById(R.id.viewpager);
+        mViewPager.setAdapter(new MainAdapter());
 
         imageOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
@@ -151,6 +162,47 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
                 super(itemView);
 
                 mImageView = (ImageView) itemView.findViewById(R.id.wallpaper_img);
+            }
+        }
+    }
+
+    private class MainAdapter extends PagerAdapter {
+        @Override
+        public Object instantiateItem(ViewGroup container, final int position) {
+            TextView text = new TextView(WallpaperOnlineActivity.this);
+            text.setGravity(Gravity.CENTER);
+            text.setTextSize(30);
+            text.setTextColor(Color.WHITE);
+            text.setText("Page " + position);
+            text.setPadding(30, 30, 30, 30);
+            int bg = Color.rgb((int) Math.floor(Math.random() * 128) + 64,
+                    (int) Math.floor(Math.random() * 128) + 64,
+                    (int) Math.floor(Math.random() * 128) + 64);
+            text.setBackgroundColor(bg);
+            container.addView(text, ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            mViewPager.setObjectForPosition(text, position);
+            return text;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object obj) {
+            container.removeView(mViewPager.findViewFromObject(position));
+        }
+
+        @Override
+        public int getCount()
+        {
+            return 10;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object obj)
+        {
+            if (view instanceof OutlineContainer) {
+                return ((OutlineContainer) view).getChildAt(0) == obj;
+            } else {
+                return view == obj;
             }
         }
     }
