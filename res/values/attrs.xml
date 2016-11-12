@@ -146,6 +146,7 @@
         <attr name="indicatorSize" format="dimension" />
     </declare-styleable>
 
+    <!-- 可以设置页面切换动画的ViewPager -->
     <declare-styleable name="SwitchViewPager">
         <attr name="style">
             <enum name="standard" value="0" />
@@ -164,5 +165,32 @@
         <attr name="fadeEnabled" format="boolean" />
         <attr name="outlineEnabled" format="boolean" />
         <attr name="outlineColor" format="color|reference" />
+    </declare-styleable>
+
+    <!-- ViewPager页面指示器-->
+    <declare-styleable name="PageIndicatorView">
+
+        <attr name="piv_viewPager" format="reference" />
+        <attr name="piv_select" format="integer" />
+
+        <attr name="piv_count" format="integer" />
+        <attr name="dynamicCount" format="boolean" />
+
+        <attr name="piv_radius" format="dimension" />
+        <attr name="piv_padding" format="dimension" />
+        <attr name="piv_scaleFactor" format="float" />
+
+        <attr name="piv_unselectedColor" format="color" />
+        <attr name="piv_selectedColor" format="color" />
+
+        <attr name="piv_interactiveAnimation" format="boolean" />
+        <attr name="piv_animationDuration" format="integer" />
+        <attr name="piv_animationType">
+            <enum name="none" value="0" />
+            <enum name="color" value="1" />
+            <enum name="scale" value="2" />
+            <enum name="worm" value="3" />
+            <enum name="slide" value="4" />
+        </attr>
     </declare-styleable>
 </resources>

@@ -1,13 +1,11 @@
 package com.android.launcher3.demoactivity;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.launcher3.bean.WallpaperClassify;
 import com.android.launcher3.bean.WallpaperOnline;
 import com.android.launcher3.net.HttpController;
 import com.android.launcher3.net.ResultCallBack;
+import com.android.launcher3.pageindicator.PageIndicatorView;
+import com.android.launcher3.swipe.HeaderAndFooterWrapper;
 import com.android.launcher3.swipe.NoAlphaDefaultItemAnimator;
 import com.android.launcher3.swipe.OutlineContainer;
 import com.android.launcher3.swipe.SwipeRecyclerView;
@@ -31,9 +32,11 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created by cgx on 16/11/10.
+ * 壁纸界面
  */
 
 public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerView.OnSwipeRecyclerViewListener {
@@ -43,9 +46,14 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
     private RecyclerView mRecyclerView;
     private int pageIndex=1;
     private ArrayList<WallpaperOnline.WallpaperOnlineInfo> mWallpaperList;
-    private WaterfallAdapter mAdapter;
+    private WaterfallAdapter mAdapter;   //瀑布流的适配器
+    private HeaderAndFooterWrapper mHeaderAndFooterWrapper;  //可以添加Head和Foot的包装者适配器，需要传入一个适配器
     private DisplayImageOptions imageOptions;
     private SwitchViewPager mViewPager;
+    private ArrayList<WallpaperClassify.WallpaperClassifyInfo> mWallpaperClassifyList;
+    private WallpaperClassifyAdapter mClassifyAdapter;
+    private PageIndicatorView mPageIndicatorView;
+    private View mWallpaperHeadView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +73,18 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new WaterfallAdapter();
         mWallpaperList = new ArrayList<>();
-        mRecyclerView.setAdapter(mAdapter);
 
-        mViewPager = (SwitchViewPager) findViewById(R.id.viewpager);
-        mViewPager.setAdapter(new MainAdapter());
+        mWallpaperHeadView = View.inflate(this, R.layout.wallpaper_headview, null);
+        mWallpaperClassifyList = new ArrayList<>();
+        mViewPager = (SwitchViewPager) mWallpaperHeadView.findViewById(R.id.viewpager);
+        mClassifyAdapter = new WallpaperClassifyAdapter();
+        mViewPager.setAdapter(mClassifyAdapter);
+        mPageIndicatorView = (PageIndicatorView) mWallpaperHeadView.findViewById(R.id.pageindicatorview);
+        mPageIndicatorView.setViewPager(mViewPager);
+
+        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mAdapter);
+        mHeaderAndFooterWrapper.addHeaderView(mWallpaperHeadView);
+        mRecyclerView.setAdapter(mHeaderAndFooterWrapper);
 
         imageOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
@@ -79,6 +95,26 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
                 .displayer(new FadeInBitmapDisplayer(600))//是否图片加载好后渐入的动画时间
                 .build();
         mSwipeRecyclerView.loadData();
+        loadWallpaperClassify();
+    }
+
+    //获取壁纸分类信息
+    private void loadWallpaperClassify(){
+        HttpController.getInstance().getWallpaperClassify(new ResultCallBack<WallpaperClassify>() {
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onResponse(WallpaperClassify response) {
+                if (response != null && response.getResults().size() > 0){
+                    mWallpaperClassifyList.addAll(response.getResults());
+                    mClassifyAdapter.notifyDataSetChanged();
+                    mPageIndicatorView.setCount(response.getResults().size());
+                }
+            }
+        });
     }
 
     //请求网络数据   type=1 下啦刷新，  type＝2加载更多
@@ -95,10 +131,10 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
                     int index = mWallpaperList.size();
                     if (type == 1){
                         mWallpaperList.addAll(0, response.getResults());
-                        mAdapter.notifyDataSetChanged();
+                        mHeaderAndFooterWrapper.notifyDataSetChanged();
                     }else{
                         mWallpaperList.addAll(response.getResults());
-                        mAdapter.notifyItemRangeChanged(index, mWallpaperList.size());
+                        mHeaderAndFooterWrapper.notifyItemRangeChanged(mHeaderAndFooterWrapper.getHeadersCount()+index, mWallpaperList.size());
                     }
                     pageIndex++;
                 }
@@ -166,44 +202,70 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
         }
     }
 
-    private class MainAdapter extends PagerAdapter {
+    private class WallpaperClassifyAdapter extends PagerAdapter {
+
+        private LinkedList<View> mCaches = new LinkedList<>();
+
+        public WallpaperClassifyAdapter(){
+        }
+
+        private View createItem(WallpaperClassifyHolder holder){
+            View view = View.inflate(WallpaperOnlineActivity.this, R.layout.wallpaper_classify_item, null);
+            holder.imageView = (ImageView) view.findViewById(R.id.classify_img);
+            holder.textView = (TextView) view.findViewById(R.id.classify_name);
+            view.setTag(holder);
+            return view;
+        }
+
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            TextView text = new TextView(WallpaperOnlineActivity.this);
-            text.setGravity(Gravity.CENTER);
-            text.setTextSize(30);
-            text.setTextColor(Color.WHITE);
-            text.setText("Page " + position);
-            text.setPadding(30, 30, 30, 30);
-            int bg = Color.rgb((int) Math.floor(Math.random() * 128) + 64,
-                    (int) Math.floor(Math.random() * 128) + 64,
-                    (int) Math.floor(Math.random() * 128) + 64);
-            text.setBackgroundColor(bg);
-            container.addView(text, ViewGroup.LayoutParams.MATCH_PARENT,
+
+            WallpaperClassifyHolder holder;
+            View view;
+            WallpaperClassify.WallpaperClassifyInfo classifyInfo = mWallpaperClassifyList.get(position);
+            if (mCaches.size() == 0){
+                holder = new WallpaperClassifyHolder();
+                view = createItem(holder);
+            }else{
+                view = mCaches.removeFirst();
+                holder = (WallpaperClassifyHolder) view.getTag();
+            }
+//            view.setScaleX(1); view.setScaleY(1);
+//            view.setTranslationX(0);
+            ImageLoader.getInstance().displayImage(classifyInfo.getCover(), holder.imageView, imageOptions);
+            holder.textView.setText(classifyInfo.getName());
+
+            container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT);
-            mViewPager.setObjectForPosition(text, position);
-            return text;
+            mViewPager.setObjectForPosition(view, position);
+            return view;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object obj) {
-            container.removeView(mViewPager.findViewFromObject(position));
+            mViewPager.findViewFromObject(position);
+            container.removeView((View)obj);
+//            mCaches.clear();
+//            mCaches.add((View)obj);
         }
 
         @Override
-        public int getCount()
-        {
-            return 10;
+        public int getCount() {
+            return mWallpaperClassifyList.size();
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object obj)
-        {
+        public boolean isViewFromObject(View view, Object obj) {
             if (view instanceof OutlineContainer) {
                 return ((OutlineContainer) view).getChildAt(0) == obj;
             } else {
                 return view == obj;
             }
+        }
+
+        private class WallpaperClassifyHolder {
+            public ImageView imageView;
+            public TextView textView;
         }
     }
 }

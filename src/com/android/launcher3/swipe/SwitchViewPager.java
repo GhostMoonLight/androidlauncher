@@ -1,8 +1,5 @@
 package com.android.launcher3.swipe;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -18,6 +15,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.cuan.launcher.R;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * 切换动画的ViewPager
@@ -169,15 +169,15 @@ public class SwitchViewPager extends ViewPager {
     }
 
     private void logState(View v, String title) {
-        Log.v(TAG,
-                title + ": ROT (" + ViewHelper.getRotation(v) + ", "
-                        + ViewHelper.getRotationX(v) + ", "
-                        + ViewHelper.getRotationY(v) + "), TRANS ("
-                        + ViewHelper.getTranslationX(v) + ", "
-                        + ViewHelper.getTranslationY(v) + "), SCALE ("
-                        + ViewHelper.getScaleX(v) + ", "
-                        + ViewHelper.getScaleY(v) + "), ALPHA "
-                        + ViewHelper.getAlpha(v));
+//        Log.v(TAG,
+//                title + ": ROT (" + ViewHelper.getRotation(v) + ", "
+//                        + ViewHelper.getRotationX(v) + ", "
+//                        + ViewHelper.getRotationY(v) + "), TRANS ("
+//                        + ViewHelper.getTranslationX(v) + ", "
+//                        + ViewHelper.getTranslationY(v) + "), SCALE ("
+//                        + ViewHelper.getScaleX(v) + ", "
+//                        + ViewHelper.getScaleY(v) + "), ALPHA "
+//                        + ViewHelper.getAlpha(v));
     }
 
     protected void animateScroll(int position, float positionOffset) {

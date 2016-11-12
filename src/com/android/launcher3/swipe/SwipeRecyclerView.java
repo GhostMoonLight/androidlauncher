@@ -285,6 +285,7 @@ public class SwipeRecyclerView extends FrameLayout {
         this.onSwipeRecyclerViewListener = onSwipeRecyclerViewListener;
     }
 
+    //第一次显示时，显示加载进度条，获取数据
     public void loadData(){
         if (onSwipeRecyclerViewListener != null) {
             isLoading = true;
