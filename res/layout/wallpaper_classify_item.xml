@@ -14,7 +14,7 @@
         android:id="@+id/classify_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="@dimen/text_size_20sp"
+        android:textSize="@dimen/text_size_22sp"
         android:gravity="center"
         android:textColor="@color/base"/>
 </FrameLayout>

@@ -124,6 +124,9 @@
     <dimen name="text_size_18sp">18sp</dimen>
     <dimen name="text_size_19sp">19sp</dimen>
     <dimen name="text_size_20sp">20sp</dimen>
+    <dimen name="text_size_21sp">21sp</dimen>
+    <dimen name="text_size_22sp">22sp</dimen>
+    <dimen name="text_size_23sp">23sp</dimen>
 
     <dimen name="default_sapce_5">5dp</dimen>
     <dimen name="default_sapce_10">10dp</dimen>

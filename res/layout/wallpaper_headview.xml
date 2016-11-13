@@ -10,7 +10,7 @@
         android:id="@+id/viewpager"
         switchviewpager:style="stack"
         android:layout_width="match_parent"
-        android:layout_height="126dp"
+        android:layout_height="127dp"
         android:background="@color/alpha_black_2"/>
 
     <com.android.launcher3.pageindicator.PageIndicatorView
