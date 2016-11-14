@@ -24,6 +24,7 @@ import com.android.launcher3.swipe.NoAlphaDefaultItemAnimator;
 import com.android.launcher3.swipe.OutlineContainer;
 import com.android.launcher3.swipe.SwipeRecyclerView;
 import com.android.launcher3.swipe.SwitchViewPager;
+import com.android.launcher3.utils.Log;
 import com.android.launcher3.utils.Util;
 import com.cuan.launcher.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -165,8 +166,8 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
         }
 
         @Override
-        public void onBindViewHolder(WaterfallAdapter.WaterfallHolder holder, final int position) {
-            WallpaperOnline.WallpaperOnlineInfo info = mWallpaperList.get(position);
+        public void onBindViewHolder(final WaterfallAdapter.WaterfallHolder holder, final int position) {
+            final WallpaperOnline.WallpaperOnlineInfo info = mWallpaperList.get(position);
             if (!info.getCover().equals(holder.mImageView.getTag())) {
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.mImageView.getLayoutParams();
                 if (info.mHeight == 0) {
@@ -181,6 +182,7 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(WallpaperOnlineActivity.this, "position:"+position, Toast.LENGTH_SHORT).show();
+                        startImageActivity(holder.mImageView, info);
                     }
                 });
             }
@@ -267,5 +269,15 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
             public ImageView imageView;
             public TextView textView;
         }
+    }
+
+    private void startImageActivity(View view, WallpaperOnline.WallpaperOnlineInfo info){
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        //显示大图图片的宽和高，服务器返回的数据要带这个图片的宽高数据，这里已经知道壁纸数据的宽和高，就是宽的长度乘以2
+        int largeWidth = Util.getScreenW()*2;
+        int largeHeight = Util.getScreenH();
+        ImageActivity.actionActivity(WallpaperOnlineActivity.this, info.getCover(), info.getFile(),
+                view.getWidth(), view.getHeight(), location[0], location[1], largeWidth, largeHeight);
     }
 }

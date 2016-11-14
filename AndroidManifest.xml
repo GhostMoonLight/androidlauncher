@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2008, The Android Open Source Project
@@ -17,70 +16,70 @@
 ** limitations under the License.
 */
 -->
-<manifest package="com.cuan.launcher"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="10000"
-          android:versionName="1.0.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cuan.launcher"
+    android:versionCode="10000"
+    android:versionName="1.0.0">
 
     <uses-sdk
         android:minSdkVersion="17"
-        android:targetSdkVersion="21"/>
+        android:targetSdkVersion="21" />
 
     <permission
         android:name="com.android.launcher.permission.INSTALL_SHORTCUT"
         android:description="@string/permdesc_install_shortcut"
         android:label="@string/permlab_install_shortcut"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="dangerous"/>
+        android:protectionLevel="dangerous" />
     <permission
         android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"
         android:description="@string/permdesc_uninstall_shortcut"
         android:label="@string/permlab_uninstall_shortcut"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="dangerous"/>
+        android:protectionLevel="dangerous" />
     <permission
         android:name="com.cuan.launcher.permission.READ_SETTINGS"
         android:description="@string/permdesc_read_settings"
         android:label="@string/permlab_read_settings"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="normal"/>
+        android:protectionLevel="normal" />
     <permission
         android:name="com.cuan.launcher.permission.WRITE_SETTINGSH"
         android:description="@string/permdesc_write_settings"
         android:label="@string/permlab_write_settings"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="signatureOrSystem"/>
+        android:protectionLevel="signatureOrSystem" />
     <permission
         android:name="com.cuan.launcher.permission.RECEIVE_LAUNCH_BROADCASTS"
-        android:protectionLevel="signature"/>
+        android:protectionLevel="signature" />
     <permission
         android:name="com.cuan.launcher.permission.RECEIVE_FIRST_LOAD_BROADCAST"
-        android:protectionLevel="signatureOrSystem"/>
+        android:protectionLevel="signatureOrSystem" />
 
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
-    <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.BIND_APPWIDGET"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
-    <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="com.cuan.launcher.permission.READ_SETTINGS"/>
-    <uses-permission android:name="com.cuan.launcher.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="com.cuan.launcher.permission.RECEIVE_LAUNCH_BROADCASTS"/>
-    <uses-permission android:name="com.cuan.launcher.permission.RECEIVE_FIRST_LOAD_BROADCAST"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!-- 如果需要精确定位的话请加上此权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BIND_APPWIDGET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.cuan.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.cuan.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.cuan.launcher.permission.RECEIVE_LAUNCH_BROADCASTS" />
+    <uses-permission android:name="com.cuan.launcher.permission.RECEIVE_FIRST_LOAD_BROADCAST" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 如果需要精确定位的话请加上此权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.android.launcher3.LauncherApplication"
@@ -99,9 +98,9 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -114,11 +113,11 @@
             android:stateNotNeeded="true"
             android:theme="@style/AppTheme.Wallpaper">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.HOME"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.MONKEY"/>
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.MONKEY" />
             </intent-filter>
         </activity>
         <activity
@@ -127,14 +126,14 @@
             android:icon="@drawable/ic_launcher_home"
             android:label="@string/toggle_weight_watcher">
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.android.launcher3.JumpActivity"
             android:launchMode="singleTask"
-            android:theme="@android:style/Theme.NoDisplay"/>
+            android:theme="@android:style/Theme.NoDisplay" />
         <activity
             android:name="com.android.launcher3.LauncherWallpaperPickerActivity"
             android:finishOnCloseSystemDialogs="true"
@@ -143,9 +142,9 @@
             android:process=":wallpaper_chooser"
             android:theme="@style/Theme.WallpaperPicker">
             <intent-filter>
-                <action android:name="android.intent.action.SET_WALLPAPER"/>
+                <action android:name="android.intent.action.SET_WALLPAPER" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -156,11 +155,11 @@
             android:process=":wallpaper_chooser"
             android:theme="@style/Theme.WallpaperCropper">
             <intent-filter>
-                <action android:name="android.service.wallpaper.CROP_AND_SET_WALLPAPER"/>
+                <action android:name="android.service.wallpaper.CROP_AND_SET_WALLPAPER" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="image/*"/>
+                <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
 
@@ -184,11 +183,11 @@
 
         <service
             android:name="com.android.launcher3.MemoryTracker"
-            android:enabled="@bool/debug_memory_enabled"/>
+            android:enabled="@bool/debug_memory_enabled" />
 
         <receiver android:name="com.android.launcher3.WallpaperChangedReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.WALLPAPER_CHANGED"/>
+                <action android:name="android.intent.action.WALLPAPER_CHANGED" />
             </intent-filter>
         </receiver>
 
@@ -197,7 +196,7 @@
             android:name="com.android.launcher3.InstallShortcutReceiver"
             android:permission="com.android.launcher.permission.INSTALL_SHORTCUT">
             <intent-filter>
-                <action android:name="com.android.launcher.action.INSTALL_SHORTCUT"/>
+                <action android:name="com.android.launcher.action.INSTALL_SHORTCUT" />
             </intent-filter>
         </receiver>
 
@@ -206,14 +205,14 @@
             android:name="com.android.launcher3.UninstallShortcutReceiver"
             android:permission="com.android.launcher.permission.UNINSTALL_SHORTCUT">
             <intent-filter>
-                <action android:name="com.android.launcher.action.UNINSTALL_SHORTCUT"/>
+                <action android:name="com.android.launcher.action.UNINSTALL_SHORTCUT" />
             </intent-filter>
         </receiver>
 
         <!-- Intent received used to initialize a restored widget -->
         <receiver android:name="com.android.launcher3.AppWidgetsRestoredReceiver">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_HOST_RESTORED"/>
+                <action android:name="android.appwidget.action.APPWIDGET_HOST_RESTORED" />
             </intent-filter>
         </receiver>
 
@@ -222,21 +221,21 @@
             android:name="com.android.launcher3.UserInitializeReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.USER_INITIALIZE"/>
+                <action android:name="android.intent.action.USER_INITIALIZE" />
             </intent-filter>
         </receiver>
         <receiver android:name="com.android.launcher3.PackageChangedReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_CHANGED"/>
-                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <action android:name="android.intent.action.PACKAGE_CHANGED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
 
-                <data android:scheme="package"/>
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
         <receiver android:name="com.android.launcher3.StartupReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
@@ -246,33 +245,31 @@
             android:authorities="com.cuan.launcher"
             android:exported="true"
             android:readPermission="com.android.launcher3.permission.READ_SETTINGS"
-            android:writePermission="com.android.launcher3.permission.WRITE_SETTINGS"/>
+            android:writePermission="com.android.launcher3.permission.WRITE_SETTINGS" />
 
         <!-- 友盟 -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="57834b3fe0f55afda5002ed4"/>
+            android:value="57834b3fe0f55afda5002ed4" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="1023"/>
+            android:value="1023" />
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="a78b21a44bd6ea586f6625713f2a0a09">
-        </meta-data>
+            android:value="a78b21a44bd6ea586f6625713f2a0a09"></meta-data>
 
         <provider
             android:name="com.android.launcher3.db.OtherDBProvider"
             android:authorities="com.cuan.launcher.otherdb"
-            android:exported="false">
-        </provider>
+            android:exported="false"></provider>
 
-        <activity android:name="com.android.launcher3.demoactivity.MainActivity"
+        <activity
+            android:name="com.android.launcher3.demoactivity.WallpaperOnlineActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme"/>
-
-        <activity android:name="com.android.launcher3.demoactivity.WallpaperOnlineActivity"
-                  android:launchMode="singleTop"
-                  android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+        <activity android:name="com.android.launcher3.demoactivity.ImageActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Transparent" />
     </application>
 
 </manifest>
