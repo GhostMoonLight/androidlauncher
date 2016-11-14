@@ -7,14 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.android.launcher3.utils.Log;
+import com.android.launcher3.utils.Util;
 import com.android.launcher3.view.SmoothClickMagnifyImageView;
 import com.cuan.launcher.R;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 public class ImageActivity extends Activity {
@@ -58,14 +54,16 @@ public class ImageActivity extends Activity {
         mOriginalPositionY = intent.getIntExtra("originPositionY", 0);
         mLargeWidth = intent.getIntExtra("largeWidth", 0);
         mLargeHeight = intent.getIntExtra("largeHeight", 0);
+        if(Util.getScreenW() == 800) {
+            mLargeWidth = 1440;
+        }
 
         setContentView(R.layout.activity_image);
         mImageView = (SmoothClickMagnifyImageView) findViewById(R.id.image_view);
         ImageLoader.getInstance().loadImage(mUrl, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                mImageView.setImageBitmap(bitmap);
-                mImageView.setOriginalValues(mOriginalWidth, mOriginalHeight, mOriginalPositionX, mOriginalPositionY, mLargeWidth, mLargeHeight);
+                mImageView.setOriginalValues(bitmap, mOriginalWidth, mOriginalHeight, mOriginalPositionX, mOriginalPositionY, mLargeWidth, mLargeHeight);
             }
         });
         ImageLoader.getInstance().loadImage(mLargeUrl, new SimpleImageLoadingListener() {
