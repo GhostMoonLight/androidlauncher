@@ -13,11 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.launcher3.bean.WallpaperClassify;
 import com.android.launcher3.bean.WallpaperOnline;
-import com.android.launcher3.common.LogUtils;
 import com.android.launcher3.net.HttpController;
 import com.android.launcher3.net.ResultCallBack;
 import com.android.launcher3.pageindicator.PageIndicatorView;
@@ -26,7 +24,6 @@ import com.android.launcher3.swipe.NoAlphaDefaultItemAnimator;
 import com.android.launcher3.swipe.OutlineContainer;
 import com.android.launcher3.swipe.SwipeRecyclerView;
 import com.android.launcher3.swipe.SwitchViewPager;
-import com.android.launcher3.utils.Log;
 import com.android.launcher3.utils.Util;
 import com.cuan.launcher.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -183,10 +180,10 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
                 ImageLoader.getInstance().displayImage(info.getCover(), holder.mImageView, imageOptions, new SimpleImageLoadingListener(){
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        //图片显示出来以后在设置点击事件
                         holder.mImageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(WallpaperOnlineActivity.this, "position:"+position, Toast.LENGTH_SHORT).show();
                                 startImageActivity(holder.mImageView, info);
                             }
                         });

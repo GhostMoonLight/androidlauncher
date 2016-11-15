@@ -9,13 +9,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
-
-import com.android.launcher3.common.LogUtils;
 
 /**
  * Created by wen on 2016/11/14.
@@ -27,6 +29,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
     private final int DURATION = 300;
 
     private int mOriginalWidth, mOriginalHeight;
+    private int mLargeWidth, mLargeHeight;
 
     private final Matrix mMatrix = new Matrix();
     private ValueAnimator mValueAnimator;
@@ -37,6 +40,9 @@ public class SmoothClickMagnifyImageView extends ImageView {
     private Runnable mRunnable;   //如果当前view没有加载出来，就调用setOriginalValues方法时，就把该方法执行的任务，保存到Runnable中
     private Runnable mSetImageRunnable;
     private ArgbEvaluator mArgbEvaluator;
+    private GestureDetector mGestureDetector;
+    private boolean isMagnifyFull;   //是不是全屏状态
+    private boolean isCheckTopAndBottom, isCheckLeftAndRight;
 
     public SmoothClickMagnifyImageView(Context context) {
         this(context, null);
@@ -69,6 +75,53 @@ public class SmoothClickMagnifyImageView extends ImageView {
                 mRunnable = null;
             }
         });
+
+        mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public boolean onDoubleTap(final MotionEvent e) {
+
+                if (!isMagnifyFull) {
+                    isMagnifyFull = true;
+                    //放大到图片的高和View的高度一样
+                }else{
+                    isMagnifyFull = false;
+                }
+                mngnifyFull(isMagnifyFull);
+                return true;
+            }
+        });
+    }
+
+    //双击放大到全屏或者双击退出全屏
+    private void mngnifyFull(final boolean isMagnifyFull){
+        if (mValueAnimator != null && mValueAnimator.isRunning()) return;
+        float scale = getHeight() * 1.0f / mLargeHeight;
+        mValueAnimator = new ValueAnimator();
+        PropertyValuesHolder scaleYHolder;
+        if (isMagnifyFull){
+            scaleYHolder = PropertyValuesHolder.ofFloat("scaleY", mScale, scale);
+            mValueAnimator.setValues(scaleYHolder);
+        }else{
+            RectF rect = getMatrixRectF();
+            PropertyValuesHolder transXHolder = PropertyValuesHolder.ofInt("transX", (int)rect.left, 0);
+            scaleYHolder = PropertyValuesHolder.ofFloat("scaleY", scale, mScale);
+            mValueAnimator.setValues(scaleYHolder, transXHolder);
+        }
+        mValueAnimator.setDuration(DURATION);
+        mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public synchronized void onAnimationUpdate(ValueAnimator animation) {
+                float scale = (float) animation.getAnimatedValue("scaleY");
+                mMatrix.reset();
+                mMatrix.postScale(scale, scale, 0, getHeight()/2);
+                if (!isMagnifyFull){
+                    mMatrix.postTranslate((int) animation.getAnimatedValue("transX"), 0);
+                }
+                setImageMatrix(mMatrix);
+            }
+        });
+        mValueAnimator.start();
     }
 
     /**
@@ -98,6 +151,8 @@ public class SmoothClickMagnifyImageView extends ImageView {
                 setImageBitmap(bitmap);
                 mOriginalWidth = originWidth;
                 mOriginalHeight = originHeight;
+                mLargeWidth = largerWidth;
+                mLargeHeight = largeHeight;
 
                 Drawable d = getDrawable();
                 if (d == null)
@@ -225,6 +280,12 @@ public class SmoothClickMagnifyImageView extends ImageView {
     public void onBackPressed(){
         if (mValueAnimator != null && mValueAnimator.isRunning()) return;
 
+        if (isMagnifyFull){
+            isMagnifyFull = false;
+            mngnifyFull(isMagnifyFull);
+            return;
+        }
+
         Drawable d = getDrawable();
         //计算最终要缩放的大小
         int dw = d.getIntrinsicWidth();
@@ -277,5 +338,136 @@ public class SmoothClickMagnifyImageView extends ImageView {
         public float currentScaleX, currentScaleY;
         public int currentTransX, currentTransY;
     }
+
+
+    private float mLastX, mLastY;
+    private boolean isCanScroll;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
+        if (mGestureDetector.onTouchEvent(event)){
+            return true;
+        }
+
+        if (!isMagnifyFull) return true;
+
+        float x = 0, y = 0;
+        x = event.getX();
+        y = event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mLastX = x;
+                mLastY = y;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float dx = x - mLastX;
+                float dy = y - mLastY;
+
+                if (!isCanScroll) {
+                    isCanScroll = isCanScroll(dx, dy);
+                }
+                if (isCanScroll) {
+                    RectF rectF = getMatrixRectF();
+                    if (getDrawable() != null)
+                    {
+                        isCheckLeftAndRight = isCheckTopAndBottom = true;
+                        // 如果宽度小于屏幕宽度，则禁止左右移动
+                        if (rectF.width() < getWidth()) {
+                            dx = 0;
+                            isCheckLeftAndRight = false;
+                        }
+                        // 如果高度小雨屏幕高度，则禁止上下移动
+                        if (rectF.height() <= getHeight()) {
+                            dy = 0;
+                            isCheckTopAndBottom = false;
+                        }
+                        mMatrix.postTranslate(dx, dy);
+                        checkMatrixBounds();
+                        setImageMatrix(mMatrix);
+                    }
+                }
+                mLastX = x;
+                mLastY = y;
+                break;
+
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                break;
+        }
+
+        return true;
+    }
+
+    /**
+     * 根据当前图片的Matrix获得图片的范围
+     *
+     * @return
+     */
+    private RectF getMatrixRectF() {
+        Matrix matrix = mMatrix;
+        RectF rect = new RectF();
+        Drawable d = getDrawable();
+        if (null != d) {
+            rect.set(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+            matrix.mapRect(rect);
+        }
+        return rect;
+    }
+
+    //获取Y方向的缩放比例
+    public float getScaleY() {
+        float[] matrixValues = new float[9];
+        mMatrix.getValues(matrixValues);
+        return matrixValues[Matrix.MSCALE_Y];
+    }
+
+    public float getTransX() {
+        float[] matrixValues = new float[9];
+        mMatrix.getValues(matrixValues);
+        return matrixValues[Matrix.MTRANS_X];
+    }
+
+    public float getTransY() {
+        float[] matrixValues = new float[9];
+        mMatrix.getValues(matrixValues);
+        return matrixValues[Matrix.MTRANS_Y];
+    }
+
+    /*
+    * 移动时，进行边界判断，主要判断宽或高大于屏幕的
+    */
+    private void checkMatrixBounds() {
+        RectF rect = getMatrixRectF();
+
+        float deltaX = 0, deltaY = 0;
+        final float viewWidth = getWidth();
+        final float viewHeight = getHeight();
+        // 判断移动或缩放后，图片显示是否超出屏幕边界
+        if (rect.top > 0 && isCheckTopAndBottom) {
+            deltaY = -rect.top;
+        }
+        if (rect.bottom < viewHeight && isCheckTopAndBottom) {
+            deltaY = viewHeight - rect.bottom;
+        }
+        if (rect.left > 0 && isCheckLeftAndRight) {
+            deltaX = -rect.left;
+        }
+        if (rect.right < viewWidth && isCheckLeftAndRight) {
+            deltaX = viewWidth - rect.right;
+        }
+        mMatrix.postTranslate(deltaX, deltaY);
+    }
+
+    /**
+     * 是否可以滑动
+     *
+     * @param dx
+     * @param dy
+     * @return
+     */
+    private boolean isCanScroll(float dx, float dy) {
+        return Math.sqrt((dx * dx) + (dy * dy)) >= ViewConfiguration.get(getContext()).getScaledTouchSlop();
+    }
+
 
 }
