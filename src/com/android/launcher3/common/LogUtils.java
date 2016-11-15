@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 /**
- * Created by ZhangTao on 10/12/16.
+ * Created by cgx on 16/11/10.
  */
 public class LogUtils {
     public static boolean mLogEnable = true;

@@ -1,17 +1,21 @@
 package com.android.launcher3.view;
 
 import android.animation.Animator;
+import android.animation.ArgbEvaluator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+
+import com.android.launcher3.common.LogUtils;
 
 /**
  * Created by wen on 2016/11/14.
@@ -20,20 +24,19 @@ import android.widget.ImageView;
 
 public class SmoothClickMagnifyImageView extends ImageView {
 
-    private final int DURATION = 400;
+    private final int DURATION = 300;
 
     private int mOriginalWidth, mOriginalHeight;
-    private int mOriginalPositionX, mOriginalPositionY;
 
     private final Matrix mMatrix = new Matrix();
     private ValueAnimator mValueAnimator;
     private TransScale mTransScale;
-    private float mScale;
-    private Bitmap mBitmap;
+    private float mScale;    //图片最终缩放的大小
     private boolean isAnimating = true;
-    private boolean isonGlobalLayout = false;
+    private boolean isOnGlobalLayout = false;
     private Runnable mRunnable;   //如果当前view没有加载出来，就调用setOriginalValues方法时，就把该方法执行的任务，保存到Runnable中
     private Runnable mSetImageRunnable;
+    private ArgbEvaluator mArgbEvaluator;
 
     public SmoothClickMagnifyImageView(Context context) {
         this(context, null);
@@ -54,10 +57,11 @@ public class SmoothClickMagnifyImageView extends ImageView {
     }
 
     private void initView(){
+        mArgbEvaluator = new ArgbEvaluator();
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                isonGlobalLayout = true;
+                isOnGlobalLayout = true;
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 if (mRunnable != null){
                     mRunnable.run();
@@ -67,9 +71,19 @@ public class SmoothClickMagnifyImageView extends ImageView {
         });
     }
 
+    /**
+     * 设置初始值     大图是最终显示的图，如果不需要加载大图，此处的largerWidth和largeHeight请根据图片最终显示的大小自行设置，
+     * @param bitmap                     小图   显示的缩略图
+     * @param originWidth                点击的view的宽
+     * @param originHeight               点击的view的高
+     * @param originalPositionX          点击的view的X在屏幕中的位置
+     * @param originalPositionY          点击的view的Y在屏幕中的位置
+     * @param largerWidth                大图的宽
+     * @param largeHeight                大图的高
+     */
     public void setOriginalValues(final Bitmap bitmap, final int originWidth, final int originHeight, final int originalPositionX, final int originalPositionY,
                                   final int largerWidth, final int largeHeight){
-        if (!isonGlobalLayout){
+        if (!isOnGlobalLayout){
             mRunnable = new Runnable() {
                 @Override
                 public void run() {
@@ -84,8 +98,6 @@ public class SmoothClickMagnifyImageView extends ImageView {
                 setImageBitmap(bitmap);
                 mOriginalWidth = originWidth;
                 mOriginalHeight = originHeight;
-                mOriginalPositionX = originalPositionX;
-                mOriginalPositionY = originalPositionY;
 
                 Drawable d = getDrawable();
                 if (d == null)
@@ -97,10 +109,8 @@ public class SmoothClickMagnifyImageView extends ImageView {
                 // 拿到图片的宽和高
                 int dw = d.getIntrinsicWidth();
                 int dh = d.getIntrinsicHeight();
-                float scaleX = 1.0f;
-                float scaleY = 1.0f;
-                scaleX = width * 1.0f / dw;
-                scaleY = height * 1.0f / dh;
+                float scaleX = width * 1.0f / dw;
+                float scaleY = height * 1.0f / dh;
 
                 mTransScale.currentScaleX = mTransScale.startScaleX = scaleX;
                 mTransScale.currentScaleY = mTransScale.startScaleY = scaleY;
@@ -135,7 +145,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
                 scaleX = width * 1.0f / dw;
                 scaleY = height * 1.0f / dh;
 
-                int endTransX = 0;
+                int endTransX = (getWidth() - width) / 2;
                 int endTransY = (getHeight() - height) / 2;
 
                 mTransScale.endScaleX = scaleX;
@@ -143,6 +153,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
                 mTransScale.endTransX = endTransX;
                 mTransScale.endTransY = endTransY;
 
+                //开始动画放大移动图片
                 PropertyValuesHolder scaleXHolder = PropertyValuesHolder.ofFloat("scaleX", mTransScale.startScaleX, mTransScale.endScaleX);
                 PropertyValuesHolder scaleYHolder = PropertyValuesHolder.ofFloat("scaleY", mTransScale.startScaleY, mTransScale.endScaleY);
                 PropertyValuesHolder transXHolder = PropertyValuesHolder.ofInt("transX", mTransScale.startTransX, mTransScale.endTransX);
@@ -159,6 +170,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
                         mTransScale.currentScaleY = (float) animation.getAnimatedValue("scaleY");
                         mTransScale.currentTransX = (int) animation.getAnimatedValue("transX");
                         mTransScale.currentTransY = (int) animation.getAnimatedValue("transY");
+                        ((Activity)getContext()).getWindow().getDecorView().setBackgroundColor((int)mArgbEvaluator.evaluate(animation.getAnimatedFraction(), Color.parseColor("#00000000"), Color.parseColor("#FF000000")));
                         setMatrixValue(mTransScale);
                     }
                 });
@@ -182,6 +194,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
         }, 200);
     }
 
+    //设置图片的缩放和移动
     public void setMatrixValue(TransScale ts){
         mMatrix.reset();
         mMatrix.postTranslate(ts.currentTransX, ts.currentTransY);
@@ -189,6 +202,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
         setImageMatrix(mMatrix);
     }
 
+    //设置最终显示的大图
     public void setImageBitmapWithMatrix(final Bitmap bitmap){
         if (isAnimating) {
             mSetImageRunnable = new Runnable() {
@@ -200,7 +214,6 @@ public class SmoothClickMagnifyImageView extends ImageView {
             return ;
         }
 
-        mBitmap = bitmap;
         setImageBitmap(bitmap);
         Matrix matrix = new Matrix();
         matrix.postTranslate(mTransScale.currentTransX, mTransScale.currentTransY);
@@ -238,6 +251,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
                 mTransScale.currentScaleY = (float) animation.getAnimatedValue("scaleY");
                 mTransScale.currentTransX = (int) animation.getAnimatedValue("transX");
                 mTransScale.currentTransY = (int) animation.getAnimatedValue("transY");
+                ((Activity)getContext()).getWindow().getDecorView().setBackgroundColor((int)mArgbEvaluator.evaluate(animation.getAnimatedFraction(), Color.parseColor("#FF000000"), Color.parseColor("#00000000")));
                 setMatrixValue(mTransScale);
             }
         });

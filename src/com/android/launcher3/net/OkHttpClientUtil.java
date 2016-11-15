@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.android.launcher3.LauncherApplication;
+import com.android.launcher3.common.LogUtils;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -162,7 +163,7 @@ public class OkHttpClientUtil {
                     }
 
                     if (response.networkResponse() == null){
-                        Log.e("AAAAA", "使用缓存");
+                        LogUtils.e("AAAAA", "使用缓存");
                     }
 
                 } catch (IOException e) {
@@ -195,6 +196,7 @@ public class OkHttpClientUtil {
     }
 
     private Request buildGetRequest(String url, boolean isUseCache) {
+        LogUtils.e("AAAAA", "Url:"+url);
         Request.Builder requestBuilder = new Request.Builder().url(url);
         //可以省略，默认是GET请求
         requestBuilder.method("GET", null);

@@ -3,6 +3,7 @@ package com.android.launcher3.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.Looper;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -63,12 +64,19 @@ public class UIUtil {
         if (isRunningLOrLater() && activity != null) {
             final Window window = activity.getWindow();
             if (window != null) {
-                window.setStatusBarColor(activity.getResources().getColor(colorId));
+//                window.setStatusBarColor(activity.getResources().getColor(colorId));
             }
         }
     }
     
     private static boolean isRunningLOrLater() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    //当前是否是主线程
+    public boolean isMainThread(){
+        return Looper.getMainLooper().getThread() == Thread.currentThread();
+//        return Looper.getMainLooper() == Looper.myLooper();
+//        return Looper.getMainLooper().getThread().getId() == Thread.currentThread().getId();
     }
 }

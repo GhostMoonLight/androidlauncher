@@ -339,23 +339,18 @@ public class IconCache {
     private CacheEntry cacheLocked(ComponentName componentName, ResolveInfo info, UserHandleCompat user) {
 		CacheEntry entry = mCache.get(componentName);
 		if (entry == null) {
-			entry = new CacheEntry();
-			CacheKey cacheKey = new CacheKey(componentName, user);
-			mCache.put(cacheKey, entry);
-			entry.title = info.loadLabel(mPackageManager).toString();
+            entry = new CacheEntry();
+            CacheKey cacheKey = new CacheKey(componentName, user);
+            mCache.put(cacheKey, entry);
+            if (info != null) {
+                entry.title = info.loadLabel(mPackageManager).toString();
 
-			if (entry.title == null) {
-				entry.title = info.activityInfo.name;
-			}
+                if (entry.title == null) {
+                    entry.title = info.activityInfo.name;
+                }
+            }
+            entry.icon = BitmapUtils.createIconBitmap(getFullResIcon(info), mContext);
 
-//			String label = info.loadLabel(mPackageManager).toString();
-//			int icon = getDefaultIconResource(mContext, label, info.activityInfo.packageName);
-//			if (icon > 0) {
-//				entry.icon = BitmapUtil.createIconBitmap(icon, mContext);
-//			} else {
-//				
-//			}
-			entry.icon = BitmapUtils.createIconBitmap(getFullResIcon(info), mContext);
 		}
 		return entry;
 	}
@@ -604,7 +599,7 @@ public class IconCache {
 		Resources resources;
 		try {
 			resources = mPackageManager.getResourcesForApplication(info.activityInfo.applicationInfo);
-		} catch (NameNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			resources = null;
 		}

@@ -7,10 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.android.launcher3.common.LogUtils;
 import com.android.launcher3.utils.Util;
 import com.android.launcher3.view.SmoothClickMagnifyImageView;
 import com.cuan.launcher.R;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 public class ImageActivity extends Activity {
@@ -58,6 +62,12 @@ public class ImageActivity extends Activity {
             mLargeWidth = 1440;
         }
 
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .imageScaleType(ImageScaleType.NONE)   //加载原图 不经过ImageLoader处理
+                .build();
+
         setContentView(R.layout.activity_image);
         mImageView = (SmoothClickMagnifyImageView) findViewById(R.id.image_view);
         ImageLoader.getInstance().loadImage(mUrl, new SimpleImageLoadingListener() {
@@ -66,7 +76,7 @@ public class ImageActivity extends Activity {
                 mImageView.setOriginalValues(bitmap, mOriginalWidth, mOriginalHeight, mOriginalPositionX, mOriginalPositionY, mLargeWidth, mLargeHeight);
             }
         });
-        ImageLoader.getInstance().loadImage(mLargeUrl, new SimpleImageLoadingListener() {
+        ImageLoader.getInstance().loadImage(mLargeUrl, defaultOptions, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
                 mImageView.setImageBitmapWithMatrix(bitmap);

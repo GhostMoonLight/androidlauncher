@@ -1,6 +1,7 @@
 package com.android.launcher3.demoactivity;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.android.launcher3.bean.WallpaperClassify;
 import com.android.launcher3.bean.WallpaperOnline;
+import com.android.launcher3.common.LogUtils;
 import com.android.launcher3.net.HttpController;
 import com.android.launcher3.net.ResultCallBack;
 import com.android.launcher3.pageindicator.PageIndicatorView;
@@ -31,6 +33,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -176,13 +179,17 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
                 params.height = info.mHeight;
                 holder.mImageView.setImageBitmap(null);
                 holder.mImageView.setTag(info.getCover());
-                ImageLoader.getInstance().displayImage(info.getCover(), holder.mImageView, imageOptions);
-
-                holder.mImageView.setOnClickListener(new View.OnClickListener() {
+                holder.mImageView.setOnClickListener(null);
+                ImageLoader.getInstance().displayImage(info.getCover(), holder.mImageView, imageOptions, new SimpleImageLoadingListener(){
                     @Override
-                    public void onClick(View v) {
-                        Toast.makeText(WallpaperOnlineActivity.this, "position:"+position, Toast.LENGTH_SHORT).show();
-                        startImageActivity(holder.mImageView, info);
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        holder.mImageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(WallpaperOnlineActivity.this, "position:"+position, Toast.LENGTH_SHORT).show();
+                                startImageActivity(holder.mImageView, info);
+                            }
+                        });
                     }
                 });
             }
@@ -274,7 +281,7 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
     private void startImageActivity(View view, WallpaperOnline.WallpaperOnlineInfo info){
         int[] location = new int[2];
         view.getLocationOnScreen(location);
-        //显示大图图片的宽和高，服务器返回的数据要带这个图片的宽高数据，这里已经知道壁纸数据的宽和高，就是宽的长度乘以2
+        //显示大图图片的宽和高，服务器返回的数据要带这个图片的宽高数据，这里已经知道壁纸数据的宽和高，就是屏幕高乘以2
         int largeWidth = Util.getScreenW()*2;
         int largeHeight = Util.getScreenH();
         ImageActivity.actionActivity(WallpaperOnlineActivity.this, info.getCover(), info.getFile(),
