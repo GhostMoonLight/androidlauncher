@@ -910,12 +910,13 @@ public class BitmapUtils {
 		return null;
 	}
 	
-	public static void setThemeWallpaper(Context c){
+	public static void setThemeWallpaper(Context c, Bitmap image){
 		int wallpaperWidth = 0, wallpaperHeight = 0;
 
 		final int screenWidth = LauncherAppState.getInstance().getScreenWidth();
 		final int screenHeight = LauncherAppState.getInstance().getScreenHeight();
-		Bitmap image = BitmapFactory.decodeResource(c.getResources(), R.drawable.wallpaper_default);
+		if (image == null)
+			image = BitmapFactory.decodeResource(c.getResources(), R.drawable.wallpaper_default);
 		final WallpaperManager mWallpaperManager = WallpaperManager.getInstance(c);
 		try {
 			if (image.getWidth() < image.getHeight()) {
@@ -938,10 +939,10 @@ public class BitmapUtils {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-//			try {
-//				mWallpaperManager.setResource(R.drawable.wallpaper_default);
-//			} catch (Exception ex) {
-//			}
+			try {
+				mWallpaperManager.setResource(R.drawable.wallpaper_default);
+			} catch (Exception ex) {
+			}
 		}			
 	}
 

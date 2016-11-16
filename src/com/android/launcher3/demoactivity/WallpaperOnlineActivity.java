@@ -7,6 +7,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,8 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
     private WallpaperClassifyAdapter mClassifyAdapter;
     private PageIndicatorView mPageIndicatorView;
     private View mWallpaperHeadView;
+    private String tagCode;   //当前加载的壁纸类别
+    private boolean isSwitchWallpaperClsaaify;   //是不是切换壁纸类别
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +98,13 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)//设置图片以如何的编码方式显示
                 .displayer(new FadeInBitmapDisplayer(600))//是否图片加载好后渐入的动画时间
                 .build();
-        mSwipeRecyclerView.loadData();
         loadWallpaperClassify();
+    }
+
+    private void refreshWallpaperData(){
+        isSwitchWallpaperClsaaify = true;
+        pageIndex = 1;
+        mSwipeRecyclerView.loadData();
     }
 
     //获取壁纸分类信息
@@ -112,7 +120,11 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
                 if (response != null && response.getResults().size() > 0){
                     mWallpaperClassifyList.addAll(response.getResults());
                     mClassifyAdapter.notifyDataSetChanged();
+                    //设置指示器点的个数
                     mPageIndicatorView.setCount(response.getResults().size());
+                    mPageIndicatorView.setSelectIndicator(0);
+                    tagCode = response.getResults().get(0).getCode();
+                    refreshWallpaperData();
                 }
             }
         });
@@ -128,7 +140,11 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
 
             @Override
             public void onResponse(WallpaperOnline response) {
-                if(response.getResults().size() > 0) {
+                if(response.getResults() != null && response.getResults().size() > 0) {
+                    if (isSwitchWallpaperClsaaify) {
+                        mWallpaperList.clear();
+                    }
+                    isSwitchWallpaperClsaaify = false;
                     int index = mWallpaperList.size();
                     if (type == 1){
                         mWallpaperList.addAll(0, response.getResults());
@@ -141,7 +157,7 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
                 }
                 mSwipeRecyclerView.onLoadFinish();
             }
-        }, pageIndex);
+        }, pageIndex, tagCode);
     }
 
     //刷新
@@ -228,7 +244,7 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
 
             WallpaperClassifyHolder holder;
             View view;
-            WallpaperClassify.WallpaperClassifyInfo classifyInfo = mWallpaperClassifyList.get(position);
+            final WallpaperClassify.WallpaperClassifyInfo classifyInfo = mWallpaperClassifyList.get(position);
             if (mCaches.size() == 0){
                 holder = new WallpaperClassifyHolder();
                 view = createItem(holder);
@@ -244,6 +260,18 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
             container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT);
             mViewPager.setObjectForPosition(view, position);
+
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!TextUtils.isEmpty(classifyInfo.getCode()) && !TextUtils.equals(tagCode, classifyInfo.getCode())){
+                        tagCode = classifyInfo.getCode();
+                        refreshWallpaperData();
+                        mPageIndicatorView.setSelectIndicator(position);
+                    }
+                }
+            });
+
             return view;
         }
 

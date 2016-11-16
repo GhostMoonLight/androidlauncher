@@ -75,6 +75,8 @@ public class PageIndicatorView extends View implements ViewPager.OnPageChangeLis
 
     private ViewPager viewPager;
     private int viewPagerId;
+    private int mSelectIndicatorIndex;
+    private boolean isUserSelect;
 
     public PageIndicatorView(Context context) {
         super(context);
@@ -495,6 +497,13 @@ public class PageIndicatorView extends View implements ViewPager.OnPageChangeLis
         }
     }
 
+    //设置选中的点
+    public void setSelectIndicator(int index){
+        isUserSelect = true;
+        mSelectIndicatorIndex = index;
+        invalidate();
+    }
+
     private void drawCircle(@NonNull Canvas canvas, int position, int x, int y) {
         boolean selectedItem = !interactiveAnimation && (position == selectedPosition || position == lastSelectedPosition);
         boolean selectingItem = interactiveAnimation && (position == selectingPosition || position == selectedPosition);
@@ -518,7 +527,7 @@ public class PageIndicatorView extends View implements ViewPager.OnPageChangeLis
                 break;
 
             case WORM:
-                drawWithWormAnimation(canvas, x, y);
+                drawWithWormAnimation(canvas, position, x, y);
                 break;
 
             case SLIDE:
@@ -552,6 +561,7 @@ public class PageIndicatorView extends View implements ViewPager.OnPageChangeLis
         }
 
         paint.setColor(color);
+        setPaintColor(position);
         canvas.drawCircle(x, y, radiusPx, paint);
     }
 
@@ -581,10 +591,11 @@ public class PageIndicatorView extends View implements ViewPager.OnPageChangeLis
         }
 
         paint.setColor(color);
+        setPaintColor(position);
         canvas.drawCircle(x, y, radius, paint);
     }
 
-    private void drawWithWormAnimation(@NonNull Canvas canvas, int x, int y) {
+    private void drawWithWormAnimation(@NonNull Canvas canvas, int position, int x, int y) {
         int radius = radiusPx;
 
         int left = frameLeftX;
@@ -598,6 +609,7 @@ public class PageIndicatorView extends View implements ViewPager.OnPageChangeLis
         rect.bottom = bot;
 
         paint.setColor(unselectedColor);
+        setPaintColor(position);
         canvas.drawCircle(x, y, radius, paint);
 
         paint.setColor(selectedColor);
@@ -610,11 +622,13 @@ public class PageIndicatorView extends View implements ViewPager.OnPageChangeLis
 
         if (interactiveAnimation && (position == selectingPosition || position == selectedPosition)) {
             paint.setColor(selectedColor);
+            setPaintColor(position);
             canvas.drawCircle(frameXCoordinate, y, radiusPx, paint);
             Log.e("TEST", "INVALID " + frameXCoordinate);
 
         } else if (!interactiveAnimation && (position == selectedPosition || position == lastSelectedPosition)) {
             paint.setColor(selectedColor);
+            setPaintColor(position);
             canvas.drawCircle(frameXCoordinate, y, radiusPx, paint);
             Log.e("TEST", String.valueOf(frameXCoordinate));
         }
@@ -633,7 +647,14 @@ public class PageIndicatorView extends View implements ViewPager.OnPageChangeLis
         }
 
         paint.setColor(color);
+        setPaintColor(position);
         canvas.drawCircle(x, y, radius, paint);
+    }
+
+    private void setPaintColor(int position){
+        if (isUserSelect && mSelectIndicatorIndex == position){
+            paint.setColor(Color.GREEN);
+        }
     }
 
     private void init(@Nullable AttributeSet attrs) {

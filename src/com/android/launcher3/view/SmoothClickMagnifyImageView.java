@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
 /**
@@ -52,6 +53,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
     private boolean isMagnifyFull;   //是不是全屏状态
     private boolean isCheckTopAndBottom, isCheckLeftAndRight;
     private Bitmap mBitmap;
+    private ValueAnimator mVelocityAnimator;
 
     public SmoothClickMagnifyImageView(Context context) {
         this(context, null);
@@ -96,6 +98,28 @@ public class SmoothClickMagnifyImageView extends ImageView {
                     isMagnifyFull = false;
                 }
                 mngnifyFull(isMagnifyFull);
+                return true;
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+                if (isMagnifyFull()) {
+                    mVelocityAnimator = ValueAnimator.ofFloat(velocityX / 100, 0);
+                    mVelocityAnimator.setDuration(600);
+                    mVelocityAnimator.setInterpolator(new DecelerateInterpolator());
+                    mVelocityAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            mMatrix.postTranslate((float) animation.getAnimatedValue(), 0);
+                            checkMatrixBounds();
+                            setImageMatrix(mMatrix);
+                        }
+                    });
+                    mVelocityAnimator.start();
+                }else{
+                    return false;
+                }
                 return true;
             }
         });
@@ -327,7 +351,6 @@ public class SmoothClickMagnifyImageView extends ImageView {
         mValueAnimator.start();
     }
 
-
     private class TransScale{
         public float startScaleX, startScaleY;
         public int startTransX, startTransY;
@@ -349,9 +372,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
 
         super.onTouchEvent(event);
 
-        if (mGestureDetector.onTouchEvent(event)){
-            return true;
-        }
+        mGestureDetector.onTouchEvent(event);
 
         if (!isMagnifyFull) return true;
 
@@ -362,6 +383,9 @@ public class SmoothClickMagnifyImageView extends ImageView {
             case MotionEvent.ACTION_DOWN:
                 mLastX = x;
                 mLastY = y;
+                if (mVelocityAnimator != null && mVelocityAnimator.isRunning()){
+                    mVelocityAnimator.cancel();
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 float dx = x - mLastX;
@@ -473,5 +497,12 @@ public class SmoothClickMagnifyImageView extends ImageView {
         return Math.sqrt((dx * dx) + (dy * dy)) >= ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
 
+    //是否处于全屏状态
+    public boolean isMagnifyFull(){
+        return isMagnifyFull;
+    }
 
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
 }

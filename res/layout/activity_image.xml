@@ -11,4 +11,16 @@
         android:layout_height="match_parent"
         android:scaleType="matrix" />
 
+    <TextView
+        android:id="@+id/wallpaper_set"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_sapce_10"
+        android:textSize="@dimen/text_size_17sp"
+        android:text="@string/wallpaper_instructions"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@color/alpha_black_4"/>
+
 </RelativeLayout>

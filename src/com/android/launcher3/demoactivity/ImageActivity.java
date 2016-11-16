@@ -6,18 +6,19 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.launcher3.common.LogUtils;
 import com.android.launcher3.utils.Util;
 import com.android.launcher3.view.SmoothClickMagnifyImageView;
+import com.android.launcher3.wallpaper.BitmapUtils;
 import com.cuan.launcher.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-public class ImageActivity extends Activity {
+public class ImageActivity extends Activity implements View.OnClickListener {
 
     public static void actionActivity(Activity activity, String imageUrl, String imageUrlLarger,
                                         int originWidth, int originHeigth, int originPositionX, int originPositionY,
@@ -39,6 +40,7 @@ public class ImageActivity extends Activity {
     private String mUrl, mLargeUrl;
     private int mOriginalWidth, mOriginalHeight, mLargeWidth, mLargeHeight;
     private int mOriginalPositionX, mOriginalPositionY;
+    private TextView mSetWallpaper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +84,57 @@ public class ImageActivity extends Activity {
                 mImageView.setImageBitmapWithMatrix(bitmap);
             }
         });
+
+        mSetWallpaper = (TextView) findViewById(R.id.wallpaper_set);
+        mSetWallpaper.setOnClickListener(this);
+        mSetWallpaper.setAlpha(0);
+        mSetWallpaper.animate().alpha(1).setDuration(1500).start();
     }
 
     @Override
     public void onBackPressed() {
+        if(!mImageView.isMagnifyFull())
+            mSetWallpaper.animate().alpha(0).setDuration(200).start();
         mImageView.onBackPressed();
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.wallpaper_set:
+                setWallpaper();
+                break;
+        }
+    }
+
+    private boolean isWallpaperSetting;
+    public void setWallpaper(){
+        if (mImageView.getBitmap() != null) {
+            if (!isWallpaperSetting) {
+                isWallpaperSetting = true;
+                showTip("开始设置壁纸...");
+                new Thread() {
+                    @Override
+                    public void run() {
+
+                        BitmapUtils.setThemeWallpaper(ImageActivity.this, mImageView.getBitmap());
+                        showTip("壁纸设置成功");
+                        isWallpaperSetting = false;
+                    }
+                }.start();
+            } else {
+                showTip("壁纸设置中...");
+            }
+        }
+    }
+
+    private void showTip(final String str){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ImageActivity.this, str, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

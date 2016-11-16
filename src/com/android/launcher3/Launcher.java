@@ -562,7 +562,7 @@ public class Launcher extends BaseActivity
 //        	new Thread(){
 //            	@Override
 //            	public void run() {
-//            		BitmapUtils.setThemeWallpaper(Launcher.this);
+//            		BitmapUtils.setThemeWallpaper(Launcher.this, null);
 //            	}
 //            }.start();
 // }

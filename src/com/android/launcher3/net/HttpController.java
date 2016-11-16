@@ -23,8 +23,8 @@ public class HttpController {
     }
 
     //获取在线壁纸
-    public void getWallpaperOnline(ResultCallBack callBack, int page){
-        String url = "http://a.holaworld.cn/wallpapers/byTag?&page="+page+"&tagCode=e43f0bc1ebad494891bb325aa3a3e582&cw="
+    public void getWallpaperOnline(ResultCallBack callBack, int page, String tagCode){
+        String url = "http://a.holaworld.cn/wallpapers/byTag?&page="+page+"&tagCode="+tagCode+"&cw="
                 + Util.getScreenW()+"&net=wifi&h="
                 + Util.getRealScreenH()+"&w="
                 + Util.getScreenW()+"&lang=zh_CN&lc=22700";
