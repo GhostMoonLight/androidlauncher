@@ -1,6 +1,8 @@
 package com.android.launcher3.bean;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by cgx on 16/11/8.
@@ -113,6 +115,8 @@ public class WallpaperOnline {
         private int downloads;
         public int mHeight; //高度是否计算过
         public int mWeight;  //高度的权重
+        public int fileHeight;   //file大图的高
+        public int fileWidth;    //file大图的宽
 
         public int getId() {
             return id;
@@ -218,6 +222,40 @@ public class WallpaperOnline {
                 }
             }
             return mWeight;
+        }
+
+        public int getFileHeight(){
+            if (fileHeight == 0) {
+                try {
+                    Pattern pattern = Pattern.compile("\\d{2,}_\\d{2,}");
+                    Matcher matcher = pattern.matcher(file);
+                    if (matcher.find()) {
+                        String[] strs = matcher.group().split("_");
+                        fileWidth = Integer.parseInt(strs[0]);
+                        fileHeight = Integer.parseInt(strs[1]);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return fileHeight;
+        }
+
+        public int getFileWidth(){
+            if (fileWidth == 0) {
+                try {
+                    Pattern pattern = Pattern.compile("\\d{2,}_\\d{2,}");
+                    Matcher matcher = pattern.matcher(file);
+                    if (matcher.find()) {
+                        String[] strs = matcher.group().split("_");
+                        fileWidth = Integer.parseInt(strs[0]);
+                        fileHeight = Integer.parseInt(strs[1]);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return fileWidth;
         }
     }
 }

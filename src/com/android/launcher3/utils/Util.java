@@ -17,6 +17,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import com.android.launcher3.LauncherAppState;
+import com.android.launcher3.LauncherApplication;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,6 +34,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Util {
+
+	/**
+	 * 获取屏幕真实的高（包括状态栏）
+	 * @return
+     */
+	public static int getRealScreenH(){
+		WindowManager sWindowManager = (WindowManager) LauncherApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
+		Display sDisplay = sWindowManager.getDefaultDisplay();
+		DisplayMetrics sDisplayMetrics = new DisplayMetrics();
+		sDisplay.getRealMetrics(sDisplayMetrics);
+		return sDisplayMetrics.heightPixels;
+	}
 
     /**
      * 获取屏幕高度

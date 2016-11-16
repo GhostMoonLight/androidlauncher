@@ -22,6 +22,14 @@ import android.widget.ImageView;
 /**
  * Created by wen on 2016/11/14.
  * 点击图片放大至全屏的ImageView。
+ *
+ * 注意：
+ * setOriginalValues中设置的mLargeWidth，mLargeHeight一定要和加载的大图的宽高一样, 如果不一样,展示效果就不好了！！！
+ *
+ * 使用方法：
+ * setOriginalValues  设置初始值,缩略图,大小位置等信息
+ * setImageBitmapWithMatrix    设置最终显示的图片
+ * onBackPressed      Activity退出的时候调用这个方法，图片缩放为原来的大小和移动到原来的位置
  */
 
 public class SmoothClickMagnifyImageView extends ImageView {
@@ -43,6 +51,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
     private GestureDetector mGestureDetector;
     private boolean isMagnifyFull;   //是不是全屏状态
     private boolean isCheckTopAndBottom, isCheckLeftAndRight;
+    private Bitmap mBitmap;
 
     public SmoothClickMagnifyImageView(Context context) {
         this(context, null);
@@ -174,21 +183,11 @@ public class SmoothClickMagnifyImageView extends ImageView {
 
                 setMatrixValue(mTransScale);
 
-                //计算最终要缩放的大小
+                //计算最终要缩放的大小, 缩放到宽和view的宽一样
                 width = getWidth();
-                height = getHeight();
                 dw = largerWidth;
-                dh = largeHeight;
-                float scale = 1.0f;
-                if (dw > width && dh <= height) {
-                    scale = width * 1.0f / dw;
-                }
-                if (dh > height && dw <= width) {
-                    scale = height * 1.0f / dh;
-                }
-                if (dw > width && dh > height) {
-                    scale = Math.min(dw * 1.0f / width, dh * 1.0f / height);
-                }
+                float scale = width * 1.0f / dw;
+
                 mScale = scale;
 
                 // 计算当前图片放大到宽为largerWidth * scale高为scale * largeHeight的缩放比
@@ -250,7 +249,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
     }
 
     //设置图片的缩放和移动
-    public void setMatrixValue(TransScale ts){
+    private void setMatrixValue(TransScale ts){
         mMatrix.reset();
         mMatrix.postTranslate(ts.currentTransX, ts.currentTransY);
         mMatrix.postScale(ts.currentScaleX, ts.currentScaleY, ts.currentTransX, ts.currentTransY);
@@ -268,7 +267,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
             };
             return ;
         }
-
+        mBitmap = bitmap;
         setImageBitmap(bitmap);
         Matrix matrix = new Matrix();
         matrix.postTranslate(mTransScale.currentTransX, mTransScale.currentTransY);
@@ -277,6 +276,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
 
     }
 
+    //Activity退出的时候（点击back键），调用这个方法图片缩小大原来的大小和移动到原来的位置
     public void onBackPressed(){
         if (mValueAnimator != null && mValueAnimator.isRunning()) return;
 
@@ -344,7 +344,11 @@ public class SmoothClickMagnifyImageView extends ImageView {
     private boolean isCanScroll;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        if (mBitmap == null) return super.onTouchEvent(event);
+
         super.onTouchEvent(event);
+
         if (mGestureDetector.onTouchEvent(event)){
             return true;
         }
@@ -415,19 +419,19 @@ public class SmoothClickMagnifyImageView extends ImageView {
     }
 
     //获取Y方向的缩放比例
-    public float getScaleY() {
+    private float getMatrixScaleY() {
         float[] matrixValues = new float[9];
         mMatrix.getValues(matrixValues);
         return matrixValues[Matrix.MSCALE_Y];
     }
 
-    public float getTransX() {
+    private float getMatrixTransX() {
         float[] matrixValues = new float[9];
         mMatrix.getValues(matrixValues);
         return matrixValues[Matrix.MTRANS_X];
     }
 
-    public float getTransY() {
+    private float getMatrixTransY() {
         float[] matrixValues = new float[9];
         mMatrix.getValues(matrixValues);
         return matrixValues[Matrix.MTRANS_Y];

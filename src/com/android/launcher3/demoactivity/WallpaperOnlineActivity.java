@@ -279,8 +279,8 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
         int[] location = new int[2];
         view.getLocationOnScreen(location);
         //显示大图图片的宽和高，服务器返回的数据要带这个图片的宽高数据，这里已经知道壁纸数据的宽和高，就是屏幕高乘以2
-        int largeWidth = Util.getScreenW()*2;
-        int largeHeight = Util.getScreenH();
+        int largeWidth = info.getFileWidth();
+        int largeHeight = info.getFileHeight();
         ImageActivity.actionActivity(WallpaperOnlineActivity.this, info.getCover(), info.getFile(),
                 view.getWidth(), view.getHeight(), location[0], location[1], largeWidth, largeHeight);
     }
