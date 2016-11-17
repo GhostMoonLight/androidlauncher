@@ -372,6 +372,7 @@ public class SmoothClickMagnifyImageView extends ImageView {
 
         super.onTouchEvent(event);
 
+        //处理双击  和  快速滑动
         mGestureDetector.onTouchEvent(event);
 
         if (!isMagnifyFull) return true;

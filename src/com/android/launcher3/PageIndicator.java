@@ -264,9 +264,21 @@ public class PageIndicator extends LinearLayout implements PagedView.OnPageChang
         float mControlY = (mFirstCircleY + mSecondCircleY) / 2.0f;
 
         float distance = Math.abs(mControlX - mFirstCircleX);
-        double a = Math.acos(mFirstCircleRadius / distance);
 
-        //弧度制   Math.Sin(Math.PI*30.0/180.0);   度数＊Math.PI/180.0
+        if (distance < mFirstCircleRadius && distance < mSecondCircleRadius){
+            mPath.reset();
+            return;
+        }
+
+        float b = mFirstCircleRadius / distance;
+        if (b > 1){
+            b = 1;
+        }
+        double a = Math.acos(b);
+
+        //弧度制   Math.Sin(Math.PI*30.0/180.0);   度数*Math.PI/180.0
+        //asin 返回弧的角度的正弦值，在到pi / 2，-π/ 2的范围内。特殊情况: 如果参数是NaN或它的绝对值大于1，那么结果是NaN. 如果参数是零，那么结果是零的同号作为参数.
+        //acos 返回弧角度的余弦值，范围在0.0到pi。如果参数是NaN或它的绝对值大于1，那么结果是NaN
         float offsetX1 = (float) (mFirstCircleRadius * Math.cos(a));
         float offsetY1 = (float) (mFirstCircleRadius * Math.sin(a));
         tanX1 = mFirstCircleX + offsetX1;
@@ -275,7 +287,11 @@ public class PageIndicator extends LinearLayout implements PagedView.OnPageChang
         tanX2 = tanX1;
         tanY2 = mFirstCircleY + offsetY1;
 
-        a = Math.acos(mSecondCircleRadius / distance);
+        b = mSecondCircleRadius / distance;
+        if (b > 1){
+            b = 1;
+        }
+        a = Math.acos(b);
         offsetX1 = (float) (mSecondCircleRadius * Math.cos(a));
         offsetY1 = (float) (mSecondCircleRadius * Math.sin(a));
         tanX3 = mSecondCircleX - offsetX1;
