@@ -61,6 +61,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PersistableBundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.speech.RecognizerIntent;
@@ -113,6 +114,7 @@ import com.android.launcher3.utils.Const;
 import com.android.launcher3.utils.PackageUtil;
 import com.android.launcher3.utils.Util;
 import com.android.launcher3.view.CustomContentPage;
+import com.android.launcher3.view.SearchView;
 import com.android.launcher3.view.WidgetTimeWeatherView;
 import com.cuan.launcher.R;
 import com.umeng.message.IUmengRegisterCallback;
@@ -414,7 +416,7 @@ public class Launcher extends BaseActivity
     //是不是透明状态栏
     final private boolean mTranslucentStatus = Build.VERSION.SDK_INT >= 19;
     private FolderBase mCurrentFolder;
-    public Bitmap buleScreen;
+    private SearchView mSearchView;
 
     static boolean isPropertyEnabled(String propertyName) {
         return Log.isLoggable(propertyName, Log.VERBOSE);
@@ -567,7 +569,12 @@ public class Launcher extends BaseActivity
 //            }.start();
 // }
     }
-    
+
+    @Override
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+    }
+
     public TimeChangeReceiver getTimeChangeReceiver(){
     	return mChangeReceiver;
     }
@@ -1370,6 +1377,7 @@ public class Launcher extends BaseActivity
         mLauncherView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mWorkspaceBackgroundDrawable = getResources().getDrawable(R.drawable.workspace_bg);
+        mSearchView = (SearchView) findViewById(R.id.launcher_search);
 
         // Setup the drag layer
         mDragLayer.setup(this, dragController);

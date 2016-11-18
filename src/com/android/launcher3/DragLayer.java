@@ -89,6 +89,16 @@ public class DragLayer extends FrameLayout implements ViewGroup.OnHierarchyChang
     private Drawable mLeftHoverDrawableActive;
     private Drawable mRightHoverDrawableActive;
 
+    @Override
+    public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        super.requestDisallowInterceptTouchEvent(disallowIntercept);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
+    }
+
     /**
      * Used to create a new DragLayer from XML.
      *
