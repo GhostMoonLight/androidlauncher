@@ -1378,6 +1378,7 @@ public class Launcher extends BaseActivity
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mWorkspaceBackgroundDrawable = getResources().getDrawable(R.drawable.workspace_bg);
         mSearchView = (SearchView) findViewById(R.id.launcher_search);
+        mWorkspace.setSearchView(mSearchView);
 
         // Setup the drag layer
         mDragLayer.setup(this, dragController);
@@ -1968,6 +1969,7 @@ public class Launcher extends BaseActivity
                 mWorkspace.moveToDefaultScreen(true);
             }
             closeFolder();
+            closeSearchView();
             if (isAllAppListViewVisile())
             	mAllAppListView.animateClose();
             exitSpringLoadedDragMode();
@@ -2473,7 +2475,9 @@ public class Launcher extends BaseActivity
             }
         } else if (isAllAppListViewVisile()){
         	mAllAppListView.animateClose();
-        }  else {
+        } else if (mSearchView.isExpand()){
+            mSearchView.animatorRetraction();
+        } else {
             mWorkspace.exitWidgetResizeMode();
 
             // Back button is a no-op here, but give at least some feedback for the button press
@@ -3081,6 +3085,13 @@ public class Launcher extends BaseActivity
         // the workspace items
         folder.sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
         getDragLayer().sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED);
+    }
+
+    //收回搜索界面
+    public void closeSearchView(){
+        if (mSearchView.isExpand()){
+            mSearchView.animatorRetraction();
+        }
     }
 
     public void closeFolder() {

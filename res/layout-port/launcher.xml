@@ -87,12 +87,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"/>
-s
+
         <com.android.launcher3.view.SearchView
             android:id="@+id/launcher_search"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="#ff0000">
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/search_content"/>
         </com.android.launcher3.view.SearchView>
     </com.android.launcher3.DragLayer>
 </android.support.design.widget.CoordinatorLayout>

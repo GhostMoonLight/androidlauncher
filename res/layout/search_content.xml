@@ -5,7 +5,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:height="60dp"
+        android:layout_height="60dp"
         android:text="搜索"
         android:textSize="@dimen/text_size_17sp"
         android:textColor="#FFFFFF"/>
