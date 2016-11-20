@@ -1039,6 +1039,7 @@ public class Launcher extends BaseActivity
     @Override
     protected void onStop() {
         super.onStop();
+        closeSearchView();
         FirstFrameAnimatorHelper.setIsVisible(false);
  }
 
@@ -1958,7 +1959,7 @@ public class Launcher extends BaseActivity
             if (mWorkspace == null) {
                 // Can be cases where mWorkspace is null, this prevents a NPE
                 return;
- }
+            }
             FolderBase openFolder = mWorkspace.getOpenFolder();
             // In all these cases, only animate if we're already on home
             mWorkspace.exitWidgetResizeMode();
@@ -3089,7 +3090,7 @@ public class Launcher extends BaseActivity
 
     //收回搜索界面
     public void closeSearchView(){
-        if (mSearchView.isExpand()){
+        if (mSearchView != null && mSearchView.isExpand()){
             mSearchView.animatorRetraction();
         }
     }

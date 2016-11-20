@@ -75,6 +75,7 @@ import com.android.launcher3.compat.UserHandleCompat;
 import com.android.launcher3.utils.Const;
 import com.android.launcher3.view.CustomContentPage;
 import com.android.launcher3.view.SearchView;
+import com.android.launcher3.view.SearchViewHelper;
 import com.android.launcher3.view.WidgetTimeWeatherView;
 import com.cuan.launcher.R;
 
@@ -304,7 +305,7 @@ public class Workspace extends SmoothPagedView
     private boolean mDeferDropAfterUninstall;
     private boolean mUninstallSuccessful;
 
-    private SearchView mSearchView;
+    private SearchViewHelper mSearchViewHelper;
 
     private final Runnable mBindPages = new Runnable() {
         @Override
@@ -1135,16 +1136,11 @@ public class Workspace extends SmoothPagedView
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
 
-        if (mSearchView.isAnimatorRuning()) return false;
-
-        mMoveX = ev.getX();
-        mMoveY = ev.getY();
         switch (ev.getAction() & MotionEvent.ACTION_MASK) {
         case MotionEvent.ACTION_DOWN:
             mXDown = ev.getX();
             mYDown = ev.getY();
             mTouchDownTime = System.currentTimeMillis();
-            isUpDowning = false;
             break;
         case MotionEvent.ACTION_POINTER_DOWN:  //当屏幕上已经有一个点被按住，此时再按下其他点时触发。
             oldDistance = spacing(ev);
@@ -1166,17 +1162,8 @@ public class Workspace extends SmoothPagedView
                     onWallpaperTap(ev);
                 }
             }
-        case MotionEvent.ACTION_MOVE:
-            float dx = Math.abs(mXDown - mMoveX);
-            float dy = Math.abs(mYDown - mMoveY);
-            if (dy > mTouchSlop && dx < mTouchSlop){
-                isUpDowning = true;
-            }
-
-            mDownLastX = mMoveX;
-            mDownLastY = mMoveY;
         }
-        return super.onInterceptTouchEvent(ev) || isUpDowning;
+        return super.onInterceptTouchEvent(ev) || mSearchViewHelper.onInterceptTouchEvent(ev);
     }
 
     private float spacing(MotionEvent event) {
@@ -1185,41 +1172,11 @@ public class Workspace extends SmoothPagedView
         return FloatMath.sqrt(x * x + y * y);
     }
 
-    private float mDownLastX, mMoveX;
-    private float mDownLastY, mMoveY;
-    private boolean isUpDowning = false;
-
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         super.onTouchEvent(ev);
 
-        mMoveX = ev.getX();
-        mMoveY = ev.getY();
-        switch (ev.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                break;
-            case MotionEvent.ACTION_MOVE:
-
-                float dy = mMoveY - mDownLastY;
-                if (isUpDowning){
-                    mSearchView.setHeightOffset(dy);
-                }
-
-                mDownLastX = mMoveX;
-                mDownLastY = mMoveY;
-                break;
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_UP:
-                if (isUpDowning){
-                    if (mMoveY - mYDown > getHeight()*0.25f){
-                        mSearchView.animatorExpand(mSearchView.getHeight(), getHeight());
-                    }else{
-                        mSearchView.animatorRetraction();
-                    }
-                }
-                isUpDowning = false;
-                break;
-        }
+        mSearchViewHelper.onTouchEvent(ev);
 
         return true;
     }
@@ -5498,6 +5455,6 @@ public class Workspace extends SmoothPagedView
     }
 
     public void setSearchView(SearchView mSearchView){
-        this.mSearchView = mSearchView;
+        mSearchViewHelper = new SearchViewHelper(mSearchView);
     }
 }
