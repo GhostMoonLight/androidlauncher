@@ -56,7 +56,7 @@ import com.android.launcher3.wallpaper.ExifInterface;
 import com.android.launcher3.wallpaper.Utils;
 import com.cuan.launcher.R;
 
-public class WallpaperCropActivity extends Activity {
+public class WallpaperCropActivity extends BaseActivity {
     private static final String LOGTAG = "Launcher3.CropActivity";
 
     protected static final String WALLPAPER_WIDTH_KEY = "wallpaper.width";
