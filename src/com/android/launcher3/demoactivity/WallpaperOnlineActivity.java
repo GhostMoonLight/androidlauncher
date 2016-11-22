@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.launcher3.BaseActivity;
 import com.android.launcher3.bean.WallpaperClassify;
 import com.android.launcher3.bean.WallpaperOnline;
 import com.android.launcher3.net.HttpController;
@@ -41,7 +42,7 @@ import java.util.LinkedList;
  * 壁纸界面
  */
 
-public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerView.OnSwipeRecyclerViewListener {
+public class WallpaperOnlineActivity extends BaseActivity implements SwipeRecyclerView.OnSwipeRecyclerViewListener {
 
     private SwipeRecyclerView mSwipeRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;

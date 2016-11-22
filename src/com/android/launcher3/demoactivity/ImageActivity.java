@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.launcher3.BaseActivity;
 import com.android.launcher3.utils.Util;
 import com.android.launcher3.view.SmoothClickMagnifyImageView;
 import com.android.launcher3.wallpaper.BitmapUtils;
@@ -18,7 +19,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-public class ImageActivity extends Activity implements View.OnClickListener {
+public class ImageActivity extends BaseActivity implements View.OnClickListener {
 
     public static void actionActivity(Activity activity, String imageUrl, String imageUrlLarger,
                                         int originWidth, int originHeigth, int originPositionX, int originPositionY,
