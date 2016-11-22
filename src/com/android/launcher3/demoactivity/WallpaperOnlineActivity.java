@@ -117,7 +117,7 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
 
             @Override
             public void onResponse(WallpaperClassify response) {
-                if (response != null && response.getResults().size() > 0){
+                if (response != null && response.getResults() !=null && response.getResults().size() > 0){
                     mWallpaperClassifyList.addAll(response.getResults());
                     mClassifyAdapter.notifyDataSetChanged();
                     //设置指示器点的个数
@@ -140,7 +140,7 @@ public class WallpaperOnlineActivity extends Activity implements SwipeRecyclerVi
 
             @Override
             public void onResponse(WallpaperOnline response) {
-                if(response.getResults() != null && response.getResults().size() > 0) {
+                if(response !=null && response.getResults() != null && response.getResults().size() > 0) {
                     if (isSwitchWallpaperClsaaify) {
                         mWallpaperList.clear();
                     }

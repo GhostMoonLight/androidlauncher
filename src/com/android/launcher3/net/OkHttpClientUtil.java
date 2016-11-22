@@ -2,7 +2,6 @@ package com.android.launcher3.net;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.android.launcher3.LauncherApplication;
 import com.android.launcher3.common.LogUtils;

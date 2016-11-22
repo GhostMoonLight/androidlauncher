@@ -346,8 +346,10 @@ public class PageIndicator extends LinearLayout implements PagedView.OnPageChang
     @Override
     public void onPageSelected(int position) {
         View view = getChildAt(position);
-        mSecondCircleX = mFirstCircleX = view.getX() + view.getWidth() / 2;
-        mSecondCircleY = mFirstCircleY = view.getY() + view.getHeight() / 2;
-        invalidate();
+        if (view != null) {
+            mSecondCircleX = mFirstCircleX = view.getX() + view.getWidth() / 2;
+            mSecondCircleY = mFirstCircleY = view.getY() + view.getHeight() / 2;
+            invalidate();
+        }
     }
 }
