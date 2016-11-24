@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -53,6 +54,7 @@ public class OkHttpClientUtil {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(new LoggingInterceptor())
                 .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
                 .cache(new Cache(sdCache.getAbsoluteFile(), CACHE_SIZE)).build();
         mGson = new Gson();
@@ -64,7 +66,7 @@ public class OkHttpClientUtil {
         //        builder.onlyIfCached();//只使用缓存
         //        builder.noTransform();//禁止转码
         builder.maxAge(60*60*12, TimeUnit.SECONDS);//这个是控制缓存的最大生命时间
-        builder.maxStale(60*60*12, TimeUnit.SECONDS);//这个是控制缓存的过时时间
+//        builder.maxStale(60*60*12, TimeUnit.SECONDS);//这个是控制缓存的过时时间
         //        builder.minFresh(10, TimeUnit.SECONDS);//指示客户机可以接收响应时间小于当前时间加上指定时间的响应。
         mUseCache = builder.build();//cacheControl
 
@@ -72,6 +74,59 @@ public class OkHttpClientUtil {
         builder1.noCache();//不使用缓存，全部走网络
         builder1.noStore();//不使用缓存，也不存储缓存
         mNoUseCache = builder1.build();//cacheControl
+    }
+
+    /**
+     * 云端响应头拦截器，用来配置缓存策略
+     * Dangerous interceptor that rewrites the server's cache-control header.
+     */
+    private static final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            if (!NetworkStatus.isNetWorking(LauncherApplication.getInstance())) {
+                request = request.newBuilder()
+                        .cacheControl(CacheControl.FORCE_CACHE)
+                        .build();
+            }
+            Response originalResponse = chain.proceed(request);
+            if (NetworkStatus.isNetWorking(LauncherApplication.getInstance())) {
+                //有网的时候读接口上的@Headers里的配置，你可以在这里进行统一的设置(注掉部分)
+                String cacheControl = request.cacheControl().toString();
+                return originalResponse.newBuilder()
+                        .header("Cache-Control", cacheControl)
+                        //.header("Cache-Control", "max-age=3600")
+                        .removeHeader("Pragma") // 清除头信息，因为服务器如果不支持，会返回一些干扰信息，不清除下面无法生效
+                        .build();
+            } else {
+                int maxAge= 60 * 60 * 12;
+                return originalResponse.newBuilder()
+                        .header("Cache-Control", "public, only-if-cached, max-age=" + maxAge)
+                        .removeHeader("Pragma")
+                        .build();
+            }
+        }
+    };
+
+    public class LoggingInterceptor implements Interceptor {
+
+        @Override public Response intercept(Interceptor.Chain chain) throws IOException {
+
+            Request request = chain.request();
+            LogUtils.e("AAAAA",String.format("Sending request %s on %s%n%s", request.url(),  chain.connection(), request.headers()));
+
+            long t1 = System.nanoTime();
+            okhttp3.Response response = chain.proceed(chain.request());
+            long t2 = System.nanoTime();
+            LogUtils.e("AAAAA",String.format(Locale.getDefault(), "Received response for %s in %.1fms%n%s",
+                    response.request().url(), (t2 - t1) / 1e6d, response.headers()));
+
+            okhttp3.MediaType mediaType = response.body().contentType();
+            String content = response.body().string();
+            return response.newBuilder()
+                    .body(okhttp3.ResponseBody.create(mediaType, content))
+                    .build();
+        }
     }
 
     /**
@@ -195,7 +250,6 @@ public class OkHttpClientUtil {
     }
 
     private Request buildGetRequest(String url, boolean isUseCache) {
-        LogUtils.e("AAAAA", "Url:"+url);
         Request.Builder requestBuilder = new Request.Builder().url(url);
         //可以省略，默认是GET请求
         requestBuilder.method("GET", null);
@@ -236,19 +290,6 @@ public class OkHttpClientUtil {
                     .build();
         }
     }
-
-    /**
-     * 云端响应头拦截器，用来配置缓存策略
-     * Dangerous interceptor that rewrites the server's cache-control header.
-     */
-    private static final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Response originalResponse = chain.proceed(chain.request());
-            return originalResponse.newBuilder().removeHeader("Pragma").removeHeader("Cache-Control")
-                    .header("Cache-Control", String.format("max-age=%d", 0)).build();
-        }
-    };
 
     /**
      *
