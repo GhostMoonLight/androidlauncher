@@ -12,10 +12,17 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.launcher3.Insettable;
 import com.android.launcher3.Interpolator.ChangeViewHeightAnimator;
 import com.android.launcher3.Launcher;
+import com.android.launcher3.download.DownloadController;
+import com.android.launcher3.download.DownloadInfo;
+import com.android.launcher3.download.DownloadManager;
+import com.android.launcher3.download.DownloadTaskInfo;
+import com.android.launcher3.download.OnDownloadRefreshUI;
 import com.android.launcher3.utils.Util;
 import com.android.launcher3.wallpaper.BitmapUtils;
 import com.cuan.launcher.R;
@@ -24,13 +31,16 @@ import com.cuan.launcher.R;
  * Created by cgx on 2016/11/18.
  * 搜索界面
  */
-public class SearchView extends LinearLayout implements Insettable, View.OnClickListener {
+public class SearchView extends LinearLayout implements Insettable, View.OnClickListener, OnDownloadRefreshUI{
 
     private Launcher mLauncher;
     private ChangeViewHeightAnimator mChangeViewHeightAnimator;
     private boolean isExpand;   //是否展开
     private View mBackground;
     private int mContentHeight;   //该控件的高度
+    private TextView mBtn;
+    private ProgressBar mProgressBar;
+    private DownloadInfo info;
 
     public SearchView(Context context) {
         this(context, null);
@@ -48,6 +58,7 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
     private void initView(Context context) {
         mLauncher = (Launcher) context;
         setOnClickListener(this);
+        mController = new DownloadController(this);
     }
 
     @Override
@@ -64,11 +75,22 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
                 mBackground.setLayoutParams(layoutParams);
             }
         });
+
+        mBtn = (TextView) findViewById(R.id.download);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress);
+        mBtn.setOnClickListener(this);
+
+        info = new DownloadInfo();
+        info.name="开心消消乐";
+        info.id=10;
+        info.url="http://b.mycheer.cn/apk/2015/6u/a2061974214.apk";
+        mController.setDwonloadInfo(info);
     }
 
     public int getContentHeight(){
         return mContentHeight;
     }
+
 
     @Override
     public void setInsets(Rect insets) {
@@ -140,12 +162,62 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.download:
+                mController.executeClick(info);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
+    }
+
+    private DownloadController mController;
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mController.registerObserver();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mController.unRegisterObserver();
+    }
+
+    @Override
+    public void onRefreshUI(DownloadTaskInfo info) {
+        switch (info.downloadState) {
+            case DownloadManager.STATE_NONE:
+                mBtn.setText("下载");
+                break;
+            case DownloadManager.STATE_PAUSED:
+                mBtn.setText("继续下载");
+                mProgressBar.setProgress((int)(info.getCurrentProgress()*100));
+                break;
+            case DownloadManager.STATE_ERROR:
+                mBtn.setText("下载失败");
+                mProgressBar.setProgress((int)(info.getCurrentProgress()*100));
+                break;
+            case DownloadManager.STATE_WAITING:
+                mBtn.setText("等待");
+                mProgressBar.setProgress((int)(info.getCurrentProgress()*100));
+                break;
+            case DownloadManager.STATE_DOWNLOADING:
+                mBtn.setText("正在下载");
+                mProgressBar.setProgress((int)(info.getCurrentProgress()*100));
+                break;
+            case DownloadManager.STATE_DOWNLOADED:
+                mBtn.setText("下载完成");
+                mProgressBar.setProgress(100);
+                break;
+            default:
+                break;
+        }
     }
 }
 

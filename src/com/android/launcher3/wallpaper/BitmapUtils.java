@@ -622,9 +622,10 @@ public class BitmapUtils {
 			if (screenShot == null) return null;
 			
 			Bitmap bluredBitmap = null;
-            bluredBitmap = StackBlur.blurNatively(screenShot, 7, true);
+            bluredBitmap = StackBlur.blurNatively(screenShot, 5, true);
+//			bluredBitmap = StackBlur.blur(screenShot, 5, true);
 //			if (Util.getSdkVersionCode() >= 30) {
-//				bluredBitmap = doBlur(launcher, screenShot, 1, 8);
+//				bluredBitmap = doBlur(launcher, screenShot, 1, 7);
 //			}
 //			if (bluredBitmap == null) {
 //				bluredBitmap = doBlur(screenShot, 16, true);

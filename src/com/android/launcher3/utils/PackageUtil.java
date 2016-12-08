@@ -1,29 +1,30 @@
 package com.android.launcher3.utils;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
+import android.content.pm.Signature;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
+
+import com.android.launcher3.LauncherAppState;
+import com.android.launcher3.LauncherApplication;
+import com.android.launcher3.ShortcutInfo;
+import com.cuan.launcher.R;
+
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.android.launcher3.LauncherAppState;
-import com.android.launcher3.ShortcutInfo;
-import com.cuan.launcher.R;
-
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.Signature;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
 
 public class PackageUtil {
 	
@@ -45,6 +46,20 @@ public class PackageUtil {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 安装应用
+	 * @param filePath
+     */
+	public static void installApkNormal(String filePath) {
+		Context sContext = LauncherApplication.getInstance().getApplicationContext();
+		File file = new File(filePath);
+		Intent intent = new Intent();
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.setAction(android.content.Intent.ACTION_VIEW);
+		intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+		sContext.startActivity(intent);
 	}
 	
 	/**

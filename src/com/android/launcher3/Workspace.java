@@ -1163,7 +1163,7 @@ public class Workspace extends SmoothPagedView
                 }
             }
         }
-        return super.onInterceptTouchEvent(ev) || mSearchViewHelper.onInterceptTouchEvent(ev);
+        return super.onInterceptTouchEvent(ev) || (mSearchViewHelper.onInterceptTouchEvent(ev) && mState == State.NORMAL);
     }
 
     private float spacing(MotionEvent event) {

@@ -159,6 +159,31 @@ public class LauncherApplication extends Application {
 		return strCacheDir;
 	}
 
+	/**
+	 * urk数据存储
+	 */
+	public String getDoanloadDir() {
+		String strCacheDir;
+		File cacheDir;
+		File cacheFile;
+
+		if (Util.isSDCardAvailable()) {
+			cacheDir = getExternalCacheDir();
+
+			if (cacheDir == null) {
+				cacheDir = new File(Environment.getExternalStorageDirectory().toString() + "/Android/data/" + getPackageName() + "/download");
+				cacheDir.mkdirs();
+			}
+		} else {
+			cacheDir = getCacheDir();
+
+		}
+		cacheFile = new File(cacheDir, "download");
+		cacheFile.mkdirs();
+		strCacheDir = cacheFile.getAbsolutePath();
+		return strCacheDir;
+	}
+
 	private static String getCurProcessName(Context context) {
 		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context. ACTIVITY_SERVICE);
 		for (ActivityManager.RunningAppProcessInfo appProcess : activityManager.getRunningAppProcesses()) {

@@ -162,6 +162,12 @@
     <string name="time_format1" formatted="false">%d月%d日</string>
     <string name="folded">折叠</string>
     <string name="expand">展开</string>
+    <string name="info_download">下载</string>
+    <string name="tinfo_continuedownload">继续</string>
+    <string name="info_downloading">下载中</string>
+    <string name="info_wait">等待</string>
+    <string name="info_error">失败</string>
+    <string name="info_success">完成</string>
 </resources>
 
 
