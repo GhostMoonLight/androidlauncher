@@ -38,7 +38,7 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
     private boolean isExpand;   //是否展开
     private View mBackground;
     private int mContentHeight;   //该控件的高度
-    private TextView mBtn;
+    private TextView mBtn, mSpeed;
     private ProgressBar mProgressBar;
     private DownloadInfo info;
 
@@ -77,6 +77,7 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
         });
 
         mBtn = (TextView) findViewById(R.id.download);
+        mSpeed = (TextView) findViewById(R.id.speed);
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
         mBtn.setOnClickListener(this);
 
@@ -218,6 +219,7 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
             default:
                 break;
         }
+        mSpeed.setText(info.speed+"kb/s");
     }
 }
 

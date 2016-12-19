@@ -171,7 +171,7 @@ public class LauncherApplication extends Application {
 			cacheDir = getExternalCacheDir();
 
 			if (cacheDir == null) {
-				cacheDir = new File(Environment.getExternalStorageDirectory().toString() + "/Android/data/" + getPackageName() + "/download");
+				cacheDir = new File(Environment.getExternalStorageDirectory().toString() + "/Android/data/" + getPackageName() + "/cache");
 				cacheDir.mkdirs();
 			}
 		} else {

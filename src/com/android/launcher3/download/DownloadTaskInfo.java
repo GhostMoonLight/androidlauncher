@@ -14,6 +14,7 @@ public class DownloadTaskInfo {
 
     public long currentSize = 0;//当前的size
     public int downloadState = 0;//下载的状态
+    public float speed;
 
     public static DownloadTaskInfo clone(DownloadInfo downloadInfo){
         DownloadTaskInfo downloadTaskInfo = new DownloadTaskInfo();
@@ -41,6 +42,13 @@ public class DownloadTaskInfo {
 
     public void setDownloadState(int state){
         downloadState = state;
+        if(state != DownloadManager.STATE_DOWNLOADING){
+            speed = 0;
+        }
+    }
+
+    public void setSpeed(float speed){
+        this.speed = (Math.round(speed*100)/100f);
     }
 
     public void setCurrentSize(long currentSize){

@@ -21,14 +21,13 @@ dependencies {
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile project(':PushSDK')
-    //RxBinding
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
-    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:recyclerview-v7:+'
     compile 'com.squareup.okhttp3:okhttp:3.4.2'
     compile 'com.google.code.gson:gson:2.8.0'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 }
 
 android {
@@ -41,6 +40,11 @@ android {
         targetSdkVersion 21
         versionCode 10000
         versionName "1.0.0"
+
+        ndk {
+            //生成的apk中就会排出多余的平台文件了
+            abiFilters "armeabi", "armeabi-v7a" ,"x86"
+        }
     }
 
     compileOptions {

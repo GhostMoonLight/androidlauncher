@@ -69,7 +69,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class LauncherProvider extends ContentProvider {
-    private static final String TAG = "Launcher.LauncherProvider";
+    private static final String TAG = "LauncherProvider";
     private static final boolean LOGD = true;
 
     private static final String DATABASE_NAME = "launcher.db";
@@ -287,7 +287,7 @@ public class LauncherProvider extends ContentProvider {
     }
 
     /**
-     * @param Should we load the old db for upgrade? first run only.
+     * Should we load the old db for upgrade? first run only.
      */
     synchronized public boolean justLoadedOldDb() {
         String spKey = LauncherAppState.getSharedPreferencesKey();
@@ -343,17 +343,18 @@ public class LauncherProvider extends ContentProvider {
             WorkspaceLoader loader = AutoInstallsLayout.get(getContext(),
                     mOpenHelper.mAppWidgetHost, mOpenHelper);
 
-            if (loader == null) {
-                final Partner partner = Partner.get(getContext().getPackageManager());
-                if (partner != null && partner.hasDefaultLayout()) {
-                    final Resources partnerRes = partner.getResources();
-                    int workspaceResId = partnerRes.getIdentifier(Partner.RES_DEFAULT_LAYOUT,
-                            "xml", partner.getPackageName());
-                    if (workspaceResId != 0) {
-                        loader = new SimpleWorkspaceLoader(mOpenHelper, partnerRes, workspaceResId);
-                    }
-                }
-            }
+//            if (loader == null) {
+//               //检测手机中是否有第三方App提供xml桌面图标定制文件，如果有就用第三方提供的
+//                final Partner partner = Partner.get(getContext().getPackageManager());
+//                if (partner != null && partner.hasDefaultLayout()) {
+//                    final Resources partnerRes = partner.getResources();
+//                    int workspaceResId = partnerRes.getIdentifier(Partner.RES_DEFAULT_LAYOUT,
+//                            "xml", partner.getPackageName());
+//                    if (workspaceResId != 0) {
+//                        loader = new SimpleWorkspaceLoader(mOpenHelper, partnerRes, workspaceResId);
+//                    }
+//                }
+//            }
 
             if (loader == null) {
                 loader = new SimpleWorkspaceLoader(mOpenHelper, getContext().getResources(),
@@ -1431,8 +1432,8 @@ public class LauncherProvider extends ContentProvider {
          * 加载xml文件
          *
          * @param db The database to write the values into
-         * @param filterContainerId The specific container id of items to load
-         * @param the set of screenIds which are used by the favorites
+         * @param workspaceResourceId The specific container id of items to load
+         * @param screenIds set of screenIds which are used by the favorites
          */
         private int loadFavoritesRecursive(SQLiteDatabase db, Resources res, int workspaceResourceId,
                 ArrayList<Long> screenIds) {
@@ -1493,7 +1494,6 @@ public class LauncherProvider extends ContentProvider {
                     values.put(Favorites.SCREEN, screen);
                     values.put(Favorites.CELLX, x);
                     values.put(Favorites.CELLY, y);
-
                     if (LOGD) {
                         final String title = getAttributeValue(parser, ATTR_TITLE);
                         final String pkg = getAttributeValue(parser, ATTR_PACKAGE_NAME);

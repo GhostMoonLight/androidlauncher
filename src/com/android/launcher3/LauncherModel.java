@@ -2064,7 +2064,7 @@ public class LauncherModel extends BroadcastReceiver
                 LauncherAppState.getLauncherProvider().migrateLauncher2Shortcuts();
             } else {
                 // Make sure the default workspace is loaded
-                Launcher.addDumpLog(TAG, "loadWorkspace: loading default favorites", false);
+                Launcher.addDumpLog(TAG, "loadWorkspace: loading default favorites", true);
                 //加载默认的xml配置文件
                 LauncherAppState.getLauncherProvider().loadDefaultFavoritesIfNecessary();
             }

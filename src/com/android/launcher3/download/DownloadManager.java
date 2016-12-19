@@ -276,9 +276,12 @@ public class DownloadManager {
 				conn.setRequestMethod("GET");
 				conn.setRequestProperty("Connection", "Keep-Alive");
 				long downloaded = 0;
-				double oldCompleted = 0;
-				double completed = 0;
-				
+//				double oldCompleted = 0;
+//				double completed = 0;
+				long lastUpdateTime = 0;
+				long oldDownloaded = 0;
+				long currentTime;
+
 				if (isStop || info.getDownloadState() != STATE_DOWNLOADING) return;
 				
 				if (info.getCurrentSize() == 0 || !file.exists()) {
@@ -286,7 +289,7 @@ public class DownloadManager {
 					info.setCurrentSize(0);
 					file.delete();
 				} else {
-					downloaded = file.length();
+					oldDownloaded = downloaded = file.length();
 					conn.setRequestProperty("Range", "bytes=" + file.length() + "-");// 设置获取实体数据流的范围
 					info.setCurrentSize(downloaded);
 				}
@@ -329,14 +332,22 @@ public class DownloadManager {
 							fos.flush();
 							info.setCurrentSize(info.getCurrentSize() + count);
 							downloaded += count;
-							completed = (downloaded * 100f) / info.size;
-							if (oldCompleted + 2 <= completed) {
+//							completed = (downloaded * 100f) / info.size;
+//							if (oldCompleted + 2 <= completed) {
+//								notifyDownloadProgressed(info);//刷新进度
+//								oldCompleted = completed;
+//							}
+							currentTime = System.currentTimeMillis();
+							if (currentTime - lastUpdateTime > 1000){
 								notifyDownloadProgressed(info);//刷新进度
-								oldCompleted = completed;
+								lastUpdateTime = currentTime;
+								info.setSpeed((downloaded - oldDownloaded)/1000.0f);
+								oldDownloaded = downloaded;
 							}
 							DownloadDB.getInstance().updateThemeUnfinished(info);
 						}else{
 							downloading = false;
+							info.setSpeed(0);
 							if (checkDownloadFile(info.getPath())){
 								info.setDownloadState(STATE_DOWNLOADED);
 								notifyDownloadStateChanged(info);
@@ -358,6 +369,7 @@ public class DownloadManager {
 				info.setDownloadState(STATE_PAUSED);
 				notifyDownloadStateChanged(info);
 				mTaskMap.remove(info.getId());
+				info.setSpeed(0);
 			} finally {
 				if (fos != null) {
 					try {

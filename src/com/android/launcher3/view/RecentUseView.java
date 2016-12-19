@@ -6,12 +6,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.android.launcher3.FolderInfo;
+import com.android.launcher3.ItemInfo;
 import com.android.launcher3.LauncherAppState;
+import com.android.launcher3.LauncherModel;
+import com.android.launcher3.LauncherSettings;
+import com.android.launcher3.ShortcutInfo;
 import com.android.launcher3.db.DBContent.RecentUserAppInfo;
 import com.android.launcher3.utils.Util;
 import com.cuan.launcher.R;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by cgx on 16/7/28.
@@ -21,7 +36,12 @@ public class RecentUseView extends FrameLayout{
 
     private int viewHeight;
     private int realHeight;
-    
+    private Context mContext;
+
+    private boolean isNotUseRXjava = false;
+
+    private Future mAnimationFuture = null;
+    private static ExecutorService sThreadPool = Executors.newFixedThreadPool(1);
 
     public RecentUseView(Context context) {
         super(context);
@@ -41,6 +61,7 @@ public class RecentUseView extends FrameLayout{
     //初始化
     private void init() {
     	realHeight = viewHeight = 2*getResources().getDimensionPixelOffset(R.dimen.folder_cell_height)+ Util.dip2px(7);
+        mContext = getContext();
     }
 
     @Override
@@ -95,7 +116,8 @@ public class RecentUseView extends FrameLayout{
             }
         }
     }
-    
+
+    //刷新界面
     public void refreshData(ArrayList<RecentUserAppInfo> infos){
     	removeAllViews();
     	for (RecentUserAppInfo info: infos){
@@ -113,5 +135,83 @@ public class RecentUseView extends FrameLayout{
 			}
 		});
         addView(view);
+    }
+
+    //遍历sBgWorkspaceItems给最近使用的app设置icon
+    public void setRecentUserAppInfoIcon(ArrayList<RecentUserAppInfo> infos) {
+        for (ItemInfo item: LauncherModel.sBgWorkspaceItems){
+            if (item instanceof ShortcutInfo){
+                ShortcutInfo sInfo = (ShortcutInfo)item;
+                if (item.itemType != LauncherSettings.BaseLauncherColumns.ITEM_TYPE_SHORTCUT
+                        || (mContext.getPackageName().equals(sInfo.packName))){
+                    for (RecentUserAppInfo info: infos){
+                        if (info.title.equals(sInfo.title) && info.pck.equals(sInfo.packName)){
+                            if (sInfo.iconBg != null){
+                                //只有时钟和日历的ShortcutInfo对象该字段有值
+                                info.icon = sInfo.iconBg;
+                            }else{
+                                info.icon = sInfo.themeDrawable;
+                            }
+                        }
+                    }
+                }
+            } else if (item instanceof FolderInfo){
+                FolderInfo fi = (FolderInfo)item;
+                for (ShortcutInfo sInfo: fi.contents){
+                    if (sInfo.itemType != LauncherSettings.BaseLauncherColumns.ITEM_TYPE_SHORTCUT
+                            || (mContext.getPackageName().equals(sInfo.packName))) {
+                        for (RecentUserAppInfo info : infos) {
+                            if (info.title.equals(sInfo.title) && info.pck.equals(sInfo.packName)) {
+                                if (sInfo.iconBg != null) {
+                                    //只有时钟和日历的ShortcutInfo对象该字段有值
+                                    info.icon = sInfo.iconBg;
+                                } else {
+                                    info.icon = sInfo.themeDrawable;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //加载最近打开的app
+    public void loadRecentUseData(){
+        final ArrayList<RecentUserAppInfo> infos = RecentUserAppInfo.queryData(mContext);
+        if (isNotUseRXjava) {
+            if (mAnimationFuture != null && !mAnimationFuture.isCancelled()) {
+                mAnimationFuture.cancel(true);
+            }
+            mAnimationFuture = sThreadPool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    setRecentUserAppInfoIcon(infos);
+
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            refreshData(infos);
+                        }
+                    });
+                }
+            });
+        }else {
+            Observable.create(new ObservableOnSubscribe<ArrayList<RecentUserAppInfo>>() {
+                @Override
+                public void subscribe(ObservableEmitter<ArrayList<RecentUserAppInfo>> e) throws Exception {
+                    setRecentUserAppInfoIcon(infos);
+                    e.onNext(infos);
+                    e.onComplete();
+                }
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ArrayList<RecentUserAppInfo>>() {
+                        @Override
+                        public void accept(ArrayList<RecentUserAppInfo> recentUserAppInfos) throws Exception {
+                            refreshData(infos);
+                        }
+                    });
+        }
     }
 }
