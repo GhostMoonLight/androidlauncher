@@ -13,6 +13,9 @@ public class DownloadDBHelper extends SQLiteOpenHelper {
 	public static String COLUMN_SIZE = "size";
 	public static String COLUMN_CURRENTSIZE = "currentsize";
 	public static String COLUMN_URL = "url";
+	public static String COLUMN_START_POS = "start_pos";  //下载开始位置
+	public static String COLUMN_END_POS = "edn_pos";      //下载结束的位置
+	public static String COLUMN_THREAD_NAME = "thread_name";
 	
 	public static String TABLE_THEME_UNFINISHED = "download_unfinished";
 	public static String TABLE_THEME_FINISHED = "download_finished";
@@ -30,7 +33,10 @@ public class DownloadDBHelper extends SQLiteOpenHelper {
                 COLUMN_NAME + " char, " +
                 COLUMN_SIZE +" char, " +
                 COLUMN_CURRENTSIZE + " char," +
-                COLUMN_URL + " char)");
+                COLUMN_URL + " char, " +
+                COLUMN_START_POS + " char, " +
+                COLUMN_END_POS + " char, " +
+                COLUMN_THREAD_NAME + " char)");
 		//下载完成的表
 		db.execSQL("create table "+TABLE_THEME_FINISHED+"(_id integer PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_ID + " integer, " +

@@ -39,7 +39,6 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,7 +50,7 @@ import com.cuan.launcher.R;
 import java.util.ArrayList;
 
 /**
- * An icon that can appear on in the workspace representing an {@link UserFolder}.
+ * An icon that can appear on in the workspace representing.
  */
 public class FolderIcon extends LinearLayout implements FolderListener {
 	private static final float SHADOW_LARGE_RADIUS = 4.0f;
@@ -516,7 +515,8 @@ public class FolderIcon extends LinearLayout implements FolderListener {
             mTotalWidth = totalSize;
 
             //文件夹边框的大小
-            final int previewSize = mPreviewBackground.getLayoutParams().height;
+            LinearLayout.LayoutParams lp = (LayoutParams) mPreviewBackground.getLayoutParams();
+            final int previewSize = lp.height;
             final int previewPadding = FolderRingAnimator.sPreviewPadding;
 
             mAvailableSpaceInPreview = (previewSize - (int)(2f*previewPadding));
@@ -532,8 +532,11 @@ public class FolderIcon extends LinearLayout implements FolderListener {
             
             mPreviewOffsetX = (mTotalWidth - mAvailableSpaceInPreview) / 2;
             mPreviewOffsetY = (int) (getPaddingTop()+2.45*previewPadding);
-            
-            mFolderItemIconSize = (int) ((mAvailableSpaceInPreview-0.4f*previewPadding)/FOLDER_ICON_ROW);
+
+            //文件夹icon背景View-->mPreviewBackground到父控件顶部的距离为paddingTop+自身topMargin
+            mPreviewOffsetY = (int) (getPaddingTop()+lp.topMargin+1*previewPadding);
+
+            mFolderItemIconSize = (int) ((mAvailableSpaceInPreview-0.3f*FOLDER_ICON_ROW*previewPadding)/FOLDER_ICON_ROW);
             mBaselineIconScale = mFolderItemIconSize*1.0f/mIntrinsicIconSize;
         }
     }
@@ -585,8 +588,9 @@ public class FolderIcon extends LinearLayout implements FolderListener {
         
         // We want to imagine our coordinates from the bottom left, growing up and to the
         // right. This is natural for the x-axis, but for the y-axis, we have to invert things.
-        float transY = (mFolderItemIconSize + FolderRingAnimator.sPreviewPadding*0.6f/(FOLDER_ICON_COLUMN-1)) * (index / FOLDER_ICON_COLUMN);
-        float transX = (mFolderItemIconSize + FolderRingAnimator.sPreviewPadding*0.6f/(FOLDER_ICON_COLUMN-1)) * (index % FOLDER_ICON_ROW);
+        float widthAndPre = (mFolderItemIconSize + FolderRingAnimator.sPreviewPadding*0.38f*FOLDER_ICON_COLUMN/(FOLDER_ICON_COLUMN-1));
+        float transY = widthAndPre * (index / FOLDER_ICON_COLUMN);
+        float transX = widthAndPre * (index % FOLDER_ICON_ROW);
         float totalScale = mBaselineIconScale * scale;
         
         final int overlayAlpha = (int) (80 * (1 - r));

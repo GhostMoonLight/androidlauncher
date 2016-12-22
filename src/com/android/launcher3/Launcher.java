@@ -598,7 +598,6 @@ public class Launcher extends BaseActivity
      */
     protected void populateCustomContentContainer() {
         CustomContentPage view = (CustomContentPage) mInflater.inflate(R.layout.custom_content_page, null, false);
-        view.setIconCache(mIconCache);
         mWorkspace.addToCustomContentPage(view, null, "");
  }
 

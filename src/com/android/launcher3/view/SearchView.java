@@ -38,7 +38,7 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
     private boolean isExpand;   //是否展开
     private View mBackground;
     private int mContentHeight;   //该控件的高度
-    private TextView mBtn, mSpeed;
+    private TextView mBtn, mSpeed, mCancel;
     private ProgressBar mProgressBar;
     private DownloadInfo info;
 
@@ -78,12 +78,15 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
 
         mBtn = (TextView) findViewById(R.id.download);
         mSpeed = (TextView) findViewById(R.id.speed);
+        mCancel = (TextView) findViewById(R.id.cancle);
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
         mBtn.setOnClickListener(this);
+        mCancel.setOnClickListener(this);
 
         info = new DownloadInfo();
-        info.name="开心消消乐";
+        info.name="hours桌面";
         info.id=10;
+        info.url="http://wdj-qn-apk.wdjcdn.com/d/55/da3e9975103c5828a140a296eac3b55d.apk";
         info.url="http://b.mycheer.cn/apk/2015/6u/a2061974214.apk";
         mController.setDwonloadInfo(info);
     }
@@ -138,7 +141,7 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
             mBackground.setBackgroundDrawable(new BitmapDrawable(getResources(), bluredBitmap));
         }
     }
-
+    
     //动画时候正在运行
     public boolean isAnimatorRuning(){
         return mChangeViewHeightAnimator != null && mChangeViewHeightAnimator.isRunning();
@@ -167,6 +170,9 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
             case R.id.download:
                 mController.executeClick(info);
                 break;
+            case R.id.cancle:
+                mController.cancelDownload(info);
+                break;
             default:
                 break;
         }
@@ -192,34 +198,32 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
 
     @Override
     public void onRefreshUI(DownloadTaskInfo info) {
+        mProgressBar.setProgress((int)(info.getCurrentProgress()*1000));
         switch (info.downloadState) {
             case DownloadManager.STATE_NONE:
                 mBtn.setText("下载");
+                mProgressBar.setProgress(0);
                 break;
             case DownloadManager.STATE_PAUSED:
                 mBtn.setText("继续下载");
-                mProgressBar.setProgress((int)(info.getCurrentProgress()*100));
                 break;
             case DownloadManager.STATE_ERROR:
                 mBtn.setText("下载失败");
-                mProgressBar.setProgress((int)(info.getCurrentProgress()*100));
                 break;
             case DownloadManager.STATE_WAITING:
                 mBtn.setText("等待");
-                mProgressBar.setProgress((int)(info.getCurrentProgress()*100));
                 break;
             case DownloadManager.STATE_DOWNLOADING:
                 mBtn.setText("正在下载");
-                mProgressBar.setProgress((int)(info.getCurrentProgress()*100));
                 break;
             case DownloadManager.STATE_DOWNLOADED:
                 mBtn.setText("下载完成");
-                mProgressBar.setProgress(100);
+                mProgressBar.setProgress(1000);
                 break;
             default:
                 break;
         }
-        mSpeed.setText(info.speed+"kb/s");
+        mSpeed.setText(info.getSpeed());
     }
 }
 

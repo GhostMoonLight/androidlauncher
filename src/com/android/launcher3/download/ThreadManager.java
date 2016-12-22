@@ -35,7 +35,7 @@ public class ThreadManager {
 	public static ThreadPoolProxy getDownloadPool() {
 		synchronized (mDownloadLock) {
 			if (mDownloadPool == null) {
-				mDownloadPool = new ThreadPoolProxy(6, 6, 5L);
+				mDownloadPool = new ThreadPoolProxy(12, 12, 5L);
 			}
 			return mDownloadPool;
 		}

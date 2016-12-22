@@ -41,12 +41,12 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
-import java.util.Set;
-
 import com.android.launcher3.bean.CustomWidgetInfo;
 import com.android.launcher3.compat.UserHandleCompat;
 import com.android.launcher3.utils.PackageUtil;
 import com.cuan.launcher.R;
+
+import java.util.Set;
 
 
 public class DeleteDropTarget extends ButtonDropTarget {
@@ -284,11 +284,10 @@ public class DeleteDropTarget extends ButtonDropTarget {
 				setText(R.string.delete_target_label);
 			}
 		}
-		
 		if (showIcon) {
 			setText("");
 		} else {
-			setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
 		}
 	}
     

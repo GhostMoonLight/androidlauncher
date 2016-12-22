@@ -1,6 +1,12 @@
 package com.android.launcher3.download;
 
+import android.text.TextUtils;
+
 import com.android.launcher3.LauncherApplication;
+import com.android.launcher3.common.LogUtils;
+import com.android.launcher3.utils.Util;
+
+import java.util.ArrayList;
 
 /**
  * Created by cgx on 2016/12/6.
@@ -14,7 +20,12 @@ public class DownloadTaskInfo {
 
     public long currentSize = 0;//当前的size
     public int downloadState = 0;//下载的状态
-    public float speed;
+    private String speed;
+    public ArrayList<DownloadManager.DownloadTask> taskLists = new ArrayList<>();
+    public int initState; //初始化状态 1:正在初始化，2：初始化完成，3:执行下载
+    private int completeThreadCount;
+    public long lastUpdateTime;  //上次刷新进度的时间
+    public long oldDownloaded;   //获取速度时上次下载的长度
 
     public static DownloadTaskInfo clone(DownloadInfo downloadInfo){
         DownloadTaskInfo downloadTaskInfo = new DownloadTaskInfo();
@@ -43,16 +54,28 @@ public class DownloadTaskInfo {
     public void setDownloadState(int state){
         downloadState = state;
         if(state != DownloadManager.STATE_DOWNLOADING){
-            speed = 0;
+            speed = 0+"";
         }
     }
 
-    public void setSpeed(float speed){
-        this.speed = (Math.round(speed*100)/100f);
+    public void setSpeed(long speed){
+        this.speed = Util.getDataSize(speed);
+    }
+
+    public String getSpeed(){
+        if (TextUtils.isEmpty(speed)){
+            return "0b/s";
+        }
+        return speed+"/s";
     }
 
     public void setCurrentSize(long currentSize){
         this.currentSize = currentSize;
+    }
+
+    public synchronized void addCurrentSize(long addSize){
+        currentSize += addSize;
+        LogUtils.e("AAAAA", "*****************progress:"+currentSize*1.0f/size);
     }
 
     public long getCurrentSize(){
@@ -69,5 +92,13 @@ public class DownloadTaskInfo {
 
     public static String getPath(String name){
         return LauncherApplication.getInstance().getDoanloadDir()+"/"+name+".apk";
+    }
+
+    public synchronized void setCompleteThreadCount(){
+        completeThreadCount++;
+    }
+
+    public int getCompleteThreadCount(){
+        return completeThreadCount;
     }
 }

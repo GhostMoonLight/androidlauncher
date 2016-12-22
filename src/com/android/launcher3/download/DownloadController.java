@@ -69,4 +69,8 @@ public class DownloadController implements DownloadManager.DownloadObserver{
         }
     }
 
+    public void cancelDownload(DownloadInfo info){
+        mDownloadManager.cancel(info);
+    }
+
 }

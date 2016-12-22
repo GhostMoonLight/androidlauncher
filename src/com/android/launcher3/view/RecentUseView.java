@@ -1,6 +1,8 @@
 package com.android.launcher3.view;
 
 import android.content.Context;
+import android.database.ContentObserver;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +44,7 @@ public class RecentUseView extends FrameLayout{
 
     private Future mAnimationFuture = null;
     private static ExecutorService sThreadPool = Executors.newFixedThreadPool(1);
+    private RecentUserAppObserver observer;
 
     public RecentUseView(Context context) {
         super(context);
@@ -62,6 +65,7 @@ public class RecentUseView extends FrameLayout{
     private void init() {
     	realHeight = viewHeight = 2*getResources().getDimensionPixelOffset(R.dimen.folder_cell_height)+ Util.dip2px(7);
         mContext = getContext();
+        observer = new RecentUserAppObserver(new Handler());
     }
 
     @Override
@@ -178,11 +182,11 @@ public class RecentUseView extends FrameLayout{
 
     //加载最近打开的app
     public void loadRecentUseData(){
-        final ArrayList<RecentUserAppInfo> infos = RecentUserAppInfo.queryData(mContext);
         if (isNotUseRXjava) {
             if (mAnimationFuture != null && !mAnimationFuture.isCancelled()) {
                 mAnimationFuture.cancel(true);
             }
+            final ArrayList<RecentUserAppInfo> infos = RecentUserAppInfo.queryData(mContext);
             mAnimationFuture = sThreadPool.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -200,6 +204,7 @@ public class RecentUseView extends FrameLayout{
             Observable.create(new ObservableOnSubscribe<ArrayList<RecentUserAppInfo>>() {
                 @Override
                 public void subscribe(ObservableEmitter<ArrayList<RecentUserAppInfo>> e) throws Exception {
+                    ArrayList<RecentUserAppInfo> infos = RecentUserAppInfo.queryData(mContext);
                     setRecentUserAppInfoIcon(infos);
                     e.onNext(infos);
                     e.onComplete();
@@ -209,9 +214,39 @@ public class RecentUseView extends FrameLayout{
                     .subscribe(new Consumer<ArrayList<RecentUserAppInfo>>() {
                         @Override
                         public void accept(ArrayList<RecentUserAppInfo> recentUserAppInfos) throws Exception {
-                            refreshData(infos);
+                            refreshData(recentUserAppInfos);
                         }
                     });
         }
+    }
+
+    //最近使用app表变化的监听
+    private class RecentUserAppObserver extends ContentObserver {
+        /**
+         * Creates a content observer.
+         *
+         * @param handler The handler to run {@link #onChange} on, or null if none.
+         */
+        public RecentUserAppObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            loadRecentUseData();
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        getContext().getContentResolver().registerContentObserver(RecentUserAppInfo.CONTENT_URI, true, observer);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        getContext().getContentResolver().unregisterContentObserver(observer);
     }
 }
