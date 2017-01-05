@@ -209,6 +209,12 @@ public class RecentUseView extends FrameLayout{
                     e.onNext(infos);
                     e.onComplete();
                 }
+            })
+            //在处理下一个事件之前要做的事  可以输出Log什么的
+            .doOnNext(new Consumer<ArrayList<RecentUserAppInfo>>() {
+                @Override
+                public void accept(ArrayList<RecentUserAppInfo> recentUserAppInfos) throws Exception {
+                }
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<ArrayList<RecentUserAppInfo>>() {

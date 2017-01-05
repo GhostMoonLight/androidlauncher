@@ -1,57 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
+
     <LinearLayout
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_sapce_20"
-            android:text="扩展界面"
-            android:gravity="center_horizontal"
-            android:textSize="@dimen/text_size_20sp"
-            android:textColor="#FFFFFF"/>
-        <TextView
-            android:id="@+id/download"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_sapce_20"
-            android:text="下载"
-            android:gravity="center_horizontal"
-            android:textSize="@dimen/text_size_20sp"
-            android:textColor="#FFFFFF"/>
 
-        <ProgressBar
-            android:id="@+id/progress"
-            style="@android:style/Widget.ProgressBar.Horizontal"
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/coordinatorlayout"
             android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_margin="3dp"
-            android:indeterminate="false"
-            android:max="1000"
-            android:progressDrawable="@drawable/progress_download" />
-        <TextView
-            android:id="@+id/speed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_sapce_2"
-            android:gravity="center_horizontal"
-            android:textSize="@dimen/text_size_20sp"
-            android:textColor="#FFFFFF"/>
-        <TextView
-            android:id="@+id/cancle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_sapce_20"
-            android:text="取消"
-            android:gravity="center_horizontal"
-            android:textSize="@dimen/text_size_20sp"
-            android:textColor="#FFFFFF"/>
+            android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/scrolling_header"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/bg_header"
+                android:scaleType="centerCrop"/>
+
+            <LinearLayout
+                android:id="@+id/edit_search"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/colorInitFloatBackground"
+                app:layout_behavior="com.android.launcher3.view.HeaderFloatBehavior">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:textColor="#90000000"
+                    android:text="搜索关键字" />
+            </LinearLayout>
+
+
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/nestedscrollview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="com.android.launcher3.view.HeaderScrollingBehavior">
+
+                <LinearLayout
+                    android:id="@+id/body"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:padding="@dimen/default_sapce_20"
+                        android:text="扩展界面"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/text_size_20sp"/>
+
+                    <TextView
+                        android:id="@+id/download"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:padding="@dimen/default_sapce_20"
+                        android:text="下载"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/text_size_20sp"/>
+
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:layout_margin="3dp"
+                        android:indeterminate="false"
+                        android:max="1000"
+                        android:progressDrawable="@drawable/progress_download"/>
+
+                    <TextView
+                        android:id="@+id/speed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:padding="@dimen/default_sapce_2"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/text_size_20sp"/>
+
+                    <TextView
+                        android:id="@+id/cancle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:padding="@dimen/default_sapce_20"
+                        android:text="取消"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/text_size_20sp"/>
+
+
+
+                </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
+        </android.support.design.widget.CoordinatorLayout>
     </LinearLayout>
 </merge>

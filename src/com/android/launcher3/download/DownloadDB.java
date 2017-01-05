@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseArray;
 
 import com.android.launcher3.LauncherApplication;
+import com.android.launcher3.common.LogUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,26 +30,31 @@ public class DownloadDB {
 	
 	//插入未完成的
 	public synchronized void insertUnfinished(DownloadManager.DownloadTask info){
-		SQLiteDatabase db = openDatabase();
-		ContentValues values = new ContentValues();
-		values.put(DownloadDBHelper.COLUMN_ID, info.info.id);
-		values.put(DownloadDBHelper.COLUMN_NAME, info.info.name);
-		values.put(DownloadDBHelper.COLUMN_SIZE, info.info.size);
-		values.put(DownloadDBHelper.COLUMN_CURRENTSIZE, info.compeleteSize);
-		values.put(DownloadDBHelper.COLUMN_URL, info.info.url);
-		values.put(DownloadDBHelper.COLUMN_START_POS, info.startPos);
-		values.put(DownloadDBHelper.COLUMN_END_POS, info.endPos);
-		values.put(DownloadDBHelper.COLUMN_THREAD_NAME, info.threadName);
-		db.insert(DownloadDBHelper.TABLE_THEME_UNFINISHED, null, values);
-		db.close();
+		int result = updateUnfinished(info);
+		LogUtils.e("AAAAA", "result:"+result);
+		if (result == 0) {
+			SQLiteDatabase db = openDatabase();
+			ContentValues values = new ContentValues();
+			values.put(DownloadDBHelper.COLUMN_ID, info.info.id);
+			values.put(DownloadDBHelper.COLUMN_NAME, info.info.name);
+			values.put(DownloadDBHelper.COLUMN_SIZE, info.info.size);
+			values.put(DownloadDBHelper.COLUMN_CURRENTSIZE, info.compeleteSize);
+			values.put(DownloadDBHelper.COLUMN_URL, info.info.url);
+			values.put(DownloadDBHelper.COLUMN_START_POS, info.startPos);
+			values.put(DownloadDBHelper.COLUMN_END_POS, info.endPos);
+			values.put(DownloadDBHelper.COLUMN_THREAD_NAME, info.threadName);
+			db.insert(DownloadDBHelper.TABLE_THEME_UNFINISHED, null, values);
+			db.close();
+		}
 	}
 	//更新未完成的
-	public synchronized void updateUnfinished(DownloadManager.DownloadTask info){
+	public synchronized int updateUnfinished(DownloadManager.DownloadTask info){
 		SQLiteDatabase db = openDatabase();
 		ContentValues values = new ContentValues();
 		values.put(DownloadDBHelper.COLUMN_CURRENTSIZE, info.compeleteSize);
-		db.update(DownloadDBHelper.TABLE_THEME_UNFINISHED, values, DownloadDBHelper.COLUMN_ID+"=? and " + DownloadDBHelper.COLUMN_THREAD_NAME+"=?", new String[]{info.info.id+"", info.threadName});
+		int result = db.update(DownloadDBHelper.TABLE_THEME_UNFINISHED, values, DownloadDBHelper.COLUMN_ID+"=? and " + DownloadDBHelper.COLUMN_THREAD_NAME+"=?", new String[]{info.info.id+"", info.threadName});
 		db.close();
+		return result;
 	}
 	//删除未完成的
 	public synchronized void deleteUnfinished(String name){

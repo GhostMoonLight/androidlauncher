@@ -69,4 +69,6 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="holo_blue">#FF33E5B5</color>
+    <color name="colorInitFloatBackground">#b0ffffff</color>
+    <color name="colorCollapsedFloatBackground">#e4e4e4</color>
 </resources>

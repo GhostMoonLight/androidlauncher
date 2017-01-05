@@ -8,10 +8,11 @@ package com.android.launcher3.download;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 一个简易的线程池管理类，提供三个线程池
@@ -91,9 +92,9 @@ public class ThreadManager {
 		}
 
 		/** 执行任务，当线程池处于关闭，将会重新创建新的线程池 */
-		public synchronized void execute(Runnable run) {
+		public synchronized Future execute(Runnable run) {
 			if (run == null) {
-				return;
+				return null;
 			}
 			if (mPool == null || mPool.isShutdown()) {
 				//参数说明
@@ -106,7 +107,8 @@ public class ThreadManager {
 				mPool = new ThreadPoolExecutor(mCorePoolSize, mMaximumPoolSize, mKeepAliveTime, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), Executors.defaultThreadFactory(), new AbortPolicy());
 			}
 			
-			mPool.execute(run);
+//			mPool.execute(run);
+			return mPool.submit(run);
 		}
 
 		/** 取消线程池中某个还未执行的任务 */

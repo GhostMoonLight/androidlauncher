@@ -52,6 +52,7 @@
         launcher:x="2"
         launcher:y="3" />
 
+
     <!-- Far-right screen [4] -->
 
     <!-- Hotseat (We use the screen as the position of the item in the hotseat) 

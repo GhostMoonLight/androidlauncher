@@ -48,6 +48,7 @@ public class DownloadManager {
 	}
 
 	private Map<Integer, DownloadTaskInfo> mDownloadMap = new ConcurrentHashMap<>();
+    private Map<Integer, InitDownloadTask> mInitTaskMap = new ConcurrentHashMap<>();
 	/** 用于记录观察者，当信息发送了改变，需要通知他们 */
 	private final List<DownloadObserver> mObservers = new ArrayList<>();
     private static final int THREAD_COUNT = 3;
@@ -116,14 +117,16 @@ public class DownloadManager {
 			mDownloadMap.put(appInfo.id, info);
 		}else{
             //如果下载任务存在，且状态是暂停，继续下载
-            if (info.getDownloadState() == STATE_PAUSED) {
+            if (info.getDownloadState() == STATE_PAUSED && info.initState != 0) {
                 if (info.initState == 3) {
                     continueTask(info);
                 } else if (info.initState == 2){
                     executeDownload(info);
-                } else {
+                } else if (info.initState == 1){
                     info.setDownloadState(STATE_WAITING);
                     notifyDownloadStateChanged(info);
+                } else {
+                    //为0说明当前线程池已满，等待执行中被暂停了,初始化任务还没执行
                 }
                 return;
             }
@@ -135,6 +138,7 @@ public class DownloadManager {
 			info.setDownloadState(STATE_WAITING);
 			notifyDownloadStateChanged(info);//每次状态发生改变，都需要回调该方法通知所有观察者
             InitDownloadTask task = new InitDownloadTask(info);//创建一个下载任务，放入线程池
+            mInitTaskMap.put(info.getId(), task);
             ThreadManager.getDownloadPool().execute(task);
 		}
 	}
@@ -154,6 +158,10 @@ public class DownloadManager {
 		if (info != null) {//修改下载状态
 			info.setDownloadState(STATE_PAUSED);
 			notifyDownloadStateChanged(info);
+            if (info.initState == 0){
+                InitDownloadTask initTask = mInitTaskMap.remove(info.getId());
+                ThreadManager.getDownloadPool().cancel(initTask);
+            }
 		}
 	}
 
@@ -163,6 +171,7 @@ public class DownloadManager {
 		if (info != null) {//修改下载状态并删除文件
             for (DownloadTask task: info.taskLists){
                 task.stopTask();
+                ThreadManager.getDownloadPool().cancel(task);
             }
             if (info.downloadState == STATE_PAUSED){
                 synchronized (info) {
@@ -252,8 +261,17 @@ public class DownloadManager {
                     accessFile.setLength(info.size);
                     accessFile.close();
                     connection.disconnect();
+                }else{
+                    mDownloadMap.remove(info.getId());
+                    ret = false;
+                    info.setDownloadState(STATE_ERROR);
+                    notifyDownloadStateChanged(info);
                 }
             } catch (Exception e) {
+                mDownloadMap.remove(info.getId());
+                ret = false;
+                info.setDownloadState(STATE_ERROR);
+                notifyDownloadStateChanged(info);
                 e.printStackTrace();
                 try {
                     File file = new File(info.getPath());
@@ -263,12 +281,10 @@ public class DownloadManager {
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
-
-                ret = false;
             }
-
-            int threadCount = THREAD_COUNT;
+            mInitTaskMap.remove(info.getId());
             if (ret){
+                int threadCount = THREAD_COUNT;
                 if (info.downloadState == STATE_PAUSED || info.downloadState == STATE_WAITING) {
                     long range = info.size / threadCount;
                     info.taskLists.clear();
@@ -297,6 +313,7 @@ public class DownloadManager {
         for (DownloadTask downloadTask : info.taskLists) {
             DownloadDB.getInstance().insertUnfinished(downloadTask);
             LogUtils.e("AAAAA", downloadTask.threadName + "开始下载");
+			downloadTask.isStop = false;
             ThreadManager.getDownloadPool().execute(downloadTask);
             info.initState = 3;
         }
@@ -310,6 +327,7 @@ public class DownloadManager {
         public long endPos;
         public String threadName;
         public long compeleteSize;  //已经下载的长度
+		public boolean isFinished; //是否执行结束
 
 		public DownloadTask(DownloadTaskInfo info, String threadName, long startPos, long endPos, long compeleteSize) {
 			this.info = info;
@@ -342,7 +360,6 @@ public class DownloadManager {
 
                 randomAccessFile = new RandomAccessFile(info.getPath(), "rwd");
                 randomAccessFile.seek(startPos + compeleteSize);
-				long oldDownloaded = 0;
 				long currentTime;
 
 				if ((stream = conn.getInputStream()) == null) {
@@ -351,7 +368,7 @@ public class DownloadManager {
 				} else {
 					int count = -1;
 					
-					byte[] buffer = new byte[1024*50];
+					byte[] buffer = new byte[1024*100];
 					boolean downloading = true;
 					a:while (!isStop && downloading) {
 						synchronized (info) {
@@ -410,9 +427,20 @@ public class DownloadManager {
 				LogUtils.e("AAAAA", threadName+"下载异常");
 				e.printStackTrace();
 				//出异常后需要修改状态并
-				info.setDownloadState(STATE_PAUSED);
-				notifyDownloadStateChanged(info);
-				info.setSpeed(0);
+				synchronized (info){
+					for (DownloadTask task : info.taskLists) {
+						task.stopTask();
+					}
+					if (info.downloadState == STATE_PAUSED){
+						synchronized (info) {
+							info.notifyAll();
+						}
+					}
+					info.initState = 2;
+					info.setDownloadState(STATE_PAUSED);
+					notifyDownloadStateChanged(info);
+					info.setSpeed(0);
+				}
 			} finally {
 				if (randomAccessFile != null) {
 					try {

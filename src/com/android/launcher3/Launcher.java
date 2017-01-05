@@ -140,6 +140,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.reactivex.functions.Consumer;
+
 /**
  * Default launcher application.
  */
@@ -2687,7 +2689,7 @@ public class Launcher extends BaseActivity
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             startAppShortcutOrInfoActivity(v);
- }
+                        }
                     });
             return;
         }
@@ -3395,7 +3397,7 @@ public class Launcher extends BaseActivity
                 itemsAlpha.setInterpolator(new AccelerateInterpolator(1.5f));
                 itemsAlpha.setStartDelay(itemsAlphaStagger);
                 mStateAnimation.play(itemsAlpha);
- }
+            }
 
             View pageIndicators = toView.findViewById(R.id.apps_customize_page_indicator);
             pageIndicators.setAlpha(0.01f);

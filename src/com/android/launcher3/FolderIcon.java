@@ -574,8 +574,8 @@ public class FolderIcon extends LinearLayout implements FolderListener {
         	offsetY = (mPreviewBackground.getLayoutParams().height)/2 + mFolderItemIconSize;
         }
 
-        center[0] = (int) Math.round(offsetX);
-        center[1] = (int) Math.round(offsetY);
+        center[0] = Math.round(offsetX);
+        center[1] = Math.round(offsetY);
         return mParams.scale;
     }
 

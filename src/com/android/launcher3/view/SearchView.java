@@ -69,7 +69,7 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
             @Override
             public void onGlobalLayout() {
                 mBackground.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                LinearLayout.LayoutParams layoutParams = (LayoutParams) mBackground.getLayoutParams();
+                ViewGroup.LayoutParams layoutParams = mBackground.getLayoutParams();
                 layoutParams.height = mLauncher.getDragLayer().getHeight();
                 mContentHeight = layoutParams.height;
                 mBackground.setLayoutParams(layoutParams);
@@ -87,7 +87,7 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
         info.name="hours桌面";
         info.id=10;
         info.url="http://wdj-qn-apk.wdjcdn.com/d/55/da3e9975103c5828a140a296eac3b55d.apk";
-        info.url="http://b.mycheer.cn/apk/2015/6u/a2061974214.apk";
+//        info.url="http://b.mycheer.cn/apk/2015/6u/a2061974214.apk";
         mController.setDwonloadInfo(info);
     }
 
@@ -185,13 +185,13 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
 
     private DownloadController mController;
     @Override
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         mController.registerObserver();
     }
 
     @Override
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mController.unRegisterObserver();
     }
