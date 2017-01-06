@@ -494,7 +494,7 @@ public class NoAlphaDefaultItemAnimator extends SimpleItemAnimator {
     }
 
     private void resetAnimation(RecyclerView.ViewHolder holder) {
-        AnimatorCompatHelper.clearInterpolator(holder.itemView);
+//        AnimatorCompatHelper.clearInterpolator(holder.itemView);
         endAnimation(holder);
     }
 

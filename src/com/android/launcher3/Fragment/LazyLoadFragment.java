@@ -78,7 +78,7 @@ public abstract class LazyLoadFragment extends Fragment {
 
     protected void showToast(String message) {
         if (!TextUtils.isEmpty(message)) {
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         }
 
     }
