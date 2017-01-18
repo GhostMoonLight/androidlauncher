@@ -3,7 +3,6 @@ package com.android.launcher3.download;
 import android.text.TextUtils;
 
 import com.android.launcher3.LauncherApplication;
-import com.android.launcher3.common.LogUtils;
 import com.android.launcher3.utils.Util;
 
 import java.util.ArrayList;
@@ -40,7 +39,9 @@ public class DownloadTaskInfo {
 
     public float getCurrentProgress(){
         if (size == 0) return 0;
-        return currentSize*1.0f/size;
+        float progress = currentSize*1.0f/size;
+        if (progress < 0) progress = 0;
+        return progress;
     }
 
     public int getDownloadState() {
@@ -59,6 +60,7 @@ public class DownloadTaskInfo {
     }
 
     public void setSpeed(long speed){
+        if(speed < 0) speed = 0;
         this.speed = Util.getDataSize(speed);
     }
 
@@ -75,7 +77,6 @@ public class DownloadTaskInfo {
 
     public synchronized void addCurrentSize(long addSize){
         currentSize += addSize;
-        LogUtils.e("AAAAA", "*****************progress:"+currentSize*1.0f/size);
     }
 
     public long getCurrentSize(){
@@ -100,5 +101,26 @@ public class DownloadTaskInfo {
 
     public int getCompleteThreadCount(){
         return completeThreadCount;
+    }
+
+    public DownloadTaskInfo cloneSelf() {
+        DownloadTaskInfo info = new DownloadTaskInfo();
+
+        info.id = id;
+        info.initState = initState;
+        info.downloadState = downloadState;
+        info.name = name;
+        info.url = url;
+        info.size = size;
+        info.completeThreadCount = completeThreadCount;
+
+        for (DownloadManager.DownloadTask task : taskLists){
+            info.taskLists.add(task.cloneSelf(info));
+        }
+        if (info.initState == 3){
+            info.initState = 2;
+        }
+        info.oldDownloaded = info.currentSize;
+        return info;
     }
 }

@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseArray;
 
 import com.android.launcher3.LauncherApplication;
-import com.android.launcher3.common.LogUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ public class DownloadDB {
 	//插入未完成的
 	public synchronized void insertUnfinished(DownloadManager.DownloadTask info){
 		int result = updateUnfinished(info);
-		LogUtils.e("AAAAA", "result:"+result);
 		if (result == 0) {
 			SQLiteDatabase db = openDatabase();
 			ContentValues values = new ContentValues();
