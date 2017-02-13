@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Scroller;
 
-import com.android.launcher3.common.LogUtils;
 import com.cuan.launcher.R;
 
 import java.lang.ref.WeakReference;
@@ -263,7 +262,6 @@ public class HeaderScrollingBehavior extends CoordinatorLayout.Behavior<NestedSc
     }
 
     private boolean onUserStopDragging(float velocity) {
-        LogUtils.e("AAAAA", "velocity:"+velocity);
         View dependentView = getDependentView();
         float translateY = dependentView.getTranslationY();
         float minHeaderTranslate = -(dependentView.getHeight() - getDependentViewCollapsedHeight());

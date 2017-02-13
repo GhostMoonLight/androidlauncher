@@ -247,7 +247,7 @@
             android:readPermission="com.android.launcher3.permission.READ_SETTINGS"
             android:writePermission="com.android.launcher3.permission.WRITE_SETTINGS" />
 
-        <!-- 友盟 -->
+        <!-- 友盟 开始-->
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="57834b3fe0f55afda5002ed4" />
@@ -257,6 +257,7 @@
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
             android:value="a78b21a44bd6ea586f6625713f2a0a09"></meta-data>
+        <!-- 友盟 结束-->
 
         <provider
             android:name="com.android.launcher3.db.OtherDBProvider"

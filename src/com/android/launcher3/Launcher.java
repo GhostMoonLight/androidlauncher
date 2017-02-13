@@ -433,7 +433,7 @@ public class Launcher extends BaseActivity
                     .penaltyLog().build());
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
                     .detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
- }
+        }
         if (LOGD) {
             Log.w(TAG, "Launcher#onCreate");
         }
@@ -553,11 +553,11 @@ public class Launcher extends BaseActivity
         	@Override
         	public void onRegistered(final String registrationId) {
         	      new Handler().post(new Runnable() {
-                          @Override
-                          public void run() {
-                    	       //onRegistered方法的参数registrationId即是device_token
-                        	 System.out.println("AAAAAA registrationId:"+registrationId);
- }
+                      @Override
+                      public void run() {
+                           //onRegistered方法的参数registrationId即是device_token
+                         System.out.println("AAAAAA registrationId:"+registrationId);
+                      }
                  });
              }
         });
@@ -1965,7 +1965,7 @@ public class Launcher extends BaseActivity
             // In all these cases, only animate if we're already on home
             mWorkspace.exitWidgetResizeMode();
             if (alreadyOnHome && mState == State.WORKSPACE && !mWorkspace.isTouchActive() && openFolder == null
-                    && shouldMoveToDefaultScreenOnHomeIntent() && !isAllAppListViewVisile()) {
+                    && shouldMoveToDefaultScreenOnHomeIntent() && !isAllAppListViewVisile() && !isSearchViewShow()) {
                 //点击Home键回到主屏幕时，不使用页面指示器动画, 在PagedView中的down事件中重新设置使用页面指示器动画
                 ((PageIndicator)mPageIndicators).setUseBezierScrollAnimal(false);
                 mWorkspace.moveToDefaultScreen(true);
@@ -3091,9 +3091,13 @@ public class Launcher extends BaseActivity
 
     //收回搜索界面
     public void closeSearchView(){
-        if (mSearchView != null && mSearchView.isExpand()){
+        if (isSearchViewShow()){
             mSearchView.animatorRetraction();
         }
+    }
+    //搜索界面是否展开
+    private boolean isSearchViewShow(){
+        return mSearchView != null && mSearchView.isExpand();
     }
 
     public void closeFolder() {

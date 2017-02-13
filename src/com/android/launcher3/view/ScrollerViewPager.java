@@ -46,9 +46,7 @@ public class ScrollerViewPager  extends ViewPager {
             scroller.setDuration(duration);
             localField.set(this, scroller);
             return;
-        } catch (IllegalAccessException localIllegalAccessException) {
-        } catch (IllegalArgumentException localIllegalArgumentException) {
-        } catch (NoSuchFieldException localNoSuchFieldException) {
+        } catch (Exception e) {
         }
     }
 

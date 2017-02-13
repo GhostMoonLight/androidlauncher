@@ -101,7 +101,19 @@
                         android:textSize="@dimen/text_size_20sp"/>
 
 
-
+                    <SeekBar
+                        android:id="@+id/menu_seekbar_light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="@dimen/default_sapce_10"
+                        android:max="255"
+                        android:maxHeight="4dp"
+                        android:minHeight="4dp"
+                        android:padding="6dp"
+                        android:progressDrawable="@drawable/seekbar_progress_launchermenu"
+                        android:thumb="@drawable/seekbar_thumb_launchermenu"
+                        android:thumbOffset="3dip" />
                 </LinearLayout>
             </android.support.v4.widget.NestedScrollView>
         </android.support.design.widget.CoordinatorLayout>

@@ -2,17 +2,22 @@ package com.android.launcher3.view;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
+import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.android.launcher3.Insettable;
@@ -24,6 +29,7 @@ import com.android.launcher3.download.DownloadManager;
 import com.android.launcher3.download.DownloadTaskInfo;
 import com.android.launcher3.download.OnDownloadRefreshUI;
 import com.android.launcher3.utils.Util;
+import com.android.launcher3.utils.switc.BrightnessUtil;
 import com.android.launcher3.wallpaper.BitmapUtils;
 import com.cuan.launcher.R;
 
@@ -41,6 +47,7 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
     private TextView mBtn, mSpeed, mCancel;
     private ProgressBar mProgressBar;
     private DownloadInfo info;
+    private SeekBar mSeekBarBrightness;
 
     public SearchView(Context context) {
         this(context, null);
@@ -89,7 +96,67 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
         info.url="http://wdj-qn-apk.wdjcdn.com/d/55/da3e9975103c5828a140a296eac3b55d.apk";
 //        info.url="http://b.mycheer.cn/apk/2015/6u/a2061974214.apk";
         mController.setDwonloadInfo(info);
+
+        initBrightness();
     }
+
+    boolean isFromUser = false;
+    private void initBrightness() {
+        mSeekBarBrightness = (SeekBar) findViewById(R.id.menu_seekbar_light);
+        mSeekBarBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
+                if (fromUser){  //是否是用户手动触发的
+                    isFromUser = true;
+                    seekBar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            BrightnessUtil.setBrightness(mLauncher, progress);
+                        }
+                    }, 20);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                Log.e("AAAAA", "onStartTrackingTouch");
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                isFromUser = false;
+                Log.e("AAAAA", "onStopTrackingTouch");
+            }
+        });
+        setBeightnessProgress();
+    }
+
+    /**
+     * 这个是我们获取系统亮度模式
+     */
+    private ContentObserver mBrightnessModeObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            if (!isFromUser){
+                setBeightnessProgress();
+            }
+        }
+    };
+
+    private void setBeightnessProgress(){
+        mSeekBarBrightness.setProgress(BrightnessUtil.getBrightnessValue(mLauncher));
+    }
+
+    /**
+     * 观察数据库是否是自动设置亮度为自动
+     */
+    ContentObserver mBrightnessObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            if (!isFromUser){
+                setBeightnessProgress();
+            }
+        }
+    };
 
     public int getContentHeight(){
         return mContentHeight;
@@ -188,12 +255,18 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         mController.registerObserver();
+
+        mLauncher.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), true, mBrightnessModeObserver);
+        mLauncher.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS_MODE),true, mBrightnessObserver);
     }
 
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mController.unRegisterObserver();
+
+        mLauncher.getContentResolver().unregisterContentObserver(mBrightnessModeObserver);
+        mLauncher.getContentResolver().unregisterContentObserver(mBrightnessObserver);
     }
 
     @Override
