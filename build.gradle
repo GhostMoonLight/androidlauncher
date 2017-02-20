@@ -106,6 +106,8 @@ android {
     }
 
     buildTypes {
+        debug {
+        }
 
         release {
             //是否开启混淆
@@ -122,6 +124,32 @@ android {
 
     }
 
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = outputFile.name.replace(".apk", "-${defaultConfig.versionName}.apk")
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }
+
+    tasks.whenTaskAdded { task ->
+        if (task.name.contains("lint")//如果instant run不生效，把clean这行干掉
+                ||task.name.equals("clean")
+                //项目中有用到aidl则不可以舍弃这个任务
+                ||task.name.contains("Aidl")
+                //用不到测试的时候就可以先关闭
+                ||task.name.contains("mockableAndroidJar")
+                ||task.name.contains("UnitTest")
+                ||task.name.contains("AndroidTest")
+                //用不到NDK和JNI的也关闭掉
+                || task.name.contains("Ndk")
+//                || task.name.contains("Jni")
+        ) {
+            task.enabled = false
+        }
+    }
 }
 
 //gradle 命令
@@ -131,6 +159,7 @@ android {
 //   ./gradlew build  编译并打debug、release包
 //   ./gradlew assembleDebug  编译并打Debug包
 //   ./gradlew assembleRelease 编译并打Release的包
+//   ./gradlew installRelease 编译打Release的包并安装到手机上
 
 
 

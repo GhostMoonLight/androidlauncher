@@ -17,4 +17,13 @@ public class Const {
 	public static final String PACKAGE_CALENDAR = "com.android.calendar";	// 日历
 	public static final String PACKAGE_CAMERA = "com.android.camera";		// 相机
 	public static final String PACKAGE_SETTINGS = "com.android.settings";	// 设置
+
+	//文本中正则表达式（@，##，url，表情）的匹配
+	private static final String AT="@[\u4e00-\u9fa5\\w]+";// @人
+
+	private static final String TOPIC="#[\u4e00-\u9fa5\\w]+#";// ##话题
+
+	private static final String EMOJI="\\[(\\S+?)\\]";// 表情
+
+	private static final String URL="http://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";// url
 }

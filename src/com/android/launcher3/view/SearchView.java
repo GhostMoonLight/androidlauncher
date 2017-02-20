@@ -10,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -119,12 +118,10 @@ public class SearchView extends LinearLayout implements Insettable, View.OnClick
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                Log.e("AAAAA", "onStartTrackingTouch");
             }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 isFromUser = false;
-                Log.e("AAAAA", "onStopTrackingTouch");
             }
         });
         setBeightnessProgress();
